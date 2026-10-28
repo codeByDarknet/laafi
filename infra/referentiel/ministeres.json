@@ -1,0 +1,9 @@
+[
+  { "code": "MTDPCE", "nom": "Ministère de la Transition digitale, des Postes et des Communications électroniques", "sigle": "MTDPCE" },
+  { "code": "MSHP", "nom": "Ministère de la Santé et de l'Hygiène publique", "sigle": "MSHP" },
+  { "code": "MEF", "nom": "Ministère de l'Économie et des Finances", "sigle": "MEF" },
+  { "code": "MENAPLN", "nom": "Ministère de l'Éducation nationale, de l'Alphabétisation et de la Promotion des langues nationales", "sigle": "MENAPLN" },
+  { "code": "MATDS", "nom": "Ministère de l'Administration territoriale, de la Décentralisation et de la Sécurité", "sigle": "MATDS" },
+  { "code": "MSECU", "nom": "Ministère de la Sécurité", "sigle": "MSECU" },
+  { "code": "MAEC", "nom": "Ministère des Affaires étrangères et de la Coopération", "sigle": "MAEC" }
+]
