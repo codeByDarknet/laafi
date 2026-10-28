@@ -1,0 +1,242 @@
+# =============================================================================
+# Laafi — messagerie souveraine chiffrée de bout en bout de l'administration
+# Hébergement en UNE commande :   docker compose up -d
+#   (ou ./scripts/install.sh, qui génère d'abord un .env avec des secrets aléatoires)
+#
+# Seul port publié sur l'hôte : la passerelle nginx (8888 par défaut).
+# Toutes les valeurs ${VAR:-défaut} ci-dessous sont des valeurs de DÉMONSTRATION :
+# en production, utiliser scripts/install.sh (secrets aléatoires dans .env).
+# =============================================================================
+name: laafi
+
+x-postgres-env: &postgres-env
+  SYNAPSE_DB_PASSWORD: ${SYNAPSE_DB_PASSWORD:-synapse-db-demo}
+  KEYCLOAK_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak-db-demo}
+  LAAFI_DB_PASSWORD: ${LAAFI_DB_PASSWORD:-laafi-db-demo}
+
+x-synapse-env: &synapse-env
+  PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8888}
+  SYNAPSE_SERVER_NAME: ${SYNAPSE_SERVER_NAME:-laafi.local}
+  SYNAPSE_REGISTRATION_SHARED_SECRET: ${SYNAPSE_REGISTRATION_SHARED_SECRET:-registration-secret-demo-a-changer}
+  SYNAPSE_SERVICE_USER: laafi-service
+  SYNAPSE_SERVICE_PASSWORD: ${SYNAPSE_SERVICE_PASSWORD:-service-demo-a-changer}
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL : bases synapse / keycloak / laafi (réseau interne uniquement)
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:17.11-alpine
+    restart: unless-stopped
+    environment:
+      <<: *postgres-env
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres-demo-a-changer}
+      POSTGRES_DB: postgres
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    networks: [interne]
+    healthcheck:
+      # -h 127.0.0.1 : le serveur temporaire d'initialisation n'écoute pas en TCP,
+      # on n'est donc « sain » qu'une fois les bases créées et le vrai serveur lancé.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d laafi"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+
+  # ---------------------------------------------------------------------------
+  # Keycloak : identité des agents, 2FA TOTP obligatoire, rôles
+  # ---------------------------------------------------------------------------
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.1
+    restart: unless-stopped
+    command: ["start", "--import-realm"]
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloak-db-demo}
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /auth
+      # Le navigateur voit Keycloak via la passerelle (${PUBLIC_URL}/auth) ; les conteneurs
+      # l'appellent directement (http://keycloak:8080/auth) : « backchannel dynamique ».
+      KC_HOSTNAME: ${PUBLIC_URL:-http://localhost:8888}/auth
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "false"
+      KC_CACHE: local
+      KC_LOG_LEVEL: ${KEYCLOAK_LOG_LEVEL:-INFO}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin-demo-a-changer}
+      JAVA_OPTS_KC_HEAP: -Xms128m -Xmx768m
+      # Variables lues par l'import du realm (placeholders ${...} dans realm-laafi.json).
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8888}
+      KEYCLOAK_SYNAPSE_SECRET: ${KEYCLOAK_SYNAPSE_SECRET:-synapse-dev-secret}
+      KEYCLOAK_BACKEND_SECRET: ${KEYCLOAK_BACKEND_SECRET:-backend-dev-secret}
+    volumes:
+      - ./infra/keycloak/realm-laafi.json:/opt/keycloak/data/import/realm-laafi.json:ro
+      - ./infra/keycloak/themes/laafi:/opt/keycloak/themes/laafi:ro
+    networks: [interne]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      # L'image Keycloak n'a ni curl ni wget : requête HTTP en bash pur sur le port de gestion.
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /auth/health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q 'HTTP/1.1 200' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # ---------------------------------------------------------------------------
+  # Synapse : serveur Matrix (ne stocke que des messages chiffrés Megolm)
+  # ---------------------------------------------------------------------------
+  synapse:
+    image: matrixdotorg/synapse:v1.164.1
+    restart: unless-stopped
+    entrypoint: ["/bin/bash", "/laafi-config/entrypoint.sh"]
+    environment:
+      <<: *synapse-env
+      SYNAPSE_MACAROON_SECRET_KEY: ${SYNAPSE_MACAROON_SECRET_KEY:-macaroon-secret-demo-a-changer}
+      SYNAPSE_FORM_SECRET: ${SYNAPSE_FORM_SECRET:-form-secret-demo-a-changer}
+      SYNAPSE_DB_USER: synapse
+      SYNAPSE_DB_NAME: synapse
+      SYNAPSE_DB_PASSWORD: ${SYNAPSE_DB_PASSWORD:-synapse-db-demo}
+      POSTGRES_HOST: postgres
+      KEYCLOAK_INTERNAL_URL: http://keycloak:8080/auth
+      KEYCLOAK_SYNAPSE_SECRET: ${KEYCLOAK_SYNAPSE_SECRET:-synapse-dev-secret}
+      SYNAPSE_MAX_UPLOAD_SIZE: ${SYNAPSE_MAX_UPLOAD_SIZE:-100M}
+      SYNAPSE_NO_TLS: "true"
+    volumes:
+      - synapse-data:/data
+      - ./infra/synapse:/laafi-config:ro
+    networks: [interne]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy     # Synapse précharge les clés OIDC de Keycloak au démarrage
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8008/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  # One-shot : crée le compte administrateur de service @laafi-service (idempotent).
+  synapse-bootstrap:
+    image: matrixdotorg/synapse:v1.164.1
+    restart: "no"
+    entrypoint: ["/bin/bash", "/laafi-config/bootstrap.sh"]
+    environment:
+      <<: *synapse-env
+      SYNAPSE_URL: http://synapse:8008
+    volumes:
+      - ./infra/synapse:/laafi-config:ro
+    networks: [interne]
+    depends_on:
+      synapse:
+        condition: service_healthy
+
+  # ---------------------------------------------------------------------------
+  # Backend Spring Boot (Dockerfile maintenu par l'équipe backend : ./backend/Dockerfile)
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ./backend
+    image: laafi/backend:local
+    restart: unless-stopped
+    environment:
+      SERVER_PORT: "8090"
+      PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8888}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/laafi
+      SPRING_DATASOURCE_USERNAME: laafi
+      SPRING_DATASOURCE_PASSWORD: ${LAAFI_DB_PASSWORD:-laafi-db-demo}
+      KEYCLOAK_URL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: laafi
+      KEYCLOAK_ISSUER: ${PUBLIC_URL:-http://localhost:8888}/auth/realms/laafi
+      KEYCLOAK_JWK_SET_URI: http://keycloak:8080/auth/realms/laafi/protocol/openid-connect/certs
+      KEYCLOAK_BACKEND_CLIENT_ID: laafi-backend
+      KEYCLOAK_BACKEND_SECRET: ${KEYCLOAK_BACKEND_SECRET:-backend-dev-secret}
+      SYNAPSE_URL: http://synapse:8008
+      SYNAPSE_SERVER_NAME: ${SYNAPSE_SERVER_NAME:-laafi.local}
+      SYNAPSE_SERVICE_USER: laafi-service
+      SYNAPSE_SERVICE_PASSWORD: ${SYNAPSE_SERVICE_PASSWORD:-service-demo-a-changer}
+      LAAFI_REFERENTIEL_MINISTERES: /opt/laafi/referentiel/ministeres.json
+      LAAFI_DATA_DIR: /var/lib/laafi
+    volumes:
+      - backend-data:/var/lib/laafi                 # clé Ed25519 du journal probant (persistante)
+      - ./infra/referentiel:/opt/laafi/referentiel:ro
+    networks: [interne]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+      synapse:
+        condition: service_healthy
+      synapse-bootstrap:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8090/api/v1/sante >/dev/null 2>&1 || wget -qO- http://localhost:8090/api/v1/sante >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # ---------------------------------------------------------------------------
+  # Applications Angular (contexte ./frontend car elles importent ../shared)
+  # ---------------------------------------------------------------------------
+  client:
+    build:
+      context: ./frontend
+      dockerfile: ../infra/docker/client.Dockerfile
+    image: laafi/client:local
+    restart: unless-stopped
+    networks: [dmz]
+
+  console:
+    build:
+      context: ./frontend
+      dockerfile: ../infra/docker/console.Dockerfile
+    image: laafi/console:local
+    restart: unless-stopped
+    networks: [dmz]
+
+  # ---------------------------------------------------------------------------
+  # Passerelle nginx : SEUL service exposé sur l'hôte
+  # ---------------------------------------------------------------------------
+  gateway:
+    image: nginx:1.30.6-alpine
+    restart: unless-stopped
+    ports:
+      - "${LAAFI_PORT:-8888}:80"
+    volumes:
+      - ./infra/gateway/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./infra/gateway:/etc/nginx/laafi:ro          # fragments inclus (en-têtes, proxy)
+    networks: [interne, dmz]
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      synapse:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/passerelle-sante"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+networks:
+  # Réseau interne : aucune sortie vers Internet (souveraineté, aucun appel à un service tiers).
+  interne:
+    internal: true
+  # Réseau de la passerelle et des applications statiques.
+  dmz: {}
+
+volumes:
+  pg-data:
+  synapse-data:
+  backend-data:
