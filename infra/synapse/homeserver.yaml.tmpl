@@ -1,0 +1,172 @@
+# =============================================================================
+# Laafi — configuration Synapse (MODÈLE)
+# Les variables « ${NOM} » sont remplacées au démarrage par infra/synapse/entrypoint.sh
+# à partir de l'environnement (docker-compose.yml / .env). Ne pas éditer
+# /data/homeserver.yaml dans le conteneur : il est régénéré à chaque démarrage.
+# Référence : https://element-hq.github.io/synapse/v1.164/usage/configuration/config_documentation.html
+# =============================================================================
+
+server_name: "${SYNAPSE_SERVER_NAME}"
+public_baseurl: "${PUBLIC_URL}/"
+pid_file: /data/homeserver.pid
+signing_key_path: /data/signing.key
+log_config: /data/log.config
+report_stats: false          # aucune statistique envoyée à matrix.org
+enable_metrics: false
+
+# --- Écoute : API client uniquement, PAS de fédération -----------------------
+# Aucun listener "federation" : le serveur ne parle à aucun autre serveur Matrix.
+listeners:
+  - port: 8008
+    type: http
+    bind_addresses: ["0.0.0.0"]
+    tls: false
+    x_forwarded: true        # derrière la passerelle nginx
+    resources:
+      - names: [client]
+        compress: false
+
+federation_domain_whitelist: []          # liste vide = fédération refusée avec tout le monde
+allow_public_rooms_over_federation: false
+allow_public_rooms_without_auth: false
+trusted_key_servers: []                  # ne jamais contacter matrix.org pour les clés
+suppress_key_server_warning: true
+url_preview_enabled: false               # pas de requêtes sortantes pour les aperçus de liens
+room_list_publication_rules:
+  - action: deny                         # aucun salon publié dans un annuaire public
+serve_server_wellknown: false
+
+# --- Base de données ---------------------------------------------------------
+database:
+  name: psycopg2
+  args:
+    user: "${SYNAPSE_DB_USER}"
+    password: "${SYNAPSE_DB_PASSWORD}"
+    dbname: "${SYNAPSE_DB_NAME}"
+    host: "${POSTGRES_HOST}"
+    port: 5432
+    cp_min: 2
+    cp_max: 10
+
+# --- Secrets (générés par scripts/install.sh) ---------------------------------
+registration_shared_secret: "${SYNAPSE_REGISTRATION_SHARED_SECRET}"
+macaroon_secret_key: "${SYNAPSE_MACAROON_SECRET_KEY}"
+form_secret: "${SYNAPSE_FORM_SECRET}"
+
+# --- Inscription et authentification -----------------------------------------
+# Personne ne peut créer de compte lui-même : les agents arrivent UNIQUEMENT
+# par SSO Keycloak (2FA obligatoire), après enrôlement par un administrateur.
+enable_registration: false
+enable_3pid_changes: false
+password_config:
+  # Le mot de passe local ne sert qu'au compte de service @laafi-service
+  # (utilisé par le backend pour l'Admin API). Les agents n'ont pas de mot de passe Matrix.
+  enabled: true
+  localdb_enabled: true
+
+oidc_providers:
+  - idp_id: keycloak                     # Synapse le préfixe : idp_id effectif = "oidc-keycloak"
+    idp_name: "Compte agent (Keycloak)"
+    # Issuer PUBLIC (celui que voit le navigateur et qui est inscrit dans les jetons).
+    issuer: "${PUBLIC_URL}/auth/realms/laafi"
+    # Découverte désactivée : le navigateur et les conteneurs ne voient pas Keycloak
+    # à la même adresse, on fixe donc chaque point d'accès à la main.
+    discover: false
+    # Synapse exige normalement des points d'accès en https. Ici token/userinfo/jwks passent
+    # par le réseau Docker interne (http://keycloak:8080, jamais exposé) : on désactive cette
+    # vérification de schéma. La signature des jetons (jwks) reste, elle, vérifiée.
+    # En production, PUBLIC_URL doit être en https (TLS terminé devant la passerelle).
+    skip_verification: true
+    authorization_endpoint: "${PUBLIC_URL}/auth/realms/laafi/protocol/openid-connect/auth"   # navigateur
+    token_endpoint: "${KEYCLOAK_INTERNAL_URL}/realms/laafi/protocol/openid-connect/token"     # interne
+    userinfo_endpoint: "${KEYCLOAK_INTERNAL_URL}/realms/laafi/protocol/openid-connect/userinfo"
+    jwks_uri: "${KEYCLOAK_INTERNAL_URL}/realms/laafi/protocol/openid-connect/certs"
+    client_id: synapse
+    client_secret: "${KEYCLOAK_SYNAPSE_SECRET}"
+    client_auth_method: client_secret_post
+    scopes: ["openid", "profile"]
+    pkce_method: always
+    # Contrôle d'accès « Intrus » : seul un agent ENRÔLÉ (attribut Keycloak enrole=true,
+    # exposé dans le claim laafi_enrole) peut ouvrir une session Matrix.
+    attribute_requirements:
+      - attribute: laafi_enrole
+        value: "true"
+    # Déconnexion « back-channel » : quand Keycloak ferme la session d'un agent
+    # (révocation, perte de téléphone), il prévient Synapse qui supprime l'appareil associé.
+    backchannel_logout_enabled: true
+    user_mapping_provider:
+      config:
+        subject_claim: sub
+        localpart_template: "{{ user.preferred_username }}"
+        display_name_template: "{{ user.given_name }} {{ user.family_name }}"
+        confirm_localpart: false
+
+sso:
+  # Retour direct vers nos applications sans page de confirmation intermédiaire.
+  client_whitelist:
+    - "${PUBLIC_URL}/"
+  update_profile_information: true
+
+# Limitation de débit des connexions Matrix. Les mots de passe et le TOTP sont protégés
+# par Keycloak (anti force brute) ; ici on évite seulement de bloquer des reconnexions
+# légitimes rapprochées (démonstration, appareil perdu puis reconnecté).
+rc_login:
+  address:
+    per_second: 0.2
+    burst_count: 10
+  account:
+    per_second: 0.1
+    burst_count: 10
+  failed_attempts:
+    per_second: 0.17
+    burst_count: 3
+
+ui_auth:
+  session_timeout: "5m"
+
+# --- Chiffrement de bout en bout imposé ---------------------------------------
+# Tout nouveau salon (privé, public, discussion directe) est créé avec m.room.encryption.
+# Le serveur ne stocke alors que des événements m.room.encrypted (Megolm) illisibles pour lui.
+encryption_enabled_by_default_for_room_type: all
+
+# --- Minimisation des métadonnées --------------------------------------------
+presence:
+  enabled: false                         # pas de statut « en ligne / vu à »
+user_directory:
+  enabled: true
+  search_all_users: false                # recherche limitée aux personnes partageant un salon
+  prefer_local_users: true
+limit_profile_requests_to_users_who_share_rooms: true
+require_auth_for_profile_requests: true
+include_profile_data_on_invite: false
+user_ips_max_age: 1d                     # adresses IP / user-agents purgés après 1 jour
+redaction_retention_period: 1d           # contenu (chiffré) des messages supprimés purgé après 1 jour
+forget_rooms_on_leave: true
+push:
+  include_content: false                 # les notifications push ne transportent jamais de contenu
+
+# Rétention : purge serveur des événements anciens (365 jours max par défaut).
+retention:
+  enabled: true
+  default_policy:
+    min_lifetime: 1d
+    max_lifetime: 365d
+  allowed_lifetime_min: 1d
+  allowed_lifetime_max: 365d
+  purge_jobs:
+    - longest_max_lifetime: 3d
+      interval: 12h
+    - shortest_max_lifetime: 3d
+      longest_max_lifetime: 31d
+      interval: 1d
+    - shortest_max_lifetime: 31d
+      interval: 2d
+
+# --- Médias (pièces jointes CHIFFRÉES côté client avant envoi) -----------------
+enable_media_repo: true
+media_store_path: /data/media_store
+max_upload_size: "${SYNAPSE_MAX_UPLOAD_SIZE}"
+enable_authenticated_media: true
+dynamic_thumbnails: false
+media_retention:
+  local_media_lifetime: 365d
