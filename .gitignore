@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.angular/
+target/
+*.log
+.env
+!.env.example
+.idea/
+.vscode/
+*.iml
+infra/synapse/data/
+.DS_Store
