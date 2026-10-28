@@ -10,3 +10,27 @@ target/
 *.iml
 infra/synapse/data/
 .DS_Store
+livrables/attestation_inscription/
+livrables/
+
+# Outils d'assistance et fichiers locaux (jamais dans le dépôt public)
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+.claude/
+.mcp.json
+.impeccable/
+.env.*
+!.env.example
+*.local.*
+
+# Secrets et clés
+*.pem
+*.key
+*.p12
+*.jks
+
+# Sorties des tests de bout en bout
+tests/e2e/captures/
+tests/e2e/test-results/
+tests/e2e/_probe*.mjs
