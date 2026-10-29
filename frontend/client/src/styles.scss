@@ -1,0 +1,26 @@
+// Laafi — styles globaux du client de messagerie.
+// Le design system partagé (../shared/styles) fournit jetons, polices, base et composants .lf-*.
+@use 'laafi';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--lf-bg);
+  color: var(--lf-ink);
+  // Évite le « rebond » qui fait glisser toute l'application sur mobile.
+  overscroll-behavior-y: none;
+}
+
+lf-root {
+  display: block;
+  min-height: 100dvh;
+}
+
+// Les icônes en ligne dans les boutons du design system s'alignent sur le texte.
+.lf-btn lf-icone {
+  margin-block: -0.125em;
+}

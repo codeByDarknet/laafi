@@ -1,0 +1,14 @@
+{
+  "name": "Laafi — messagerie de l'administration",
+  "short_name": "Laafi",
+  "description": "Messagerie souveraine chiffrée de bout en bout des agents publics.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f3ed",
+  "theme_color": "#007a3d",
+  "icons": [
+    { "src": "assets/brand/laafi-mark.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

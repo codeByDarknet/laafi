@@ -1,0 +1,28 @@
+@use 'tokens' as lf;
+
+.ecran-demarrage {
+  position: fixed;
+  inset: 0;
+  z-index: var(--lf-z-overlay);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--lf-space-4);
+  padding: var(--lf-gutter);
+  background: var(--lf-bg);
+  text-align: center;
+
+  &__marque {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  &__texte {
+    font-weight: var(--lf-weight-semibold);
+  }
+
+  &__detail {
+    max-width: 22rem;
+    font-size: var(--lf-text-sm);
+  }
+}

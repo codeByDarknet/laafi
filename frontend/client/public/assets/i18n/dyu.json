@@ -1,0 +1,352 @@
+{
+  "commun": {
+    "aller_au_contenu": "Taa kunnafoni yɔrɔ la",
+    "annuler": "A dabila",
+    "chargement": "Makɔnɔ dɔɔnin…",
+    "fermer": "A datugu",
+    "reessayer": "A kɛ tugun",
+    "retour": "Segin kɔ",
+    "terminer": "A laban"
+  },
+  "nav": {
+    "annuaire": "Baarakɛlaw tɔgɔ gafe",
+    "profil": "N ka kunnafoniw ani lakana"
+  },
+  "langues": {
+    "fr": "Faransikan",
+    "mos": "Mɔɔrɛkan",
+    "dyu": "Julakan"
+  },
+  "roles": {
+    "agent": "Baarakɛla",
+    "chef_service": "Baarada kuntigi",
+    "admin_ministere": "Minisiriso ɲɛmɔgɔ (administrateur)",
+    "super_admin": "Ɲɛmɔgɔba (super-administrateur)"
+  },
+  "accueil": {
+    "titre": "Fanga baarakɛlaw ka cikan ci yɔrɔ lakananen",
+    "texte": "Aw ni aw baarakɛɲɔgɔnw ka kuma gundo la. Aw ka cikanw bɛ dogo aw ka minɛn kɔnɔ, mɔgɔ minnu ye aw ye cikan ci olu dɔrɔn de bɛ se k'a kalan.",
+    "connexion": "Don ni n ka baarakɛla jatebila ye",
+    "garantie_chiffrement": "Cikanw bɛ dogo k'a ta daminɛ na ka se a laban ma: serveur tɛ se ka aw ka cikanw kalan abada",
+    "garantie_2fa": "Donni bɛ kɛ ni jatebila sɛbɛnnen ye ani sɛgɛsɛgɛli nimɔrɔ (code) ye",
+    "garantie_appareil": "Sira bɛ se ka ta minɛn na waati bɛɛ, n'a tununa walima n'a sonyalen don",
+    "pied": "Burukina Faso yɛrɛ ka baarakɛyɔrɔ, min bɛ Burukina Faso kɔnɔ",
+    "erreur_jeton": "Donni ma se ka kɛ. Donni sira waati tɛmɛna wa: a daminɛ kokura.",
+    "erreur_demarrage": "Cikan ci yɔrɔ ma se ka daminɛ. Aw ka internet lajɛ ka a kɛ tugun."
+  },
+  "demarrage": {
+    "connexion": "Donni bɛ ka kɛ…",
+    "chargement": "Aw ka cikan ci yɔrɔ bɛ ka dayɛlɛ…",
+    "chiffrement": "Cikan dogoli bɛ ka labɛn minɛn nin kan. Siɲɛ fɔlɔ la, a bɛ se ka sekondi dama dɔ ta."
+  },
+  "reseau": {
+    "hors_ligne": "Internet tɛ yen. Aw ka cikanw bɛna ci internet seginni waati.",
+    "reconnexion": "Internet ma sabati, donni bɛ ka kɛ kokura…",
+    "reessayer": "A kɛ tugun sisan"
+  },
+  "salons": {
+    "titre": "Barow",
+    "rechercher": "Baro dɔ ɲini",
+    "nouvelle": "Baro kura",
+    "invitations": "Weleliw",
+    "invite_par": "{{nom}} ka weleli",
+    "accepter": "Sɔn",
+    "refuser": "Ban",
+    "non_lus": "Cikan {{n}} minnu ma kalan",
+    "aucun_resultat": "Baro si ma sɔrɔ",
+    "aucun_resultat_texte": "Baro si tɛ bɛn « {{q}} » ma.",
+    "vide_titre": "Baro si tɛ yen fɔlɔ",
+    "vide_texte": "Aw baarakɛɲɔgɔn ɲini tɔgɔ gafe kɔnɔ k'a sɛbɛn, walima aw ka baara jɛkulu dɔ da.",
+    "aucun_ouvert_titre": "Baro dɔ sugandi",
+    "aucun_ouvert_texte": "Baro dɔ sugandi lisi kɔnɔ, walima ka baro kura daminɛ.",
+    "erreur_accepter": "Weleli ma se ka sɔn. A kɛ tugun.",
+    "erreur_refuser": "Weleli ma se ka ban. A kɛ tugun."
+  },
+  "apercu": {
+    "image": "Foto",
+    "vocal": "Kumakan cikan (vocal)",
+    "fichier": "Sɛbɛn (fichier)",
+    "supprime": "Cikan jɔsira",
+    "indechiffrable": "Cikan ma se ka dayɛlɛ",
+    "dechiffrement": "A bɛ ka dayɛlɛ…",
+    "inconnu": "Cikan",
+    "confidentiel": "Gundo cikan",
+    "vous": "Ele",
+    "vide": "Cikan si tɛ yen"
+  },
+  "classification": {
+    "niveau": {
+      "NORMAL": "Gansan",
+      "DIFFUSION_RESTREINTE": "Minisiriso mɔgɔw dɔrɔn",
+      "CONFIDENTIEL": "Gundo"
+    },
+    "court": {
+      "NORMAL": "N",
+      "DIFFUSION_RESTREINTE": "DR",
+      "CONFIDENTIEL": "C"
+    },
+    "bandeau": {
+      "NORMAL": "Baro nin tɛ gundo ye.",
+      "DIFFUSION_RESTREINTE": "Minisiriso mɔgɔw dɔrɔn: cikanw bɛ se ka ci aw ka minisiriso baarakɛlaw dɔrɔn ma.",
+      "CONFIDENTIEL": "Gundo: a ladege ni a cili mɔgɔ wɛrɛ ma bɛ dagalen, aw tɔgɔ bɛ sɛbɛn a kan, a bɛ dogo ni aw t'a filɛ."
+    }
+  },
+  "piece": {
+    "image": "Foto dogolen",
+    "dechiffrement": "Sɛbɛn farilen bɛ ka dayɛlɛ…",
+    "erreur": "Sɛbɛn farilen nin ma se ka dayɛlɛ.",
+    "afficher_image": "Foto jira ({{taille}})",
+    "pause": "A jɔ dɔɔnin",
+    "ecouter": "Kumakan cikan lamɛn",
+    "vocal_duree": "Kumakan cikan, {{duree}}",
+    "fichier": "Sɛbɛn (fichier) dogolen",
+    "telecharger": "{{nom}} jigin"
+  },
+  "instruction": {
+    "etiquette": "Fanga ci fɔlen",
+    "voir_accuses": "Sɔrɔli seereyaw lajɛ",
+    "deja_reconnue": "Aw ye ci fɔlen nin kalan k'a faamu",
+    "prendre_connaissance": "N y'a kalan k'a faamu",
+    "session_api": "Don Laafi baarakɛyɔrɔ la walasa k'a jira ko aw y'a sɔrɔ.",
+    "se_connecter": "Don",
+    "accuse_ok": "Aw ka sɔrɔli sɛbɛnna."
+  },
+  "conversation": {
+    "message_supprime": "Cikan nin jɔsira.",
+    "indechiffrable": "Cikan nin tɛ se ka dayɛlɛ minɛn nin kan. Minɛn nin sɛgɛsɛgɛ ni aw ka segin kile ye.",
+    "dechiffrement": "A bɛ ka dayɛlɛ…",
+    "non_pris_en_charge": "Cikan suguya nin tɛ se ka jira yan.",
+    "expire": "A bɛna tunun {{quand}}",
+    "envoi_en_cours": "A bɛ ka ci",
+    "envoye": "A cira",
+    "echec_envoi": "Cili ma se ka kɛ",
+    "actions": "Cikan baaraw",
+    "transferer": "A ci mɔgɔ wɛrɛ ma",
+    "supprimer": "A jɔsi",
+    "erreur_envoi": "Cikan ma se ka ci.",
+    "introuvable_titre": "Baro ma sɔrɔ",
+    "introuvable_texte": "Baro nin tɛ yen, walima aw tɛ a kɔnɔ tugun.",
+    "direct": "Baro ni mɔgɔ kelen ye",
+    "canal": "Fanga kunnafoni sira",
+    "groupe": "Jɛkulu",
+    "membres": "Mɔgɔ {{n}}",
+    "details": "Baro kunnafoniw",
+    "invitation_titre": "Aw welelen don baro nin kɔnɔ",
+    "invitation_texte": "Sɔn weleli ma walasa ka cikanw kalan ani ka u ci.",
+    "fil": "Cikanw",
+    "charger_anciens": "Cikan kɔrɔw jira",
+    "debut": "Baro daminɛ. Cikanw bɛ dogo k'a ta daminɛ na ka se a laban ma.",
+    "vide": "Cikan si tɛ yen. Fɔlɔ sɛbɛn.",
+    "aller_en_bas": "Taa cikan laban na",
+    "lecture_seule": "Fanga kunnafoni sira: ɲɛmɔgɔw dɔrɔn de bɛ se ka sɛbɛn.",
+    "supprimer_titre": "Cikan nin jɔsi wa?",
+    "supprimer_texte": "Cikan bɛna jɔsi mɔgɔ bɛɛ fɛ. A tɛ se ka segin kɔ tugun.",
+    "erreur_suppression": "Cikan ma se ka jɔsi."
+  },
+  "envoi": {
+    "preparation": "A bɛ ka labɛn ({{taille}})…",
+    "televersement": "Cili dogolen bɛ ka kɛ ({{taille}})…",
+    "echec": "Cili bɛ makɔnɔ ({{taille}}): a bɛna ci tugun internet seginni waati"
+  },
+  "composeur": {
+    "options": "Cikan labɛnniw",
+    "classification": "Gundo hakɛ",
+    "expiration": "A yɛrɛ tununni",
+    "instruction": "Fanga ci fɔlen",
+    "instruction_aide": "Mɔgɔ minnu b'a sɔrɔ, olu ka kan k'a jira ko u y'a kalan k'a faamu.",
+    "enregistrement": "Kumakan bɛ ka minɛ",
+    "annuler_vocal": "Kumakan minɛni dabila",
+    "envoyer_vocal": "Kumakan cikan ci",
+    "joindre_image": "Foto fara a kan",
+    "joindre_fichier": "Sɛbɛn (fichier) fara a kan",
+    "message": "Cikan",
+    "placeholder": "Cikan dogolen sɛbɛn…",
+    "placeholder_instruction": "Ci fɔlen sɛbɛn…",
+    "envoyer": "A ci",
+    "enregistrer_vocal": "Kumakan cikan minɛ",
+    "fichier_trop_gros": "« {{nom}} » ka bon ka tɛmɛ 50 Mo kan.",
+    "micro_refuse": "Mikoro sira ma di. A sira di navigateur labɛnniw kɔnɔ.",
+    "vocal_trop_court": "Kumakan cikan ka surun: a minɛ ka mɛn ni o ye.",
+    "duree": {
+      "jamais": "Abada",
+      "h1": "Lɛrɛ kelen kɔfɛ",
+      "j1": "Tile kelen kɔfɛ",
+      "j7": "Tile 7 kɔfɛ",
+      "j30": "Tile 30 kɔfɛ"
+    }
+  },
+  "transfert": {
+    "titre": "Cikan ci mɔgɔ wɛrɛ ma",
+    "dr_regle": "Minisiriso mɔgɔw dɔrɔn ka cikan: a bɛ se ka ci « {{ministere}} » minisiriso baarakɛlaw dɔrɔn ma.",
+    "aucune_cible": "Baro si tɛ yen cikan nin ka ci min ma.",
+    "refuse_dr": "Cili bannen don: baro nin kɔnɔ, mɔgɔ dɔw tɛ aw ka minisiriso mɔgɔw ye.",
+    "erreur": "Cili ma se ka kɛ. A kɛ tugun.",
+    "ok": "Cikan cira {{nom}} ma."
+  },
+  "accuses": {
+    "titre": "Sɔrɔli seereyaw",
+    "preuve_titre": "Kalanni seereya",
+    "preuve_texte": "Sɛbɛn min tɔgɔ sɛbɛnna Laafi serveur fɛ, a b'a jira ko baarakɛla ye ci fɔlen nin yɛrɛ kalan k'a faamu (empreinte SHA-256).",
+    "agent": "Baarakɛla",
+    "date": "Don",
+    "signature": "Serveur ka tɔgɔ sɛbɛnni",
+    "signature_valide": "Tɔgɔ sɛbɛnni sɛgɛsɛgɛra",
+    "signature_invalide": "Tɔgɔ sɛbɛnni ma sɛgɛsɛgɛ",
+    "telecharger": "Seereya jigin",
+    "compte": "Sɔrɔli seereya {{n}}",
+    "conforme": "Empreinte bɛnnen don",
+    "non_conforme": "Empreinte tɛ bɛn cikan jiralen ma",
+    "voir_preuve": "Seereya lajɛ",
+    "aucun": "Sɔrɔli seereya si tɛ yen fɔlɔ."
+  },
+  "annuaire": {
+    "titre": "Baarakɛlaw tɔgɔ gafe",
+    "intro": "Aw baarakɛɲɔgɔn ɲini a tɔgɔ, a ka baara walima a ka minisiriso fɛ.",
+    "ouverture": "Baro bɛ ka dayɛlɛ…",
+    "rechercher": "Jamu, tɔgɔ walima baara",
+    "ministere": "Minisiriso",
+    "tous_ministeres": "Minisiriso bɛɛ",
+    "indisponible": "Tɔgɔ gafe bɛ Laafi baarakɛyɔrɔ donni de fɛ.",
+    "se_connecter": "Don baarakɛyɔrɔ la",
+    "resultats": "Baarakɛla {{n}}",
+    "vous": "Ele",
+    "selectionne": "Sugandilen",
+    "plus": "Baarakɛla wɛrɛw jira",
+    "aucun": "Baarakɛla si tɛ bɛn aw ka ɲinini ma.",
+    "utiliser_id": "{{id}} baara",
+    "choisir": "Sugandi",
+    "ecrire": "Sɛbɛn"
+  },
+  "nouveau": {
+    "titre": "Baro kura",
+    "type": "Baro suguya",
+    "onglet": {
+      "direct": "Mɔgɔ kelen",
+      "groupe": "Jɛkulu",
+      "canal": "Fanga kunnafoni sira"
+    },
+    "aide": {
+      "direct": "Baro dogolen ni aw baarakɛɲɔgɔn kelen dɔrɔn ye.",
+      "groupe": "Baara jɛkulu dogolen: mɔgɔ bɛɛ bɛ se ka sɛbɛn.",
+      "canal": "Aw ka minisiriso kunnafoni sira: ɲɛmɔgɔw dɔrɔn de bɛ sɛbɛn, tɔw b'a kalan."
+    },
+    "nom": "Tɔgɔ",
+    "sujet": "Baro kun (a man kan ni wajibi ye)",
+    "avertissement_nom": "Tɔgɔ ni baro kun tɛ dogo: aw kana kunnafoni gundo si sɛbɛn yen.",
+    "membres": "Mɔgɔw ({{n}})",
+    "retirer": "{{nom}} bɔ",
+    "aucun_membre": "Mɔgɔ si ma sugandi.",
+    "ajouter": "Mɔgɔw fara a kan",
+    "creer": {
+      "groupe": "Jɛkulu da",
+      "canal": "Kunnafoni sira da"
+    },
+    "erreur_creation": "Baro ma se ka da. A kɛ tugun.",
+    "canal_non_declare": "Kunnafoni sira dara, nka a ma jira Laafi baarakɛyɔrɔ la. A tɛna ye fanga lisi kɔnɔ."
+  },
+  "details": {
+    "titre": "Kunnafoniw",
+    "chiffre": "Dogolen k'a ta daminɛ na ka se a laban ma",
+    "avertissement_metadonnees": "Serveur bɛ se ka tɔgɔ, baro kun ani mɔgɔw tɔgɔw ye. Nka a tɛ se ka cikanw kɔnɔ ye.",
+    "membres": "Mɔgɔw ({{n}})",
+    "inviter": "Wele",
+    "invite": "Welelen",
+    "role": {
+      "admin": "Ɲɛmɔgɔ (administrateur)",
+      "moderateur": "Kɔlɔsibaga (modérateur)"
+    },
+    "verifie": "A yɛrɛ sɛgɛsɛgɛra",
+    "non_verifie": "A yɛrɛ ma sɛgɛsɛgɛ",
+    "quitter": "Bɔ baro kɔnɔ",
+    "quitter_titre": "Bɔ baro nin kɔnɔ wa?",
+    "quitter_texte": "Aw tɛna cikanw sɔrɔ tugun. Walasa ka segin, mɔgɔ dɔ ka kan k'aw wele kokura.",
+    "invitation_ok": "{{nom}} welela.",
+    "erreur_invitation": "Weleli ma se ka ci.",
+    "erreur_depart": "Aw ma se ka bɔ baro kɔnɔ."
+  },
+  "profil": {
+    "titre": "N ka kunnafoniw ani lakana",
+    "matricule": "Matricule",
+    "api_indisponible": "Fanga kunnafoniw, tɔgɔ gafe ani sɔrɔli seereyaw tɛ sɔrɔ: don Laafi baarakɛyɔrɔ la.",
+    "preferences": "N diyanyeta",
+    "langue": "Kan",
+    "langue_aide": "Bayɛlɛmani bɛ ka kɛ: sɛbɛn dɔw bɛ to faransikan na.",
+    "theme": "Ɲɛda",
+    "themes": {
+      "systeme": "I n'a fɔ minɛn",
+      "clair": "Yeelen",
+      "sombre": "Dibi"
+    }
+  },
+  "securite": {
+    "titre": "Minɛn nin lakana",
+    "verifie_titre": "Minɛn sɛgɛsɛgɛlen",
+    "verifie_texte": "Aw yɛrɛ seereya (identité cryptographique) ye minɛn nin dɔn. Aw baarakɛɲɔgɔnw bɛ se ka la a la.",
+    "non_verifie_titre": "Minɛn ma sɛgɛsɛgɛ",
+    "non_verifie_texte_cle": "Aw ka segin kile sɛbɛn walasa ka minɛn nin sɛgɛsɛgɛ ani ka cikan dogolen kɔrɔw sɔrɔ tugun.",
+    "non_verifie_texte_premier": "Aw ka segin kile da: a bɛ aw yɛrɛ ni aw ka cikanw lakana n'aw ye minɛn yɛlɛma.",
+    "empreinte": "Minɛn nin ka empreinte",
+    "configurer": "N ka segin kile da",
+    "saisir_cle": "N ka segin kile sɛbɛn",
+    "saisir_texte": "Segin kile min sɛbɛnna aw ka donni fɔlɔ waati, o sɛbɛn.",
+    "cle": "Segin kile",
+    "cle_titre": "Aw ka segin kile",
+    "cle_texte": "Kile nin sɛbɛn k'a mara yɔrɔ lakananen na, minɛn nin kɔfɛ. A tɛna jira tugun abada. N'a tɛ aw bolo, aw tɛna se ka aw ka cikanw kalan minɛn kura kan.",
+    "cle_notee": "N ye n ka kile sɛbɛn k'a mara yɔrɔ lakananen na",
+    "copier": "A ladege",
+    "telecharger": "A jigin",
+    "cle_copiee": "Kile ladegera. Aw hakili to presse-papiers jɔsili la.",
+    "copie_impossible": "Ladegeli ma se ka kɛ: kile sɛbɛn ni bolo ye.",
+    "cle_incorrecte": "Kile ma ɲɛ. Aw ka sɛbɛnni lajɛ, yɔrɔ lankolonw fana.",
+    "verifier": "Minɛn nin sɛgɛsɛgɛ",
+    "appareil_verifie": "Minɛn sɛgɛsɛgɛra.",
+    "erreur_configuration": "Segin kile ma se ka da. A kɛ tugun."
+  },
+  "appareils": {
+    "titre": "N ka minɛnw",
+    "aide": "Minɛn minnu donnen bɛ aw ka jatebila la. N'a tununa walima n'a sonyara, aw ka kɔrɔtɔ butɔn digi min bɛ duguma, walima aw ka ɲɛmɔgɔ wele.",
+    "activite": "baara laban: {{date}}",
+    "courant": "Minɛn nin",
+    "verifie": "Sɛgɛsɛgɛlen",
+    "non_verifie": "Ma sɛgɛsɛgɛ",
+    "erreur": "Minɛnw lisi ma se ka na."
+  },
+  "urgence": {
+    "titre": "Kɔrɔtɔ",
+    "texte": "Aw ka telefɔni tununa, a sonyara walima farati bɛ a la? Aw ka minɛnw bɛɛ bɔ sisan ani ka nin minɛn kunnafoniw bɛɛ jɔsi.",
+    "bouton": "N ka minɛnw bɛɛ bɔ",
+    "confirmer_titre": "Kɔrɔtɔ bɔli",
+    "consequence_1": "Aw ka minɛnw bɛɛ bɛ bɔ sisan-sisan.",
+    "consequence_2": "Minɛn nin kunnafoniw bɛɛ bɛ jɔsi: cikanw, dogoli kilew, labɛnniw.",
+    "consequence_3": "Walasa ka segin, aw ka kan ka don kokura ka aw ka segin kile sɛbɛn.",
+    "mot": "URGENCE",
+    "taper": "Walasa k'a sɛmɛntiya, {{mot}} sɛbɛn",
+    "confirmer": "Bɛɛ bɔ ani ka bɛɛ jɔsi"
+  },
+  "revoque": {
+    "titre": "Sira tara",
+    "motif": {
+      "jeton-invalide": "Ɲɛmɔgɔw walima minɛn wɛrɛ ye minɛn nin bɔ aw ka jatebila la.",
+      "compte-desactive": "Ɲɛmɔgɔw ye aw ka jatebila jɔ.",
+      "deconnexion-distante": "Aw ka donni datugura ka bɔ yɔrɔ jan.",
+      "urgence": "Kɔrɔtɔ bɔli kɛra."
+    },
+    "efface_cles": "Dogoli kilew jɔsira minɛn nin kan",
+    "efface_messages": "Cikanw ni sɛbɛn farilenw jɔsira",
+    "efface_session": "Donni ni labɛnniw jɔsira",
+    "rapport": "Jɔsili kunnafoniw",
+    "rapport_detail": "Kunnafoni mara yɔrɔ {{bases}} ani cache {{caches}} jɔsira.",
+    "rapport_erreurs": "Fɛn {{n}} ma se ka jɔsi sisan; u bɛna jɔsi onglet datuguli waati.",
+    "aide": "N'aw b'a miiri ko fili don, aw ka minisiriso ɲɛmɔgɔ wele.",
+    "reconnecter": "Don kokura"
+  },
+  "erreurs": {
+    "reseau": "Baarakɛyɔrɔ tɛ sɔrɔ. Aw ka internet lajɛ.",
+    "session_api": "Aw ka donni waati tɛmɛna Laafi baarakɛyɔrɔ la. Don kokura.",
+    "interdit": "Aw tɛ ni sira ye ka baara nin kɛ.",
+    "introuvable": "Fɛn ma sɔrɔ.",
+    "conflit": "Baara nin kɛra ka ban.",
+    "serveur": "Baarakɛyɔrɔ ye gɛlɛya dɔ sɔrɔ. A kɛ tugun kɔfɛ.",
+    "inconnue": "Gɛlɛya dɔ min ma miiri, o sɔrɔla."
+  }
+}
