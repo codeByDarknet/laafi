@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laafi — design system</title>
+  <link rel="icon" href="brand/favicon.svg" type="image/svg+xml">
+  <!-- CSS compilé depuis styles/laafi.scss (voir README, « Régénérer l'aperçu ») -->
+  <link rel="stylesheet" href="preview/laafi.css">
+  <style>
+    /* Mise en page propre à cette page de démonstration (préfixe pv-) */
+    .pv-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--lf-space-8); padding-block: var(--lf-space-8) var(--lf-space-16); }
+    @media (min-width: 1024px) { .pv-layout { grid-template-columns: 13rem minmax(0, 1fr); } }
+    .pv-nav { display: none; }
+    @media (min-width: 1024px) {
+      .pv-nav { display: block; position: sticky; top: 5.5rem; align-self: start; }
+      .pv-nav ul { list-style: none; padding: 0; display: grid; gap: 2px; }
+      .pv-nav a { display: block; padding: .35rem .75rem; border-radius: var(--lf-radius-sm); color: var(--lf-ink-2); text-decoration: none; font-size: var(--lf-text-sm); }
+      .pv-nav a:hover { background: var(--lf-surface-2); color: var(--lf-ink); }
+    }
+    .pv-section { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--lf-space-4); scroll-margin-top: 5rem; }
+    .pv-section + .pv-section { margin-top: var(--lf-space-12); }
+    .pv-section > h2 { display: flex; align-items: baseline; gap: var(--lf-space-3); }
+    .pv-section > p { color: var(--lf-ink-2); }
+    .pv-grid { display: grid; gap: var(--lf-space-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr)); }
+    .pv-panel { padding: var(--lf-space-5); border: 1px solid var(--lf-border); border-radius: var(--lf-radius-md); background: var(--lf-surface); }
+    .pv-swatch { display: grid; gap: var(--lf-space-1); font-size: var(--lf-text-sm); }
+    .pv-swatch i { display: block; height: 3.5rem; border-radius: var(--lf-radius-sm); border: 1px solid var(--lf-border); }
+    .pv-swatch code { color: var(--lf-ink-2); }
+
+    /* Hero : la messagerie elle-même, en situation */
+    .pv-hero { display: grid; gap: var(--lf-space-6); align-items: center; }
+    .pv-hero > .lf-stack { max-width: 40rem; }
+    .pv-hero h1 { font-size: var(--lf-text-3xl); max-width: 14ch; }
+    @media (min-width: 768px) { .pv-hero h1 { font-size: var(--lf-text-4xl); } }
+    .pv-app { display: grid; grid-template-columns: minmax(0, 1fr); overflow: hidden; border: 1px solid var(--lf-border); border-radius: var(--lf-radius-lg); background: var(--lf-surface); box-shadow: var(--lf-shadow-3); }
+    @media (min-width: 768px) { .pv-app { grid-template-columns: 15rem minmax(0, 1fr); } }
+    .pv-app__side { border-inline-end: 1px solid var(--lf-border); display: none; }
+    @media (min-width: 768px) { .pv-app__side { display: block; } }
+    .pv-app__main { display: flex; flex-direction: column; min-height: 26rem; background: var(--lf-bg); }
+    .pv-room { display: flex; align-items: center; gap: var(--lf-space-3); padding: var(--lf-space-3) var(--lf-space-4); background: var(--lf-surface); border-bottom: 1px solid var(--lf-border); }
+    .pv-composer { display: flex; gap: var(--lf-space-2); align-items: center; margin-top: auto; padding: var(--lf-space-3); background: var(--lf-surface); border-top: 1px solid var(--lf-border); }
+    .pv-type-row { display: grid; grid-template-columns: 5rem 1fr; gap: var(--lf-space-4); align-items: baseline; padding-block: var(--lf-space-2); border-bottom: 1px solid var(--lf-border); }
+    .pv-type-row code { color: var(--lf-ink-2); font-size: var(--lf-text-xs); }
+    .pv-static-modal { position: relative; display: grid; place-items: center; padding: var(--lf-space-8) var(--lf-space-4); border-radius: var(--lf-radius-md); background: var(--lf-overlay); }
+    .pv-static-modal .lf-modal { position: static; display: flex; flex-direction: column; margin: 0; width: min(100%, 30rem); border-radius: var(--lf-radius-lg); }
+    .pv-toasts { position: static; inset: auto; align-items: flex-start; }
+  </style>
+</head>
+<body>
+  <a class="lf-skip-link" href="#contenu">Aller au contenu</a>
+
+  <header class="lf-appbar">
+    <span class="lf-fani" aria-hidden="true"></span>
+    <div class="lf-appbar__inner">
+      <a class="lf-appbar__brand" href="#">
+        <img src="brand/laafi-mark.svg" alt="" width="28" height="28">
+        Laafi
+      </a>
+      <span class="lf-appbar__context">Design system partagé</span>
+      <span class="lf-appbar__spacer"></span>
+      <button class="lf-btn lf-btn--ghost lf-btn--sm" id="theme" type="button" aria-pressed="false">Thème sombre</button>
+    </div>
+  </header>
+
+  <main id="contenu" class="lf-container pv-layout">
+    <nav class="pv-nav" aria-label="Sections">
+      <ul>
+        <li><a href="#messagerie">Messagerie</a></li>
+        <li><a href="#classification">Classification</a></li>
+        <li><a href="#boutons">Boutons</a></li>
+        <li><a href="#champs">Champs</a></li>
+        <li><a href="#cartes">Cartes et indicateurs</a></li>
+        <li><a href="#listes">Listes et avatars</a></li>
+        <li><a href="#tableaux">Tableau d'administration</a></li>
+        <li><a href="#retours">Alertes et toasts</a></li>
+        <li><a href="#modales">Modales</a></li>
+        <li><a href="#navigation">Onglets et filtres</a></li>
+        <li><a href="#chargement">Chargement et état vide</a></li>
+        <li><a href="#marque">Marque</a></li>
+        <li><a href="#palette">Palette</a></li>
+        <li><a href="#typographie">Typographie</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <!-- ============================================================ -->
+      <section class="pv-section pv-hero" id="messagerie" aria-labelledby="h-msg">
+        <div class="lf-stack">
+          <h1 id="h-msg">Laafi, la messagerie de l'administration</h1>
+          <p class="lf-muted">Composants communs au client des agents et à la console d'administration. Chaque message porte sa classification ; le chiffrement de bout en bout reste visible sans être bavard.</p>
+          <div class="lf-cluster">
+            <a class="lf-btn lf-btn--primary" href="#boutons">Voir les composants</a>
+            <a class="lf-btn lf-btn--secondary" href="#palette">Palette et contrastes</a>
+          </div>
+        </div>
+
+        <div class="pv-app" inert aria-label="Maquette de l'écran de conversation">
+          <div class="pv-app__side">
+            <ul class="lf-list lf-list--divided">
+              <li><a class="lf-list__item" href="#" aria-current="true">
+                <span class="lf-avatar lf-avatar--sm lf-avatar--group" data-tint="0">DS</span>
+                <span class="lf-list__body"><span class="lf-list__title">District sanitaire de Ziniaré</span><span class="lf-list__meta">Awa : Merci de confirmer…</span></span>
+              </a></li>
+              <li><a class="lf-list__item lf-list__item--unread" href="#">
+                <span class="lf-avatar lf-avatar--sm" data-tint="3">PZ</span>
+                <span class="lf-list__body"><span class="lf-list__title">Paul Zongo</span><span class="lf-list__meta">Rapport de contrôle T3</span></span>
+                <span class="lf-list__trailing"><time>09:12</time><span class="lf-badge lf-badge--count">2</span></span>
+              </a></li>
+              <li><a class="lf-list__item" href="#">
+                <span class="lf-avatar lf-avatar--sm" data-tint="1">MT</span>
+                <span class="lf-list__body"><span class="lf-list__title">Mariam Traoré</span><span class="lf-list__meta">Bien reçu, laafi bala.</span></span>
+              </a></li>
+            </ul>
+          </div>
+          <div class="pv-app__main">
+            <div class="pv-room">
+              <span class="lf-avatar lf-avatar--group" data-tint="0">DS</span>
+              <div class="lf-list__body">
+                <strong class="lf-truncate">District sanitaire de Ziniaré</strong>
+                <span class="lf-muted lf-truncate" style="font-size: var(--lf-text-xs)">14 membres · chiffré de bout en bout</span>
+              </div>
+              <span class="lf-cls lf-cls--dr">Diffusion restreinte</span>
+            </div>
+            <div class="lf-thread">
+              <span class="lf-day">Aujourd'hui</span>
+              <div class="lf-bubble">
+                <span class="lf-bubble__author">Issa Kaboré</span>
+                Les doses de la campagne de vaccination sont arrivées au dépôt.
+                <span class="lf-bubble__meta"><time>08:41</time></span>
+              </div>
+              <div class="lf-bubble lf-bubble--instruction" data-cls="DIFFUSION_RESTREINTE">
+                <span class="lf-bubble__head"><span class="lf-bubble__author" style="margin:0">Awa Sawadogo</span><span class="lf-badge lf-badge--success">Instruction de service</span></span>
+                Merci de confirmer la répartition par centre de santé avant 12 h.
+                <span class="lf-bubble__meta"><time>08:57</time> · accusé demandé</span>
+              </div>
+              <div class="lf-bubble lf-bubble--out">
+                Répartition confirmée, tableau joint dans le canal.
+                <span class="lf-bubble__meta"><time>09:03</time> · lu</span>
+              </div>
+            </div>
+            <div class="pv-composer">
+              <label class="lf-sr-only" for="msg">Message</label>
+              <input class="lf-input" id="msg" placeholder="Écrire un message chiffré">
+              <button class="lf-btn lf-btn--primary" type="button">Envoyer</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="classification" aria-labelledby="h-cls">
+        <h2 id="h-cls">Classification des messages</h2>
+        <p>Le libellé porte toujours le sens. Le marqueur se remplit avec le niveau (anneau vide, à moitié, plein) pour rester lisible sans la couleur.</p>
+        <div class="pv-panel lf-stack">
+          <div class="lf-cluster">
+            <span class="lf-cls" data-cls="NORMAL">Normal</span>
+            <span class="lf-cls" data-cls="DIFFUSION_RESTREINTE">Diffusion restreinte</span>
+            <span class="lf-cls" data-cls="CONFIDENTIEL">Confidentiel</span>
+          </div>
+          <div class="lf-cluster">
+            <span class="lf-cls lf-cls--lg">Normal</span>
+            <span class="lf-cls lf-cls--lg lf-cls--dr">Diffusion restreinte</span>
+            <span class="lf-cls lf-cls--lg lf-cls--conf">Confidentiel</span>
+          </div>
+          <div class="lf-watermark" data-watermark="Issa Kaboré · MAT-10482 · 02/11/2026" style="padding: var(--lf-space-4); border-radius: var(--lf-radius-md); background: var(--lf-surface-2); overflow: hidden">
+            <div class="lf-bubble lf-no-copy" data-cls="CONFIDENTIEL">
+              <span class="lf-bubble__head"><span class="lf-bubble__author" style="margin:0">Awa Sawadogo</span><span class="lf-cls lf-cls--conf">Confidentiel</span></span>
+              Liste nominative des agents concernés par la mutation. Transfert et copie désactivés.
+              <span class="lf-bubble__meta"><time>10:20</time> · expire dans 7 jours</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="boutons" aria-labelledby="h-btn">
+        <h2 id="h-btn">Boutons</h2>
+        <div class="pv-panel lf-stack">
+          <div class="lf-cluster">
+            <button class="lf-btn lf-btn--primary" type="button">Enrôler l'agent</button>
+            <button class="lf-btn lf-btn--secondary" type="button">Exporter la preuve</button>
+            <button class="lf-btn" type="button">Annuler</button>
+            <button class="lf-btn lf-btn--ghost" type="button">Plus tard</button>
+            <button class="lf-btn lf-btn--danger" type="button">Révoquer l'accès</button>
+            <button class="lf-btn lf-btn--danger-outline" type="button">Révoquer les appareils</button>
+          </div>
+          <div class="lf-cluster">
+            <button class="lf-btn lf-btn--primary lf-btn--sm" type="button">Petit</button>
+            <button class="lf-btn lf-btn--primary lf-btn--lg" type="button">Se connecter avec mon compte agent</button>
+            <button class="lf-btn lf-btn--primary" type="button" aria-busy="true">Envoi en cours</button>
+            <button class="lf-btn" type="button" disabled>Indisponible</button>
+            <button class="lf-btn lf-btn--ghost lf-btn--icon" type="button" aria-label="Fermer"><span aria-hidden="true">×</span></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="champs" aria-labelledby="h-fld">
+        <h2 id="h-fld">Champs de formulaire</h2>
+        <div class="pv-panel pv-grid">
+          <div class="lf-field">
+            <label class="lf-label lf-label--required" for="f-nom">Nom de famille</label>
+            <input class="lf-input" id="f-nom" value="Ouédraogo" required>
+          </div>
+          <div class="lf-field">
+            <label class="lf-label" for="f-min">Ministère</label>
+            <select class="lf-input" id="f-min">
+              <option>MSHP — Santé et Hygiène publique</option>
+              <option>MEF — Économie et Finances</option>
+            </select>
+          </div>
+          <div class="lf-field">
+            <label class="lf-label" for="f-mat">Matricule</label>
+            <input class="lf-input" id="f-mat" value="MAT-1O482" aria-invalid="true" aria-describedby="f-mat-err">
+            <p class="lf-error" id="f-mat-err">Le matricule ne contient que des chiffres après « MAT- ».</p>
+          </div>
+          <div class="lf-field">
+            <label class="lf-label" for="f-otp">Code de vérification</label>
+            <input class="lf-input lf-input--code" id="f-otp" inputmode="numeric" autocomplete="one-time-code" placeholder="000000" maxlength="6">
+            <p class="lf-hint">Six chiffres affichés par votre application d'authentification.</p>
+          </div>
+          <div class="lf-field">
+            <label class="lf-label" for="f-q">Rechercher dans l'annuaire</label>
+            <div class="lf-search"><input class="lf-input" id="f-q" type="search" placeholder="Nom, fonction, direction"></div>
+          </div>
+          <div class="lf-field">
+            <label class="lf-label" for="f-motif">Motif de révocation</label>
+            <textarea class="lf-input" id="f-motif">Fin de détachement au 31/10/2026.</textarea>
+          </div>
+          <div class="lf-stack" style="--lf-stack-gap: var(--lf-space-2)">
+            <label class="lf-check"><input type="checkbox" checked> Instruction de service (accusé probant)</label>
+            <label class="lf-check"><input type="radio" name="r" checked> Expiration après 7 jours</label>
+            <label class="lf-check"><input type="radio" name="r"> Pas d'expiration</label>
+            <label class="lf-check"><input class="lf-switch" type="checkbox" role="switch" checked> Accusés de lecture privés</label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="cartes" aria-labelledby="h-card">
+        <h2 id="h-card">Cartes et indicateurs</h2>
+        <div class="pv-grid">
+          <div class="lf-card lf-card--stat"><span class="lf-card__value">1 284</span><span class="lf-card__label">Agents enrôlés</span></div>
+          <div class="lf-card lf-card--stat"><span class="lf-card__value">37</span><span class="lf-card__label">Canaux institutionnels</span></div>
+          <div class="lf-card lf-card--stat"><span class="lf-card__value">3</span><span class="lf-card__label">Révocations ce mois-ci</span></div>
+        </div>
+        <article class="lf-card">
+          <header class="lf-card__header"><h3 class="lf-card__title">Journal probant</h3><span class="lf-badge lf-badge--success lf-badge--dot">Chaîne intègre</span></header>
+          <div class="lf-card__body lf-stack" style="--lf-stack-gap: var(--lf-space-2)">
+            <p>Dernière vérification le 02/11/2026 à 07:30 : 4 112 accusés, aucune rupture de chaînage.</p>
+            <p class="lf-muted">Empreinte de tête : <code>9f2c4e1a7b0d3e58c6a1f04b2d97e3c5a8b1f6d20e4c7a93b5d18f2e6c0a4b71</code></p>
+          </div>
+          <footer class="lf-card__footer">
+            <button class="lf-btn lf-btn--sm" type="button">Consulter</button>
+            <button class="lf-btn lf-btn--primary lf-btn--sm" type="button">Vérifier maintenant</button>
+          </footer>
+        </article>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="listes" aria-labelledby="h-list">
+        <h2 id="h-list">Listes et avatars</h2>
+        <div class="pv-panel lf-cluster" style="--lf-cluster-gap: var(--lf-space-3)">
+          <span class="lf-avatar lf-avatar--xs" data-tint="0">AS</span>
+          <span class="lf-avatar lf-avatar--sm" data-tint="1">IK</span>
+          <span class="lf-avatar" data-tint="2">MT</span>
+          <span class="lf-avatar lf-avatar--lg" data-tint="3">PZ<span class="lf-avatar__verified" title="Appareil vérifié"></span></span>
+          <span class="lf-avatar lf-avatar--lg" data-tint="4">RC</span>
+          <span class="lf-avatar lf-avatar--lg" data-tint="5">AD</span>
+          <span class="lf-avatar lf-avatar--lg lf-avatar--group" data-tint="0">MS</span>
+          <span class="lf-avatar lf-avatar--lg lf-avatar--revoked" title="Accès révoqué">BN</span>
+        </div>
+        <div class="lf-card">
+          <ul class="lf-list lf-list--divided" aria-label="Annuaire du ministère de la Santé">
+            <li><button class="lf-list__item" type="button">
+              <span class="lf-avatar" data-tint="0">AS</span>
+              <span class="lf-list__body"><span class="lf-list__title">Awa Sawadogo</span><span class="lf-list__meta">Directrice des ressources humaines · MSHP</span></span>
+              <span class="lf-list__trailing"><span class="lf-badge lf-badge--success lf-badge--dot">Actif</span></span>
+            </button></li>
+            <li><button class="lf-list__item" type="button" aria-selected="true">
+              <span class="lf-avatar" data-tint="1">IK</span>
+              <span class="lf-list__body"><span class="lf-list__title">Issa Kaboré</span><span class="lf-list__meta">Médecin-chef de district · MSHP</span></span>
+              <span class="lf-list__trailing"><span class="lf-badge lf-badge--warning lf-badge--dot">Appareils révoqués</span></span>
+            </button></li>
+            <li><button class="lf-list__item" type="button">
+              <span class="lf-avatar lf-avatar--revoked">BN</span>
+              <span class="lf-list__body"><span class="lf-list__title">Boukary Nikiéma</span><span class="lf-list__meta">Agent de saisie · MSHP</span></span>
+              <span class="lf-list__trailing"><span class="lf-badge lf-badge--danger lf-badge--dot">Révoqué</span></span>
+            </button></li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="tableaux" aria-labelledby="h-tbl">
+        <h2 id="h-tbl">Tableau d'administration</h2>
+        <p>Sous 768 px, la variante <code>lf-table--stack</code> transforme chaque ligne en fiche.</p>
+        <div class="lf-table-wrap">
+          <table class="lf-table lf-table--stack">
+            <caption>Agents du ministère de la Santé et de l'Hygiène publique</caption>
+            <thead><tr><th scope="col">Agent</th><th scope="col">Fonction</th><th scope="col">Statut</th><th scope="col" class="lf-table__num">Appareils</th><th scope="col" class="lf-table__actions"><span class="lf-sr-only">Actions</span></th></tr></thead>
+            <tbody>
+              <tr>
+                <td data-label="Agent"><div class="lf-cluster"><span class="lf-avatar lf-avatar--sm" data-tint="4">RC</span><span>Rasmata Compaoré<br><code class="lf-muted">@admin.sante:laafi.local</code></span></div></td>
+                <td data-label="Fonction">Administratrice ministère</td>
+                <td data-label="Statut"><span class="lf-badge lf-badge--success lf-badge--dot">Actif</span></td>
+                <td data-label="Appareils" class="lf-table__num">2</td>
+                <td data-label="Actions" class="lf-table__actions"><button class="lf-btn lf-btn--sm" type="button">Ouvrir la fiche</button></td>
+              </tr>
+              <tr>
+                <td data-label="Agent"><div class="lf-cluster"><span class="lf-avatar lf-avatar--sm" data-tint="1">IK</span><span>Issa Kaboré<br><code class="lf-muted">@issa.kabore:laafi.local</code></span></div></td>
+                <td data-label="Fonction">Médecin-chef de district</td>
+                <td data-label="Statut"><span class="lf-badge lf-badge--warning lf-badge--dot">Appareils révoqués</span></td>
+                <td data-label="Appareils" class="lf-table__num">0</td>
+                <td data-label="Actions" class="lf-table__actions"><button class="lf-btn lf-btn--sm" type="button">Ouvrir la fiche</button></td>
+              </tr>
+              <tr>
+                <td data-label="Agent"><div class="lf-cluster"><span class="lf-avatar lf-avatar--sm lf-avatar--revoked">BN</span><span>Boukary Nikiéma<br><code class="lf-muted">@boukary.nikiema:laafi.local</code></span></div></td>
+                <td data-label="Fonction">Agent de saisie</td>
+                <td data-label="Statut"><span class="lf-badge lf-badge--danger lf-badge--dot">Révoqué</span></td>
+                <td data-label="Appareils" class="lf-table__num">0</td>
+                <td data-label="Actions" class="lf-table__actions"><button class="lf-btn lf-btn--sm lf-btn--secondary" type="button">Réactiver</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="retours" aria-labelledby="h-fb">
+        <h2 id="h-fb">Alertes et toasts</h2>
+        <div class="lf-stack">
+          <div class="lf-alert lf-alert--danger" role="alert"><div><p class="lf-alert__title">Accès révoqué</p><p>Votre accès à Laafi a été retiré par l'administrateur. Les données locales de cet appareil ont été effacées.</p></div></div>
+          <div class="lf-alert lf-alert--warning"><div><p class="lf-alert__title">Clés de chiffrement non sauvegardées</p><p>Configurez la récupération sécurisée pour relire vos messages sur un nouvel appareil.</p></div></div>
+          <div class="lf-alert lf-alert--success"><div><p class="lf-alert__title">Appareil vérifié</p><p>Les messages de ce salon sont chiffrés de bout en bout.</p></div></div>
+          <div class="lf-alert"><div><p>Mode faible connexion : les pièces jointes ne se téléchargent qu'à la demande.</p></div></div>
+        </div>
+        <div class="lf-toast-region pv-toasts" role="status" aria-live="polite">
+          <div class="lf-toast"><div class="lf-toast__body"><p class="lf-toast__title">Agent enrôlé</p><p>Mariam Traoré recevra son mot de passe temporaire.</p></div><button class="lf-close" type="button" aria-label="Fermer la notification">×</button></div>
+          <div class="lf-toast lf-toast--warning"><div class="lf-toast__body"><p class="lf-toast__title">Message expiré</p><p>Le contenu a été retiré de la conversation.</p></div><button class="lf-close" type="button" aria-label="Fermer la notification">×</button></div>
+          <div class="lf-toast lf-toast--danger" role="alert"><div class="lf-toast__body"><p class="lf-toast__title">Révocation impossible</p><p>Le serveur de messagerie ne répond pas. Réessayez dans un instant.</p></div><button class="lf-close" type="button" aria-label="Fermer la notification">×</button></div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="modales" aria-labelledby="h-mod">
+        <h2 id="h-mod">Modales</h2>
+        <p>Conçues pour l'élément natif <code>&lt;dialog&gt;</code> ouvert par <code>showModal()</code> : focus piégé et touche Échap gérés par le navigateur. Sur mobile, la modale devient une feuille ancrée en bas.</p>
+        <div class="pv-static-modal">
+          <div class="lf-modal lf-modal--danger" role="dialog" aria-labelledby="mod-t">
+            <div class="lf-modal__header"><h3 class="lf-modal__title" id="mod-t">Révoquer l'accès de Issa Kaboré ?</h3><button class="lf-close" type="button" aria-label="Fermer">×</button></div>
+            <div class="lf-modal__body lf-stack" style="--lf-stack-gap: var(--lf-space-3)">
+              <p>Ses sessions et appareils seront supprimés immédiatement. Il quittera tous les salons et ne pourra plus lire les nouveaux messages.</p>
+              <div class="lf-field"><label class="lf-label lf-label--required" for="m-motif">Motif</label><input class="lf-input" id="m-motif" placeholder="Ex. départ à la retraite"></div>
+            </div>
+            <div class="lf-modal__footer">
+              <button class="lf-btn" type="button">Annuler</button>
+              <button class="lf-btn lf-btn--danger" type="button">Révoquer l'accès</button>
+            </div>
+          </div>
+        </div>
+        <div><button class="lf-btn" type="button" id="open-dialog">Ouvrir une vraie modale</button></div>
+        <dialog class="lf-modal" id="dlg" aria-labelledby="dlg-t">
+          <div class="lf-modal__header"><h3 class="lf-modal__title" id="dlg-t">Créer un canal institutionnel</h3><button class="lf-close" type="button" aria-label="Fermer" data-close>×</button></div>
+          <div class="lf-modal__body lf-stack">
+            <div class="lf-field"><label class="lf-label" for="d-nom">Nom du canal</label><input class="lf-input" id="d-nom" value="Cellule de crise sanitaire"></div>
+            <div class="lf-field"><span class="lf-label" id="d-cls">Classification par défaut</span>
+              <div class="lf-cluster" role="group" aria-labelledby="d-cls"><button class="lf-chip" type="button" aria-pressed="false">Normal</button><button class="lf-chip" type="button" aria-pressed="true">Diffusion restreinte</button><button class="lf-chip" type="button" aria-pressed="false">Confidentiel</button></div>
+            </div>
+          </div>
+          <div class="lf-modal__footer"><button class="lf-btn" type="button" data-close>Annuler</button><button class="lf-btn lf-btn--primary" type="button" data-close>Créer le canal</button></div>
+        </dialog>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="navigation" aria-labelledby="h-nav">
+        <h2 id="h-nav">Onglets et filtres</h2>
+        <div class="pv-panel lf-stack">
+          <div class="lf-tabs" role="tablist" aria-label="Fiche agent">
+            <button class="lf-tab" role="tab" aria-selected="true" type="button">Profil</button>
+            <button class="lf-tab" role="tab" aria-selected="false" type="button">Appareils <span class="lf-badge">2</span></button>
+            <button class="lf-tab" role="tab" aria-selected="false" type="button">Historique</button>
+          </div>
+          <div class="lf-cluster" role="group" aria-label="Filtrer par ministère">
+            <button class="lf-chip" type="button" aria-pressed="true">MSHP</button>
+            <button class="lf-chip" type="button" aria-pressed="false">MEF</button>
+            <button class="lf-chip" type="button" aria-pressed="false">MTDPCE</button>
+            <span class="lf-chip">Statut : actif <button class="lf-chip__remove" type="button" aria-label="Retirer le filtre statut">×</button></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="chargement" aria-labelledby="h-load">
+        <h2 id="h-load">Chargement et état vide</h2>
+        <div class="pv-grid">
+          <div class="pv-panel lf-stack" aria-busy="true" aria-label="Chargement des conversations">
+            <div class="lf-cluster" style="flex-wrap: nowrap"><span class="lf-skeleton lf-skeleton--circle"></span><span style="flex:1"><span class="lf-skeleton lf-skeleton--text" style="--lf-skeleton-width: 60%"></span><span class="lf-skeleton lf-skeleton--text" style="--lf-skeleton-width: 85%"></span></span></div>
+            <div class="lf-cluster" style="flex-wrap: nowrap"><span class="lf-skeleton lf-skeleton--circle"></span><span style="flex:1"><span class="lf-skeleton lf-skeleton--text" style="--lf-skeleton-width: 45%"></span><span class="lf-skeleton lf-skeleton--text" style="--lf-skeleton-width: 70%"></span></span></div>
+            <span class="lf-skeleton lf-skeleton--block"></span>
+          </div>
+          <div class="pv-panel">
+            <div class="lf-empty">
+              <img class="lf-empty__art" src="brand/laafi-mark.svg" alt="">
+              <h3 class="lf-empty__title">Aucune conversation</h3>
+              <p class="lf-empty__text">Cherchez un collègue dans l'annuaire officiel pour lui écrire.</p>
+              <button class="lf-btn lf-btn--primary" type="button">Ouvrir l'annuaire</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="marque" aria-labelledby="h-brand">
+        <h2 id="h-brand">Marque</h2>
+        <p>Une bulle de dialogue verte, le « L » de Laafi et l'étoile d'or du drapeau. Lisible jusqu'à 16 px.</p>
+        <div class="pv-grid">
+          <div class="pv-panel lf-stack" style="background:#f8f3ed"><img src="brand/laafi-logo.svg" alt="Logo Laafi, version claire" width="206" height="64"><div class="lf-cluster"><img src="brand/laafi-mark.svg" alt="" width="16" height="16"><img src="brand/laafi-mark.svg" alt="" width="24" height="24"><img src="brand/laafi-mark.svg" alt="" width="48" height="48"></div></div>
+          <div class="pv-panel lf-stack" style="background:#12181c"><img src="brand/laafi-logo-dark.svg" alt="Logo Laafi, version sombre" width="206" height="64"><div class="lf-cluster"><img src="brand/laafi-mark-dark.svg" alt="" width="16" height="16"><img src="brand/laafi-mark-dark.svg" alt="" width="24" height="24"><img src="brand/laafi-mark-dark.svg" alt="" width="48" height="48"></div></div>
+          <div class="pv-panel lf-stack"><span class="lf-fani" aria-hidden="true" style="--lf-fani-height: 3rem; border-radius: var(--lf-radius-sm)"></span><p class="lf-muted">Bande Faso Dan Fani (<code>.lf-fani</code>) : en liseré de 4 à 6 px uniquement.</p></div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="palette" aria-labelledby="h-pal">
+        <h2 id="h-pal">Palette</h2>
+        <p>Les couleurs du drapeau restent des accents. Les actions utilisent des variantes approfondies pour garantir un contraste AA avec le texte.</p>
+        <div class="pv-grid" style="grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr))">
+          <div class="pv-swatch"><i style="background: var(--lf-bg)"></i>Fond<code>--lf-bg</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-surface)"></i>Surface<code>--lf-surface</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-surface-2)"></i>Surface 2<code>--lf-surface-2</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-ink)"></i>Encre<code>--lf-ink</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-ink-2)"></i>Encre 2<code>--lf-ink-2</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-accent)"></i>Action<code>--lf-accent</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-danger)"></i>Danger<code>--lf-danger</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-flag-green)"></i>Vert drapeau<code>--lf-flag-green</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-flag-red)"></i>Rouge drapeau<code>--lf-flag-red</code></div>
+          <div class="pv-swatch"><i style="background: var(--lf-flag-gold)"></i>Or de l'étoile<code>--lf-flag-gold</code></div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <section class="pv-section" id="typographie" aria-labelledby="h-type">
+        <h2 id="h-type">Typographie</h2>
+        <p>Noto Sans variable, auto-hébergée. Une seule famille : les titres sont resserrés par l'axe de largeur. Elle couvre l'alphabet du mooré et du dioula.</p>
+        <div class="pv-panel">
+          <div class="pv-type-row"><code>4xl</code><span style="font-size: var(--lf-text-4xl); font-weight: 800; font-stretch: 87.5%; line-height: 1.1">Ne y yibeoogo</span></div>
+          <div class="pv-type-row"><code>2xl</code><span style="font-size: var(--lf-text-2xl); font-weight: 700; font-stretch: 87.5%">I ni sɔgɔma, i ka kɛnɛ wa ?</span></div>
+          <div class="pv-type-row"><code>lg</code><span style="font-size: var(--lf-text-lg)">Mooré : ɩ ʋ ã ẽ ĩ õ ũ · Dioula : ɛ ɔ ɲ ŋ</span></div>
+          <div class="pv-type-row"><code>md</code><span>Les messages sont chiffrés sur votre appareil avant l'envoi ; le serveur ne peut pas les lire.</span></div>
+          <div class="pv-type-row"><code>sm</code><span style="font-size: var(--lf-text-sm)">Dernière connexion le 02/11/2026 à 07:42 depuis un appareil vérifié.</span></div>
+          <div class="pv-type-row"><code>mono</code><span class="lf-mono">@issa.kabore:laafi.local</span></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // Bascule de thème de démonstration : pose data-theme sur <html>
+    const btn = document.getElementById('theme');
+    const root = document.documentElement;
+    const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    const sync = () => { btn.setAttribute('aria-pressed', String(isDark())); btn.textContent = isDark() ? 'Thème clair' : 'Thème sombre'; };
+    btn.addEventListener('click', () => { root.dataset.theme = isDark() ? 'light' : 'dark'; sync(); });
+    sync();
+    const dlg = document.getElementById('dlg');
+    document.getElementById('open-dialog').addEventListener('click', () => dlg.showModal());
+    dlg.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', () => dlg.close()));
+    document.querySelectorAll('.lf-chip[aria-pressed]').forEach((c) => c.addEventListener('click', () => c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true'))));
+  </script>
+</body>
+</html>

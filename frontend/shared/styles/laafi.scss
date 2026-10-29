@@ -1,0 +1,19 @@
+// =============================================================================
+// Laafi — point d'entrée du design system (à importer UNE fois, dans
+// src/styles.scss de chaque application) :
+//
+//     @use 'laafi';
+//
+// Dans les styles de composants, n'importer que les jetons (aucun CSS émis) :
+//
+//     @use 'tokens' as lf;
+// =============================================================================
+
+@use 'tokens';
+@use 'fonts';
+@use 'base';
+@use 'components';
+
+// Propriétés CSS --lf-* (thèmes clair et sombre). L'ordre d'émission est
+// sans effet sur les variables : elles sont résolues à l'usage.
+@include tokens.root-tokens;

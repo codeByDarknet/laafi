@@ -1,0 +1,279 @@
+// =============================================================================
+// Laafi — base : reset moderne, typographie, liens, focus, défilement
+// =============================================================================
+
+@use 'tokens' as lf;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  // Défilement doux uniquement si l'utilisateur l'accepte
+  @include lf.motion-safe {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--lf-bg);
+  color: var(--lf-ink);
+  font-family: var(--lf-font-sans);
+  font-size: var(--lf-text-md);
+  line-height: var(--lf-leading-normal);
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  font-variant-ligatures: common-ligatures;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+p,
+li,
+dd,
+blockquote {
+  overflow-wrap: break-word;
+}
+
+p {
+  max-width: var(--lf-measure);
+  text-wrap: pretty;
+}
+
+// --- Titres : même famille, largeur réduite (axe wdth), interlignage serré --
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-stretch: var(--lf-display-stretch);
+  font-weight: var(--lf-weight-bold);
+  line-height: var(--lf-leading-tight);
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+}
+
+h1 {
+  font-size: var(--lf-text-2xl);
+  font-weight: var(--lf-weight-black);
+  @include lf.bp(md) {
+    font-size: var(--lf-text-3xl);
+  }
+}
+h2 {
+  font-size: var(--lf-text-xl);
+}
+h3 {
+  font-size: var(--lf-text-lg);
+}
+h4,
+h5,
+h6 {
+  font-size: var(--lf-text-md);
+  letter-spacing: 0;
+}
+
+small {
+  font-size: var(--lf-text-sm);
+}
+
+strong,
+b {
+  font-weight: var(--lf-weight-bold);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--lf-font-mono);
+  font-size: 0.9em;
+}
+
+// Les empreintes SHA-256 et identifiants Matrix sont longs : on autorise la coupure.
+code {
+  overflow-wrap: anywhere;
+}
+
+kbd {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--lf-border-strong);
+  border-bottom-width: 2px;
+  border-radius: var(--lf-radius-xs);
+  background: var(--lf-surface);
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--lf-border);
+}
+
+// Chiffres alignés dans les tableaux et compteurs
+table,
+time,
+.lf-num {
+  font-variant-numeric: tabular-nums;
+}
+
+// --- Liens ------------------------------------------------------------------
+a {
+  color: var(--lf-accent-text);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+  transition: text-decoration-color var(--lf-duration-fast) var(--lf-ease-out);
+
+  &:hover {
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 2px;
+  }
+}
+
+// --- Focus visible : identique partout (clavier uniquement) -----------------
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 2px solid var(--lf-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--lf-focus-halo);
+  border-radius: var(--lf-radius-xs);
+}
+
+// --- Sélection ---------------------------------------------------------------
+::selection {
+  background: var(--lf-selection);
+  color: var(--lf-ink);
+}
+
+// --- Barres de défilement discrètes -----------------------------------------
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--lf-scrollbar) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--lf-scrollbar);
+  border: 3px solid transparent;
+  border-radius: var(--lf-radius-pill);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+// --- Attribut hidden toujours respecté ---------------------------------------
+[hidden] {
+  display: none !important;
+}
+
+// --- Mouvement réduit : on coupe animations et transitions -------------------
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+// --- Utilitaires transverses -------------------------------------------------
+.lf-visually-hidden,
+.lf-sr-only {
+  @include lf.visually-hidden;
+}
+
+// Lien d'évitement « Aller au contenu » (visible au focus clavier)
+.lf-skip-link {
+  position: absolute;
+  inset-inline-start: var(--lf-space-4);
+  top: var(--lf-space-2);
+  z-index: var(--lf-z-tooltip);
+  padding: var(--lf-space-2) var(--lf-space-4);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-ink);
+  color: var(--lf-ink-inverse);
+  font-weight: var(--lf-weight-semibold);
+  transform: translateY(-200%);
+
+  &:focus-visible {
+    transform: none;
+  }
+}
+
+.lf-truncate {
+  @include lf.truncate;
+}
+
+.lf-muted {
+  color: var(--lf-ink-2);
+}
+
+.lf-mono {
+  font-family: var(--lf-font-mono);
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+// Mise en page minimale (empilement / grappe), pour éviter les marges ad hoc
+.lf-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-stack-gap, var(--lf-space-4));
+}
+.lf-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lf-cluster-gap, var(--lf-space-2));
+}
+.lf-container {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: var(--lf-gutter);
+}
