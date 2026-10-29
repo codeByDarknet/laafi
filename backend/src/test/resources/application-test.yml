@@ -1,0 +1,20 @@
+# Profil de test : H2 en mémoire en mode PostgreSQL, Keycloak et Synapse simulés par WireMock.
+spring:
+  datasource:
+    url: jdbc:h2:mem:laafi;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+  threads:
+    virtual:
+      enabled: false
+
+laafi:
+  public-url: http://localhost:8888
+  synapse:
+    connexion-au-demarrage: false
+    service-password: mot-de-passe-de-test
+
+logging:
+  level:
+    root: WARN
