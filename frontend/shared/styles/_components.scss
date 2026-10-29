@@ -1,0 +1,1526 @@
+// =============================================================================
+// Laafi — composants réutilisables (classes préfixées `lf-`)
+// -----------------------------------------------------------------------------
+// Convention BEM légère : .lf-bloc, .lf-bloc__element, .lf-bloc--variante.
+// Les états passent de préférence par les attributs ARIA (aria-selected,
+// aria-pressed, aria-invalid, aria-busy, aria-current) : le style suit
+// l'accessibilité au lieu de la dupliquer avec des classes.
+// =============================================================================
+
+@use 'tokens' as lf;
+
+// =============================================================================
+// Bande « Faso Dan Fani » — l'élément de marque
+// -----------------------------------------------------------------------------
+// Évoque le pagne tissé : une chaîne de rayures verticales (vert, or, rouge,
+// encre) traversée par une trame horizontale fine. Purement décoratif
+// (aria-hidden), utilisé en liseré : en-tête d'application, écran de
+// connexion, modale. Ne jamais l'utiliser en grand aplat.
+// =============================================================================
+.lf-fani {
+  display: block;
+  height: var(--lf-fani-height, 6px);
+  flex: none;
+  background:
+    // trame : fils clairs horizontaux
+    repeating-linear-gradient(
+      0deg,
+      transparent 0 2px,
+      rgb(255 255 255 / 0.22) 2px 3px
+    ),
+    // chaîne : motif de 48 px répété
+    repeating-linear-gradient(
+      90deg,
+      var(--lf-flag-green) 0 14px,
+      var(--lf-ink) 14px 16px,
+      var(--lf-flag-gold) 16px 20px,
+      var(--lf-ink) 20px 22px,
+      var(--lf-flag-red) 22px 36px,
+      var(--lf-flag-gold) 36px 38px,
+      var(--lf-flag-green) 38px 40px,
+      var(--lf-flag-gold) 40px 42px,
+      var(--lf-ink) 42px 48px
+    );
+}
+
+// =============================================================================
+// Barre d'application
+// =============================================================================
+.lf-appbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--lf-z-sticky);
+  display: flex;
+  flex-direction: column;
+  background: var(--lf-surface);
+  border-bottom: 1px solid var(--lf-border);
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--lf-space-3);
+    min-height: 3.5rem;
+    padding-inline: var(--lf-gutter);
+  }
+
+  &__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lf-space-2);
+    color: var(--lf-ink);
+    font-weight: var(--lf-weight-black);
+    font-stretch: var(--lf-display-stretch);
+    font-size: var(--lf-text-lg);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+
+    img,
+    svg {
+      width: 1.75rem;
+      height: 1.75rem;
+    }
+  }
+
+  // Libellé de contexte (ministère, « Console »…) : masqué sur très petit écran
+  &__context {
+    display: none;
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-sm);
+    border-inline-start: 1px solid var(--lf-border);
+    padding-inline-start: var(--lf-space-3);
+    @include lf.truncate;
+
+    @include lf.bp(sm) {
+      display: block;
+    }
+  }
+
+  &__spacer {
+    flex: 1;
+  }
+}
+
+// =============================================================================
+// Boutons
+// =============================================================================
+.lf-btn {
+  --_bg: var(--lf-surface);
+  --_fg: var(--lf-ink);
+  --_bd: var(--lf-border-strong);
+  --_bg-hover: var(--lf-surface-2);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--lf-space-2);
+  max-width: 100%;
+  min-height: var(--lf-control-md);
+  padding: var(--lf-space-1) var(--lf-space-5);
+  border: 1px solid var(--_bd);
+  border-radius: var(--lf-radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-size: var(--lf-text-md);
+  font-weight: var(--lf-weight-semibold);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  // Libellé long sur petit écran : retour à la ligne plutôt que débordement
+  // (text-wrap-style seul, pour ne pas écraser un white-space: nowrap hérité)
+  text-wrap-style: balance;
+  user-select: none;
+  transition:
+    background-color var(--lf-duration-fast) var(--lf-ease-out),
+    border-color var(--lf-duration-fast) var(--lf-ease-out),
+    transform var(--lf-duration-fast) var(--lf-ease-out);
+  @include lf.focus-ring;
+
+  &:hover:not(:disabled, [aria-disabled='true']) {
+    background: var(--_bg-hover);
+  }
+
+  // Retour tactile discret à l'appui
+  &:active:not(:disabled, [aria-disabled='true']) {
+    transform: translateY(1px);
+  }
+
+  &:disabled,
+  &[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  svg {
+    width: 1.15em;
+    height: 1.15em;
+    flex: none;
+  }
+
+  // Variantes -----------------------------------------------------------
+  &--primary {
+    --_bg: var(--lf-accent);
+    --_fg: var(--lf-accent-contrast);
+    --_bd: var(--lf-accent);
+    --_bg-hover: var(--lf-accent-hover);
+  }
+
+  &--secondary {
+    --_bg: var(--lf-surface);
+    --_fg: var(--lf-accent-text);
+    --_bd: var(--lf-accent);
+    --_bg-hover: var(--lf-accent-soft);
+  }
+
+  &--danger {
+    --_bg: var(--lf-danger);
+    --_fg: var(--lf-danger-contrast);
+    --_bd: var(--lf-danger);
+    --_bg-hover: var(--lf-danger-hover);
+  }
+
+  // Danger « contour » : action destructrice secondaire (ex. révoquer les appareils)
+  &--danger-outline {
+    --_bg: transparent;
+    --_fg: var(--lf-danger-text);
+    --_bd: var(--lf-danger);
+    --_bg-hover: var(--lf-danger-soft);
+  }
+
+  &--ghost {
+    --_bg: transparent;
+    --_fg: var(--lf-ink);
+    --_bd: transparent;
+    --_bg-hover: var(--lf-surface-2);
+  }
+
+  // Tailles -------------------------------------------------------------
+  &--sm {
+    min-height: var(--lf-control-sm);
+    padding: var(--lf-space-1) var(--lf-space-3);
+    font-size: var(--lf-text-sm);
+  }
+
+  &--lg {
+    min-height: var(--lf-control-lg);
+    padding: var(--lf-space-2) var(--lf-space-6);
+    font-size: var(--lf-text-lg);
+  }
+
+  &--block {
+    width: 100%;
+  }
+
+  // Bouton icône seul : carré, libellé obligatoire via aria-label
+  &--icon {
+    width: var(--lf-control-md);
+    padding: 0;
+
+    &.lf-btn--sm {
+      width: var(--lf-control-sm);
+    }
+  }
+
+  // Chargement : <button aria-busy="true"> — le libellé reste lu
+  &[aria-busy='true'] {
+    color: transparent;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 1.1em;
+      height: 1.1em;
+      border: 2px solid var(--_fg);
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: lf-spin 0.7s linear infinite;
+    }
+  }
+}
+
+.lf-spinner {
+  display: inline-block;
+  width: 1.25em;
+  height: 1.25em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: lf-spin 0.7s linear infinite;
+}
+
+@keyframes lf-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// =============================================================================
+// Champs de formulaire
+// =============================================================================
+.lf-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-1);
+}
+
+.lf-label {
+  font-size: var(--lf-text-sm);
+  font-weight: var(--lf-weight-semibold);
+  color: var(--lf-ink);
+
+  // Champ obligatoire : astérisque + texte pour lecteurs d'écran dans le HTML
+  &--required::after {
+    content: ' *';
+    color: var(--lf-danger-text);
+  }
+}
+
+.lf-hint {
+  font-size: var(--lf-text-sm);
+  color: var(--lf-ink-2);
+}
+
+.lf-error {
+  display: flex;
+  gap: var(--lf-space-1);
+  font-size: var(--lf-text-sm);
+  font-weight: var(--lf-weight-medium);
+  color: var(--lf-danger-text);
+
+  &::before {
+    content: '!';
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: 0.1rem;
+    border-radius: 50%;
+    background: var(--lf-danger);
+    color: var(--lf-danger-contrast);
+    font-size: 0.75rem;
+    font-weight: var(--lf-weight-bold);
+  }
+}
+
+.lf-input {
+  width: 100%;
+  min-height: var(--lf-control-md);
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border: 1px solid var(--lf-border-strong);
+  border-radius: var(--lf-radius-sm);
+  background: var(--lf-surface);
+  color: var(--lf-ink);
+  font-size: var(--lf-text-md); // 16 px : évite le zoom auto sur iOS
+  transition:
+    border-color var(--lf-duration-fast) var(--lf-ease-out),
+    box-shadow var(--lf-duration-fast) var(--lf-ease-out);
+
+  &::placeholder {
+    color: var(--lf-ink-3);
+    opacity: 1;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--lf-ink-2);
+  }
+
+  &:focus-visible,
+  &:focus {
+    outline: none;
+    border-color: var(--lf-focus);
+    box-shadow:
+      0 0 0 1px var(--lf-focus),
+      0 0 0 5px var(--lf-focus-halo);
+  }
+
+  &:disabled {
+    background: var(--lf-surface-2);
+    color: var(--lf-ink-2);
+    cursor: not-allowed;
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--lf-danger);
+    box-shadow: inset 3px 0 0 var(--lf-danger);
+  }
+}
+
+textarea.lf-input {
+  min-height: 6rem;
+  resize: vertical;
+  line-height: var(--lf-leading-normal);
+}
+
+select.lf-input {
+  appearance: none;
+  padding-inline-end: var(--lf-space-10);
+  // Chevron dessiné en CSS (aucune image externe)
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--lf-ink-2) 50%),
+    linear-gradient(-45deg, transparent 50%, var(--lf-ink-2) 50%);
+  background-position:
+    right 1.1rem center,
+    right 0.75rem center;
+  background-size: 0.35rem 0.35rem;
+  background-repeat: no-repeat;
+}
+
+// Code OTP / matricule : chiffres espacés, police à chasse fixe
+.lf-input--code {
+  font-family: var(--lf-font-mono);
+  font-size: var(--lf-text-xl);
+  letter-spacing: 0.35em;
+  text-align: center;
+}
+
+// Champ de recherche avec loupe dessinée en CSS
+.lf-search {
+  position: relative;
+
+  .lf-input {
+    padding-inline-start: 2.5rem;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+  &::before {
+    left: 0.85rem;
+    top: 50%;
+    width: 0.8rem;
+    height: 0.8rem;
+    border: 2px solid var(--lf-ink-2);
+    border-radius: 50%;
+    transform: translateY(-62%);
+  }
+  &::after {
+    left: 1.5rem;
+    top: 50%;
+    width: 2px;
+    height: 0.45rem;
+    background: var(--lf-ink-2);
+    transform: translateY(15%) rotate(-45deg);
+  }
+}
+
+// Case à cocher / bouton radio natifs, teintés
+.lf-check {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--lf-space-2);
+  min-height: 1.75rem;
+  cursor: pointer;
+
+  input:not(.lf-switch) {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: var(--lf-accent);
+    cursor: inherit;
+    @include lf.focus-ring;
+  }
+}
+
+// Interrupteur : <input type="checkbox" role="switch" class="lf-switch">
+.lf-switch {
+  appearance: none;
+  position: relative;
+  flex: none;
+  width: 2.75rem;
+  height: 1.5rem;
+  border-radius: var(--lf-radius-pill);
+  background: var(--lf-surface-3);
+  border: 1px solid var(--lf-border-strong);
+  cursor: pointer;
+  transition: background-color var(--lf-duration-base) var(--lf-ease-out);
+  @include lf.focus-ring;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    background: var(--lf-surface);
+    box-shadow: var(--lf-shadow-1);
+    transition: transform var(--lf-duration-base) var(--lf-ease-out);
+  }
+
+  &:checked {
+    background: var(--lf-accent);
+    border-color: var(--lf-accent);
+
+    &::after {
+      transform: translateX(1.25rem);
+    }
+  }
+}
+
+// =============================================================================
+// Cartes
+// =============================================================================
+.lf-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--lf-surface);
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-md);
+  box-shadow: var(--lf-shadow-1);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--lf-space-3);
+    padding: var(--lf-space-4) var(--lf-space-5) 0;
+  }
+
+  &__title {
+    font-size: var(--lf-text-lg);
+    font-stretch: var(--lf-display-stretch);
+    font-weight: var(--lf-weight-bold);
+  }
+
+  &__body {
+    padding: var(--lf-space-4) var(--lf-space-5);
+  }
+
+  &__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--lf-space-2);
+    padding: var(--lf-space-3) var(--lf-space-5);
+    border-top: 1px solid var(--lf-border);
+  }
+
+  // Carte cliquable (lien ou bouton)
+  &--interactive {
+    color: inherit;
+    text-decoration: none;
+    transition:
+      border-color var(--lf-duration-fast) var(--lf-ease-out),
+      box-shadow var(--lf-duration-fast) var(--lf-ease-out);
+    @include lf.focus-ring;
+
+    &:hover {
+      border-color: var(--lf-border-strong);
+      box-shadow: var(--lf-shadow-2);
+    }
+  }
+
+  // Indicateur chiffré du tableau de bord : un nombre, une légende
+  &--stat {
+    padding: var(--lf-space-4) var(--lf-space-5);
+    gap: var(--lf-space-1);
+
+    .lf-card__value {
+      font-size: var(--lf-text-3xl);
+      font-weight: var(--lf-weight-black);
+      font-stretch: var(--lf-display-stretch);
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lf-card__label {
+      color: var(--lf-ink-2);
+      font-size: var(--lf-text-sm);
+    }
+  }
+}
+
+// =============================================================================
+// Badges génériques (statut d'agent, compteurs…)
+// =============================================================================
+.lf-badge {
+  --_bg: var(--lf-surface-2);
+  --_fg: var(--lf-ink-2);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.15em 0.55em;
+  border-radius: var(--lf-radius-xs);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-size: var(--lf-text-xs);
+  font-weight: var(--lf-weight-semibold);
+  line-height: 1.5;
+  white-space: nowrap;
+
+  &--success {
+    --_bg: var(--lf-success-soft);
+    --_fg: var(--lf-success-text);
+  }
+  &--warning {
+    --_bg: var(--lf-warning-soft);
+    --_fg: var(--lf-warning-text);
+  }
+  &--danger {
+    --_bg: var(--lf-danger-soft);
+    --_fg: var(--lf-danger-text);
+  }
+
+  // Pastille d'état avant le texte
+  &--dot::before {
+    content: '';
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  // Compteur de non-lus
+  &--count {
+    min-width: 1.4rem;
+    justify-content: center;
+    padding: 0.1em 0.45em;
+    border-radius: var(--lf-radius-pill);
+    background: var(--lf-accent);
+    color: var(--lf-accent-contrast);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// =============================================================================
+// Badges de classification
+// -----------------------------------------------------------------------------
+// Trois niveaux, distinguables SANS la couleur (daltonisme, impression N&B) :
+//   NORMAL                → anneau vide
+//   DIFFUSION_RESTREINTE  → anneau à moitié plein
+//   CONFIDENTIEL          → disque plein + fond saturé + texte en gras
+// Deux syntaxes équivalentes :
+//   <span class="lf-cls lf-cls--conf">Confidentiel</span>
+//   <span class="lf-cls" [attr.data-cls]="m.classification">…</span>
+// =============================================================================
+.lf-cls {
+  --_bg: var(--lf-cls-normal-bg);
+  --_fg: var(--lf-cls-normal-fg);
+  --_line: var(--lf-cls-normal-line);
+  --_fill: 0%;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.2em 0.6em 0.2em 0.5em;
+  border: 1px solid color-mix(in srgb, var(--_line) 55%, transparent);
+  border-radius: var(--lf-radius-xs);
+  background: var(--_bg);
+  color: var(--_fg);
+  font-size: var(--lf-text-xs);
+  font-weight: var(--lf-weight-semibold);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+
+  // Marqueur : remplissage piloté par --_fill (0 %, 50 %, 100 %)
+  &::before {
+    content: '';
+    flex: none;
+    width: 0.7em;
+    height: 0.7em;
+    border: 2px solid var(--_line);
+    border-radius: 50%;
+    background: linear-gradient(90deg, var(--_line) var(--_fill), transparent var(--_fill));
+  }
+
+  &--dr,
+  &[data-cls='DIFFUSION_RESTREINTE'] {
+    --_bg: var(--lf-cls-dr-bg);
+    --_fg: var(--lf-cls-dr-fg);
+    --_line: var(--lf-cls-dr-line);
+    --_fill: 50%;
+  }
+
+  &--conf,
+  &[data-cls='CONFIDENTIEL'] {
+    --_bg: var(--lf-cls-conf-bg);
+    --_fg: var(--lf-cls-conf-fg);
+    --_line: var(--lf-cls-conf-line);
+    --_fill: 100%;
+    font-weight: var(--lf-weight-bold);
+  }
+
+  // Version large pour l'en-tête d'un salon ou le sélecteur à l'envoi
+  &--lg {
+    padding: 0.35em 0.8em 0.35em 0.65em;
+    font-size: var(--lf-text-sm);
+  }
+}
+
+// =============================================================================
+// Avatars à initiales
+// -----------------------------------------------------------------------------
+// Six teintes ; l'application choisit data-tint = hash(matrixId) % 6 pour
+// qu'une même personne garde toujours la même couleur.
+// =============================================================================
+.lf-avatar {
+  --_size: 2.5rem;
+  --_bg: light-dark(#dcefe3, #1d3d2b);
+  --_fg: light-dark(#0b4f2a, #a6e6c2);
+
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: var(--_size);
+  height: var(--_size);
+  border-radius: 50%;
+  background: var(--_bg);
+  color: var(--_fg);
+  font-size: calc(var(--_size) * 0.38);
+  font-weight: var(--lf-weight-bold);
+  font-stretch: var(--lf-display-stretch);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+  user-select: none;
+
+  &[data-tint='1'] {
+    --_bg: light-dark(#f6e7c1, #3a2f12);
+    --_fg: light-dark(#5e4300, #f2d27a);
+  }
+  &[data-tint='2'] {
+    --_bg: light-dark(#f6ddd3, #43231a);
+    --_fg: light-dark(#7a2e17, #f4b8a3);
+  }
+  &[data-tint='3'] {
+    --_bg: light-dark(#dce5ee, #1f3042);
+    --_fg: light-dark(#23405e, #b2cbe6);
+  }
+  &[data-tint='4'] {
+    --_bg: light-dark(#ebdde8, #3a2235);
+    --_fg: light-dark(#5a2a50, #e4bddb);
+  }
+  &[data-tint='5'] {
+    --_bg: light-dark(#d6ecea, #163a37);
+    --_fg: light-dark(#134d49, #a3dcd6);
+  }
+
+  &--xs {
+    --_size: 1.5rem;
+  }
+  &--sm {
+    --_size: 2rem;
+  }
+  &--lg {
+    --_size: 3.5rem;
+  }
+  &--xl {
+    --_size: 5rem;
+  }
+
+  // Groupe / canal institutionnel : carré arrondi au lieu d'un cercle
+  &--group {
+    border-radius: var(--lf-radius-md);
+  }
+
+  // Agent révoqué : désaturé + barre oblique
+  &--revoked {
+    --_bg: var(--lf-surface-3);
+    --_fg: var(--lf-ink-2);
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 18%;
+      background: linear-gradient(
+        135deg,
+        transparent calc(50% - 1px),
+        var(--lf-danger) calc(50% - 1px) calc(50% + 1px),
+        transparent calc(50% + 1px)
+      );
+    }
+  }
+
+  // Pastille « appareil vérifié » (chiffrement de bout en bout confirmé)
+  &__verified {
+    position: absolute;
+    right: -2px;
+    bottom: -2px;
+    width: 38%;
+    height: 38%;
+    border: 2px solid var(--lf-surface);
+    border-radius: 50%;
+    background: var(--lf-accent);
+  }
+}
+
+// =============================================================================
+// Listes (conversations, annuaire, appareils)
+// =============================================================================
+.lf-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+
+  &--divided > * + * {
+    border-top: 1px solid var(--lf-border);
+  }
+
+  &__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--lf-space-3);
+    width: 100%;
+    min-height: 3.5rem;
+    padding: var(--lf-space-3) var(--lf-space-4);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: start;
+    text-decoration: none;
+
+    // Élément interactif (a ou button)
+    @at-root a#{&},
+      button#{&} {
+      cursor: pointer;
+      transition: background-color var(--lf-duration-fast) var(--lf-ease-out);
+      @include lf.focus-ring(-2px);
+
+      &:hover {
+        background: var(--lf-surface-2);
+      }
+    }
+
+    // Élément actif : liseré vert à gauche (rappel discret du drapeau)
+    &[aria-current='true'],
+    &[aria-current='page'],
+    &[aria-selected='true'] {
+      background: var(--lf-accent-soft);
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset-block: var(--lf-space-2);
+        inset-inline-start: 0;
+        width: 3px;
+        border-radius: 0 3px 3px 0;
+        background: var(--lf-accent);
+      }
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__title {
+    font-weight: var(--lf-weight-semibold);
+    @include lf.truncate;
+  }
+
+  &__meta {
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-sm);
+    @include lf.truncate;
+  }
+
+  &__trailing {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--lf-space-1);
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-xs);
+  }
+
+  // Conversation non lue : titre et aperçu en gras
+  &__item--unread &__title,
+  &__item--unread &__meta {
+    font-weight: var(--lf-weight-bold);
+    color: var(--lf-ink);
+  }
+}
+
+// =============================================================================
+// Tableaux d'administration
+// =============================================================================
+.lf-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-surface);
+}
+
+.lf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--lf-text-sm);
+
+  caption {
+    padding: var(--lf-space-3) var(--lf-space-4);
+    text-align: start;
+    font-weight: var(--lf-weight-semibold);
+    color: var(--lf-ink-2);
+  }
+
+  th,
+  td {
+    padding: var(--lf-space-3) var(--lf-space-4);
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: var(--lf-z-raised);
+    background: var(--lf-surface-2);
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-xs);
+    font-weight: var(--lf-weight-semibold);
+    letter-spacing: 0.02em;
+    border-bottom: 1px solid var(--lf-border-strong);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--lf-border);
+    transition: background-color var(--lf-duration-fast) var(--lf-ease-out);
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:hover {
+      background: color-mix(in srgb, var(--lf-surface-2) 60%, transparent);
+    }
+
+    &[aria-selected='true'] {
+      background: var(--lf-accent-soft);
+    }
+  }
+
+  .lf-table__num {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lf-table__actions {
+    text-align: end;
+    white-space: nowrap;
+  }
+
+  // Sous md : chaque ligne devient une fiche, libellés via data-label
+  &--stack {
+    @media (max-width: 767.98px) {
+      thead {
+        @include lf.visually-hidden;
+      }
+
+      tr {
+        display: grid;
+        gap: var(--lf-space-1);
+        padding: var(--lf-space-3) var(--lf-space-4);
+      }
+
+      td {
+        display: grid;
+        grid-template-columns: 6.5rem minmax(0, 1fr);
+        justify-items: start;
+        align-items: center;
+        gap: var(--lf-space-2);
+        padding: 0;
+        text-align: start;
+
+        &::before {
+          content: attr(data-label);
+          color: var(--lf-ink-2);
+          font-size: var(--lf-text-xs);
+          font-weight: var(--lf-weight-semibold);
+        }
+      }
+
+      .lf-table__actions {
+        text-align: start;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// Bandeaux d'alerte en ligne
+// =============================================================================
+.lf-alert {
+  --_bg: var(--lf-surface-2);
+  --_fg: var(--lf-ink);
+  --_line: var(--lf-border-strong);
+
+  display: flex;
+  gap: var(--lf-space-3);
+  padding: var(--lf-space-3) var(--lf-space-4);
+  border-inline-start: 4px solid var(--_line);
+  border-radius: var(--lf-radius-sm);
+  background: var(--_bg);
+  color: var(--_fg);
+
+  &__title {
+    font-weight: var(--lf-weight-bold);
+  }
+
+  &--success {
+    --_bg: var(--lf-success-soft);
+    --_fg: var(--lf-success-text);
+    --_line: var(--lf-accent);
+  }
+  &--warning {
+    --_bg: var(--lf-warning-soft);
+    --_fg: var(--lf-warning-text);
+    --_line: var(--lf-warning-line);
+  }
+  &--danger {
+    --_bg: var(--lf-danger-soft);
+    --_fg: var(--lf-danger-text);
+    --_line: var(--lf-danger);
+  }
+}
+
+// =============================================================================
+// Toasts (notifications éphémères)
+// -----------------------------------------------------------------------------
+// <div class="lf-toast-region" role="status" aria-live="polite"> … </div>
+// Pour une erreur bloquante : role="alert" sur le toast.
+// =============================================================================
+.lf-toast-region {
+  position: fixed;
+  inset-inline: var(--lf-space-4);
+  bottom: var(--lf-space-4);
+  z-index: var(--lf-z-toast);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--lf-space-2);
+  pointer-events: none;
+
+  @include lf.bp(md) {
+    inset-inline: auto var(--lf-space-6);
+    bottom: var(--lf-space-6);
+    align-items: flex-end;
+  }
+}
+
+.lf-toast {
+  --_line: var(--lf-accent);
+
+  display: flex;
+  align-items: flex-start;
+  gap: var(--lf-space-3);
+  width: min(100%, 26rem);
+  padding: var(--lf-space-3) var(--lf-space-3) var(--lf-space-3) var(--lf-space-4);
+  border: 1px solid var(--lf-border);
+  border-inline-start: 4px solid var(--_line);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-surface);
+  color: var(--lf-ink);
+  box-shadow: var(--lf-shadow-3);
+  pointer-events: auto;
+
+  @include lf.motion-safe {
+    animation: lf-toast-in var(--lf-duration-slow) var(--lf-ease-out);
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--lf-text-sm);
+  }
+
+  &__title {
+    font-weight: var(--lf-weight-bold);
+    font-size: var(--lf-text-md);
+  }
+
+  &--warning {
+    --_line: var(--lf-warning-line);
+  }
+  &--danger {
+    --_line: var(--lf-danger);
+  }
+  &--neutral {
+    --_line: var(--lf-border-strong);
+  }
+}
+
+@keyframes lf-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+// Bouton de fermeture « × » commun (toasts, modales, chips)
+.lf-close {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--lf-radius-sm);
+  background: transparent;
+  color: var(--lf-ink-2);
+  font-size: 1.35rem;
+  line-height: 1;
+  @include lf.focus-ring(0);
+
+  &:hover {
+    background: var(--lf-surface-2);
+    color: var(--lf-ink);
+  }
+}
+
+// =============================================================================
+// Modales — pensées pour l'élément natif <dialog> (focus piégé, Échap, inert)
+// -----------------------------------------------------------------------------
+// <dialog class="lf-modal" aria-labelledby="t"> … </dialog>, ouvert par
+// dialog.showModal(). Sur mobile, la modale devient une feuille ancrée en bas.
+// =============================================================================
+.lf-modal {
+  width: 100%;
+  max-width: 100%;
+  max-height: 92dvh;
+  margin: auto auto 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--lf-radius-lg) var(--lf-radius-lg) 0 0;
+  background: var(--lf-surface);
+  color: var(--lf-ink);
+  box-shadow: var(--lf-shadow-3);
+  overflow: hidden auto;
+
+  @include lf.bp(md) {
+    width: min(100% - 2rem, var(--lf-modal-width, 32rem));
+    margin: auto;
+    border-radius: var(--lf-radius-lg);
+  }
+
+  &::backdrop {
+    background: var(--lf-overlay);
+  }
+
+  &[open] {
+    display: flex;
+    flex-direction: column;
+
+    @include lf.motion-safe {
+      animation: lf-modal-in var(--lf-duration-slow) var(--lf-ease-out);
+    }
+  }
+
+  &--wide {
+    --lf-modal-width: 48rem;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--lf-space-3);
+    padding: var(--lf-space-5) var(--lf-space-5) var(--lf-space-2);
+  }
+
+  &__title {
+    flex: 1;
+    font-size: var(--lf-text-xl);
+  }
+
+  &__body {
+    padding: var(--lf-space-2) var(--lf-space-5) var(--lf-space-5);
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--lf-space-2);
+    padding: var(--lf-space-4) var(--lf-space-5);
+    border-top: 1px solid var(--lf-border);
+    background: var(--lf-surface-2);
+
+    @include lf.bp(sm) {
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+
+  // Modale de confirmation destructive (révocation) : liseré rouge en tête
+  &--danger {
+    border-top: 4px solid var(--lf-danger);
+  }
+}
+
+// Variante sans <dialog> (rendu statique, tests) : fond + centrage
+.lf-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--lf-z-modal);
+  display: grid;
+  place-items: end center;
+  background: var(--lf-overlay);
+
+  @include lf.bp(md) {
+    place-items: center;
+  }
+
+  > .lf-modal {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+}
+
+@keyframes lf-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+}
+
+// =============================================================================
+// Onglets — role="tablist" / role="tab" aria-selected / role="tabpanel"
+// =============================================================================
+.lf-tabs {
+  display: flex;
+  gap: var(--lf-space-1);
+  border-bottom: 1px solid var(--lf-border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.lf-tab {
+  position: relative;
+  flex: none;
+  min-height: var(--lf-control-md);
+  padding: 0 var(--lf-space-4);
+  border: 0;
+  background: transparent;
+  color: var(--lf-ink-2);
+  font-weight: var(--lf-weight-semibold);
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  @include lf.focus-ring(-2px);
+
+  &:hover {
+    color: var(--lf-ink);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: var(--lf-space-2);
+    bottom: -1px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: transparent;
+    transition: background-color var(--lf-duration-base) var(--lf-ease-out);
+  }
+
+  &[aria-selected='true'],
+  &[aria-current='page'] {
+    color: var(--lf-ink);
+
+    &::after {
+      background: var(--lf-accent);
+    }
+  }
+}
+
+.lf-tabpanel {
+  padding-block: var(--lf-space-4);
+}
+
+// =============================================================================
+// Chips (filtres) — <button class="lf-chip" aria-pressed="true|false">
+// =============================================================================
+.lf-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-1);
+  min-height: 2rem;
+  padding: 0 var(--lf-space-3);
+  border: 1px solid var(--lf-border-strong);
+  border-radius: var(--lf-radius-pill);
+  background: var(--lf-surface);
+  color: var(--lf-ink);
+  font-size: var(--lf-text-sm);
+  font-weight: var(--lf-weight-medium);
+  white-space: nowrap;
+  transition:
+    background-color var(--lf-duration-fast) var(--lf-ease-out),
+    border-color var(--lf-duration-fast) var(--lf-ease-out);
+  @include lf.focus-ring;
+
+  &:hover {
+    background: var(--lf-surface-2);
+  }
+
+  // Sélectionné : coche dessinée + teinte verte (pas seulement la couleur)
+  &[aria-pressed='true'] {
+    border-color: var(--lf-accent);
+    background: var(--lf-accent-soft);
+    color: var(--lf-accent-soft-text);
+
+    &::before {
+      content: '';
+      width: 0.35rem;
+      height: 0.65rem;
+      margin: 0 0.15rem 0.15rem 0;
+      border: solid currentColor;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
+
+  &__remove {
+    display: inline-grid;
+    place-items: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-inline-end: calc(var(--lf-space-1) * -1);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 1rem;
+    line-height: 1;
+
+    &:hover {
+      background: var(--lf-surface-3);
+    }
+  }
+}
+
+// =============================================================================
+// Squelettes de chargement
+// =============================================================================
+.lf-skeleton {
+  display: block;
+  height: 1em;
+  border-radius: var(--lf-radius-xs);
+  background: var(--lf-skeleton);
+
+  @include lf.motion-safe {
+    background: linear-gradient(
+      90deg,
+      var(--lf-skeleton) 0%,
+      var(--lf-skeleton-shine) 50%,
+      var(--lf-skeleton) 100%
+    );
+    background-size: 200% 100%;
+    animation: lf-shimmer 1.4s ease-in-out infinite;
+  }
+
+  &--text {
+    width: var(--lf-skeleton-width, 100%);
+    height: 0.8em;
+    margin-block: 0.35em;
+  }
+
+  &--title {
+    width: 40%;
+    height: 1.2em;
+  }
+
+  &--circle {
+    width: var(--lf-skeleton-size, 2.5rem);
+    height: var(--lf-skeleton-size, 2.5rem);
+    border-radius: 50%;
+    flex: none;
+  }
+
+  &--block {
+    height: var(--lf-skeleton-height, 6rem);
+    border-radius: var(--lf-radius-md);
+  }
+}
+
+@keyframes lf-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+// =============================================================================
+// État vide — toujours une phrase d'orientation et, si possible, une action
+// =============================================================================
+.lf-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--lf-space-3);
+  max-width: 28rem;
+  margin-inline: auto;
+  padding: var(--lf-space-10) var(--lf-space-4);
+  text-align: center;
+
+  &__art {
+    width: 4.5rem;
+    height: 4.5rem;
+    color: var(--lf-ink-3);
+  }
+
+  &__title {
+    font-size: var(--lf-text-lg);
+  }
+
+  &__text {
+    color: var(--lf-ink-2);
+  }
+}
+
+// =============================================================================
+// Messagerie : bulles, filigrane, flou hors focus
+// =============================================================================
+.lf-thread {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+  padding: var(--lf-space-4) var(--lf-gutter);
+}
+
+// Séparateur de date dans le fil
+.lf-day {
+  align-self: center;
+  margin-block: var(--lf-space-3);
+  padding: 0.15em 0.75em;
+  border-radius: var(--lf-radius-pill);
+  background: var(--lf-surface-2);
+  color: var(--lf-ink-2);
+  font-size: var(--lf-text-xs);
+  font-weight: var(--lf-weight-semibold);
+}
+
+.lf-bubble {
+  --_bg: var(--lf-bubble-in);
+  --_fg: var(--lf-ink);
+  --_cls: transparent;
+
+  position: relative;
+  align-self: flex-start;
+  max-width: min(85%, 36rem);
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-lg) var(--lf-radius-lg) var(--lf-radius-lg) var(--lf-radius-xs);
+  background: var(--_bg);
+  color: var(--_fg);
+  box-shadow:
+    inset 3px 0 0 var(--_cls),
+    var(--lf-shadow-1);
+  overflow-wrap: anywhere;
+
+  &--out {
+    --_bg: var(--lf-bubble-out);
+    --_fg: var(--lf-bubble-out-ink);
+    align-self: flex-end;
+    border-color: transparent;
+    border-radius: var(--lf-radius-lg) var(--lf-radius-lg) var(--lf-radius-xs) var(--lf-radius-lg);
+  }
+
+  // Liseré gauche selon la classification du message
+  &[data-cls='DIFFUSION_RESTREINTE'] {
+    --_cls: var(--lf-cls-dr-line);
+  }
+  &[data-cls='CONFIDENTIEL'] {
+    --_cls: var(--lf-cls-conf-line);
+  }
+
+  &__author {
+    display: block;
+    margin-bottom: 0.1rem;
+    color: var(--lf-accent-text);
+    font-size: var(--lf-text-sm);
+    font-weight: var(--lf-weight-bold);
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--lf-space-2);
+    margin-bottom: var(--lf-space-1);
+  }
+
+  &__meta {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: var(--lf-space-1);
+    margin-top: 0.15rem;
+    color: color-mix(in srgb, var(--_fg) 72%, transparent);
+    font-size: var(--lf-text-2xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  // Instruction de service (accusé probant demandé)
+  &--instruction {
+    border-color: var(--lf-accent);
+  }
+}
+
+// Filigrane nominatif (CONFIDENTIEL) : texte répété en diagonale.
+// Usage : <div class="lf-watermark" data-watermark="Issa Kaboré · 2026-11-02">
+.lf-watermark {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: attr(data-watermark) '   ' attr(data-watermark) '   ' attr(data-watermark) '   '
+      attr(data-watermark);
+    position: absolute;
+    inset: -50%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--lf-ink);
+    opacity: 0.07;
+    font-size: var(--lf-text-sm);
+    font-weight: var(--lf-weight-bold);
+    line-height: 4;
+    white-space: pre-wrap;
+    text-align: center;
+    word-spacing: 0.4em;
+    transform: rotate(-24deg);
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+// Flou hors focus : l'application ajoute .is-blurred quand la fenêtre perd
+// le focus (window blur / visibilitychange). Dissuasif, pas infaillible.
+.lf-blur-guard {
+  transition: filter var(--lf-duration-base) var(--lf-ease-out);
+
+  &.is-blurred {
+    filter: blur(12px);
+    user-select: none;
+  }
+}
+
+// Contenu non copiable (politique CONFIDENTIEL : copie interdite)
+.lf-no-copy {
+  user-select: none;
+  -webkit-touch-callout: none;
+}
