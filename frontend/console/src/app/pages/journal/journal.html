@@ -1,0 +1,158 @@
+<header class="lc-entete">
+  <div class="lc-entete__texte">
+    <h1>{{ 'journal.titre' | transloco }}</h1>
+    <p class="lc-entete__desc">{{ 'journal.desc' | transloco }}</p>
+  </div>
+</header>
+
+<!-- 1. Vérification de l'intégrité de la chaîne -->
+<section class="lf-card verif" aria-labelledby="t-verif" [attr.data-etat]="rapport() ? (rapport()!.integre ? 'ok' : 'rompu') : null">
+  <div class="verif__tete">
+    <div>
+      <h2 id="t-verif" class="verif__titre">{{ 'journal.integriteTitre' | transloco }}</h2>
+      <p class="verif__texte">{{ 'journal.integriteTexte' | transloco }}</p>
+    </div>
+    <button type="button" class="lf-btn lf-btn--primary lf-btn--lg" (click)="verifier()" [disabled]="verification()" [attr.aria-busy]="verification()">
+      <lc-icone nom="verifier" />
+      {{ (verification() ? 'journal.verificationEnCours' : 'journal.verifier') | transloco }}
+    </button>
+  </div>
+
+  <div class="verif__resultat" aria-live="polite">
+    @if (erreurVerif(); as e) {
+      <p class="lf-error">{{ e }}</p>
+    } @else if (rapport(); as r) {
+      <div class="verdict">
+        <lc-icone [nom]="r.integre ? 'chaine' : 'chaine-rompue'" class="verdict__icone" />
+        <div>
+          <p class="verdict__titre">{{ (r.integre ? 'journal.verdictOk' : 'journal.verdictRompu') | transloco }}</p>
+          <p class="verdict__texte">
+            @if (r.integre) {
+              {{ 'journal.verdictOkTexte' | transloco: { n: r.nombreEntrees } }}
+            } @else {
+              {{ 'journal.verdictRompuTexte' | transloco: { id: r.premiereEntreeInvalide ?? '?' } }}
+              <strong>{{ r.raison }}</strong>
+            }
+          </p>
+        </div>
+      </div>
+
+      @if (chaine().length) {
+        <ol class="chaine" [attr.aria-label]="'journal.chaineAria' | transloco" role="list">
+          @for (m of chaine(); track $index) {
+            <li class="chaine__maillon" [attr.data-etat]="m" aria-hidden="true"></li>
+          }
+        </ol>
+        <p class="chaine__legende">
+          <span><i data-etat="ok"></i>{{ 'journal.legende.ok' | transloco }}</span>
+          @if (!r.integre) {
+            <span><i data-etat="rompu"></i>{{ 'journal.legende.rompu' | transloco }}</span>
+            <span><i data-etat="nonverifie"></i>{{ 'journal.legende.nonverifie' | transloco }}</span>
+          }
+        </p>
+      } @else {
+        <p class="lf-hint">{{ 'journal.vide' | transloco }}</p>
+      }
+
+      <dl class="lc-dl details">
+        <dt>{{ 'journal.entrees' | transloco }}</dt><dd class="lc-num">{{ r.nombreEntrees }}</dd>
+        <dt>{{ 'journal.verifieLe' | transloco }}</dt><dd class="lc-num">{{ r.verifieLe | date: 'd MMMM y, HH:mm:ss' }}</dd>
+        @if (r.dernierHash) {
+          <dt>{{ 'journal.dernierHash' | transloco }}</dt><dd class="lc-hash">{{ r.dernierHash }}</dd>
+        }
+      </dl>
+    } @else {
+      <p class="lf-hint">{{ 'journal.pasEncore' | transloco }}</p>
+    }
+  </div>
+</section>
+
+<!-- 2. Consultation des accusés d'un message -->
+<section class="lc-section" aria-labelledby="t-accuses">
+  <h2 id="t-accuses" class="lc-section__titre">{{ 'journal.accusesTitre' | transloco }}</h2>
+  <form class="recherche" role="search" (submit)="$event.preventDefault(); chercher()">
+    <div class="lf-field">
+      <label class="lf-label" for="j-event">{{ 'journal.eventId' | transloco }}</label>
+      <input id="j-event" class="lf-input lf-mono" autocomplete="off" spellcheck="false" placeholder="$AbCdEf…"
+             [value]="eventId()" (input)="eventId.set($any($event.target).value)" aria-describedby="j-event-aide" />
+      <p id="j-event-aide" class="lf-hint">{{ 'journal.eventIdAide' | transloco }}</p>
+    </div>
+    <button type="submit" class="lf-btn lf-btn--secondary" [disabled]="!eventId().trim() || recherche()" [attr.aria-busy]="recherche()">
+      {{ 'journal.chercher' | transloco }}
+    </button>
+  </form>
+
+  @if (erreurRecherche(); as e) {
+    <p class="lf-error" role="alert">{{ e }}</p>
+  } @else if (accuses(); as l) {
+    @if (l.length === 0) {
+      <div class="lf-table-wrap"><div class="lf-empty"><p class="lf-empty__text">{{ 'journal.aucunAccuse' | transloco }}</p></div></div>
+    } @else {
+      <div class="lf-table-wrap">
+        <table class="lf-table lf-table--stack">
+          <thead>
+            <tr>
+              <th scope="col" class="lf-table__num">{{ 'journal.col.entree' | transloco }}</th>
+              <th scope="col">{{ 'journal.col.agent' | transloco }}</th>
+              <th scope="col">{{ 'journal.col.horodatage' | transloco }}</th>
+              <th scope="col">{{ 'journal.col.empreinte' | transloco }}</th>
+              <th scope="col" class="lf-table__actions"><span class="lf-sr-only">{{ 'commun.actions' | transloco }}</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (a of l; track a.id) {
+              <tr>
+                <td class="lf-table__num" [attr.data-label]="'journal.col.entree' | transloco">#{{ a.id }}</td>
+                <td [attr.data-label]="'journal.col.agent' | transloco"><span class="lf-mono">{{ a.agent }}</span></td>
+                <td class="lc-num" [attr.data-label]="'journal.col.horodatage' | transloco">{{ a.horodatage | date: 'd MMM y, HH:mm:ss' }}</td>
+                <td [attr.data-label]="'journal.col.empreinte' | transloco"><span class="lc-hash">{{ a.empreinte.slice(0, 16) }}…</span></td>
+                <td class="lf-table__actions">
+                  <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="voirPreuve(a.id)"
+                          [disabled]="chargementPreuve() === a.id" [attr.aria-busy]="chargementPreuve() === a.id">
+                    <lc-icone nom="cle" />{{ 'journal.voirPreuve' | transloco }}
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      @if (erreurPreuve(); as e) { <p class="lf-error" role="alert">{{ e }}</p> }
+    }
+  }
+</section>
+
+<dialog #dlg class="lf-modal lf-modal--wide" aria-labelledby="dp-titre">
+  @if (preuve(); as p) {
+    <header class="lf-modal__header">
+      <h2 id="dp-titre" class="lf-modal__title">{{ 'journal.preuveTitre' | transloco: { id: p.entree.id } }}</h2>
+      <button type="button" class="lf-close" [attr.aria-label]="'commun.fermer' | transloco" (click)="fermerPreuve()"><lc-icone nom="fermer" /></button>
+    </header>
+    <div class="lf-modal__body">
+      <p class="preuve__statut" [attr.data-ok]="p.verifieeParLeServeur">
+        <lc-icone [nom]="p.verifieeParLeServeur ? 'coche' : 'alerte'" />
+        {{ (p.verifieeParLeServeur ? 'journal.preuveValide' : 'journal.preuveInvalide') | transloco }}
+      </p>
+      <dl class="lc-dl">
+        <dt>{{ 'journal.col.agent' | transloco }}</dt><dd class="lf-mono">{{ p.entree.agent }}</dd>
+        <dt>{{ 'journal.col.horodatage' | transloco }}</dt><dd class="lc-num">{{ p.entree.horodatage | date: 'd MMMM y, HH:mm:ss' }}</dd>
+        <dt>{{ 'journal.salon' | transloco }}</dt><dd class="lc-hash">{{ p.entree.roomId }}</dd>
+        <dt>{{ 'journal.eventId' | transloco }}</dt><dd class="lc-hash">{{ p.entree.eventId }}</dd>
+        <dt>{{ 'journal.hashPrecedent' | transloco }}</dt><dd class="lc-hash">{{ p.hashPrecedent }}</dd>
+        <dt>{{ 'journal.hashEntree' | transloco }}</dt><dd class="lc-hash">{{ p.hashEntree }}</dd>
+        <dt>{{ 'journal.signature' | transloco }}</dt><dd class="lc-hash">{{ p.signature }}</dd>
+        <dt>{{ 'journal.algorithme' | transloco }}</dt><dd>{{ p.algorithme }}</dd>
+        <dt>{{ 'journal.clePublique' | transloco }}</dt><dd class="lc-hash">{{ p.clePublique }}</dd>
+      </dl>
+      <details class="canon">
+        <summary>{{ 'journal.serialisation' | transloco }}</summary>
+        <pre class="lc-hash">{{ p.serialisationCanonique }}</pre>
+      </details>
+      <p class="lf-hint methode">{{ p.methode }}</p>
+    </div>
+    <footer class="lf-modal__footer">
+      <button type="button" class="lf-btn lf-btn--secondary" (click)="telecharger()">{{ 'journal.telecharger' | transloco }}</button>
+      <button type="button" class="lf-btn lf-btn--primary" (click)="fermerPreuve()">{{ 'commun.fermer' | transloco }}</button>
+    </footer>
+  }
+</dialog>

@@ -1,0 +1,125 @@
+<header class="lc-entete">
+  <div class="lc-entete__texte">
+    <h1>{{ 'politiques.titre' | transloco }}</h1>
+    <p class="lc-entete__desc">{{ 'politiques.desc' | transloco }}</p>
+  </div>
+</header>
+
+@if (!auth.estSuperAdmin()) {
+  <div class="lf-alert lecture" role="note">
+    <lc-icone nom="info" />
+    <p>{{ 'politiques.lectureSeule' | transloco }}</p>
+  </div>
+}
+
+@if (erreur(); as e) {
+  <div class="lf-alert lf-alert--danger" role="alert">
+    <div><p>{{ e }}</p>
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="charger()">{{ 'commun.reessayer' | transloco }}</button></div>
+  </div>
+} @else if (politiques() === null) {
+  <div class="lf-table-wrap"><div class="lf-card__body">
+    @for (i of [1, 2, 3]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }
+  </div></div>
+} @else {
+  <div class="lf-table-wrap">
+    <table class="lf-table lf-table--stack">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'politiques.col.niveau' | transloco }}</th>
+          <th scope="col">{{ 'politiques.col.transfert' | transloco }}</th>
+          <th scope="col">{{ 'politiques.col.copie' | transloco }}</th>
+          <th scope="col">{{ 'politiques.col.expiration' | transloco }}</th>
+          <th scope="col">{{ 'politiques.col.filigrane' | transloco }}</th>
+          <th scope="col">{{ 'politiques.col.flou' | transloco }}</th>
+          @if (auth.estSuperAdmin()) { <th scope="col" class="lf-table__actions"><span class="lf-sr-only">{{ 'commun.actions' | transloco }}</span></th> }
+        </tr>
+      </thead>
+      <tbody>
+        @for (p of politiques(); track p.niveau) {
+          <tr>
+            <td [attr.data-label]="'politiques.col.niveau' | transloco">
+              <lc-classification [niveau]="p.niveau" />
+              <span class="libelle">{{ p.libelle }}</span>
+              @if (p.modifieLe) {
+                <span class="modif">{{ 'politiques.modifie' | transloco: { par: p.modifiePar ?? '—' } }} {{ p.modifieLe | date: 'd MMM y' }}</span>
+              }
+            </td>
+            <td [attr.data-label]="'politiques.col.transfert' | transloco">
+              <span class="regle" [attr.data-ok]="p.transfert === 'AUTORISE'">{{ 'politiques.transfert.' + p.transfert | transloco }}</span>
+            </td>
+            <td [attr.data-label]="'politiques.col.copie' | transloco">
+              <span class="regle" [attr.data-ok]="p.copie">{{ (p.copie ? 'politiques.autorisee' : 'politiques.bloquee') | transloco }}</span>
+            </td>
+            <td [attr.data-label]="'politiques.col.expiration' | transloco" class="lc-num">
+              {{ p.expirationJours ? ('politiques.jours' | transloco: { n: p.expirationJours }) : ('politiques.aucune' | transloco) }}
+            </td>
+            <td [attr.data-label]="'politiques.col.filigrane' | transloco">
+              {{ (p.filigraneNominatif ? 'politiques.nominatif' : p.filigrane ? 'commun.oui' : 'commun.non') | transloco }}
+            </td>
+            <td [attr.data-label]="'politiques.col.flou' | transloco">{{ (p.flouHorsFocus ? 'commun.oui' : 'commun.non') | transloco }}</td>
+            @if (auth.estSuperAdmin()) {
+              <td class="lf-table__actions">
+                <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="editer(p)">
+                  <lc-icone nom="crayon" />{{ 'commun.modifier' | transloco }}
+                  <span class="lf-sr-only">{{ 'classification.' + p.niveau | transloco }}</span>
+                </button>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <p class="lf-hint rappel">{{ 'politiques.rappel' | transloco }}</p>
+}
+
+@if (auth.estSuperAdmin()) {
+  <dialog #dlg class="lf-modal lf-modal--wide" aria-labelledby="dp-titre" (cancel)="envoi() && $event.preventDefault()">
+    @if (enEdition(); as p) {
+      <form [formGroup]="form" (ngSubmit)="enregistrer()" novalidate>
+        <header class="lf-modal__header">
+          <h2 id="dp-titre" class="lf-modal__title">{{ 'politiques.editer' | transloco }} <lc-classification [niveau]="p.niveau" /></h2>
+          <button type="button" class="lf-close" [attr.aria-label]="'commun.fermer' | transloco" (click)="fermer()"><lc-icone nom="fermer" /></button>
+        </header>
+        <div class="lf-modal__body edition">
+          <div class="lf-field">
+            <label class="lf-label lf-label--required" for="dp-libelle">{{ 'politiques.libelle' | transloco }}</label>
+            <input id="dp-libelle" class="lf-input" formControlName="libelle" />
+          </div>
+          <fieldset class="groupe">
+            <legend class="lf-label">{{ 'politiques.col.transfert' | transloco }}</legend>
+            @for (tr of transferts; track tr) {
+              <label class="lf-check"><input type="radio" formControlName="transfert" [value]="tr" />{{ 'politiques.transfert.' + tr | transloco }}</label>
+            }
+          </fieldset>
+          <fieldset class="groupe">
+            <legend class="lf-label">{{ 'politiques.protections' | transloco }}</legend>
+            <label class="lf-check"><input type="checkbox" formControlName="copie" />{{ 'politiques.copieAutorisee' | transloco }}</label>
+            <label class="lf-check"><input type="checkbox" formControlName="filigrane" />{{ 'politiques.col.filigrane' | transloco }}</label>
+            <label class="lf-check"><input type="checkbox" formControlName="filigraneNominatif" />{{ 'politiques.filigraneNominatif' | transloco }}</label>
+            <label class="lf-check"><input type="checkbox" formControlName="flouHorsFocus" />{{ 'politiques.col.flou' | transloco }}</label>
+          </fieldset>
+          <fieldset class="groupe">
+            <legend class="lf-label">{{ 'politiques.col.expiration' | transloco }}</legend>
+            <label class="lf-check"><input type="checkbox" formControlName="expire" />{{ 'politiques.expireApres' | transloco }}</label>
+            @if (form.controls.expire.value) {
+              <div class="jours">
+                <input id="dp-jours" class="lf-input lc-num" type="number" min="1" max="3650" formControlName="expirationJours"
+                       [attr.aria-label]="'politiques.nbJours' | transloco" />
+                <span>{{ 'politiques.joursUnite' | transloco }}</span>
+              </div>
+            }
+          </fieldset>
+          @if (erreurForm(); as e) { <p class="lf-error" role="alert">{{ e }}</p> }
+        </div>
+        <footer class="lf-modal__footer">
+          <button type="button" class="lf-btn lf-btn--secondary" (click)="fermer()" [disabled]="envoi()">{{ 'commun.annuler' | transloco }}</button>
+          <button type="submit" class="lf-btn lf-btn--primary" [disabled]="envoi()" [attr.aria-busy]="envoi()">
+            {{ (envoi() ? 'commun.enCours' : 'commun.enregistrer') | transloco }}
+          </button>
+        </footer>
+      </form>
+    }
+  </dialog>
+}

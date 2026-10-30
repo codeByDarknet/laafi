@@ -1,0 +1,130 @@
+<header class="lc-entete">
+  <div class="lc-entete__texte">
+    <h1>{{ 'canaux.titre' | transloco }}</h1>
+    <p class="lc-entete__desc">{{ 'canaux.desc' | transloco }}</p>
+  </div>
+  <div class="lc-entete__actions">
+    <button type="button" class="lf-btn lf-btn--primary" (click)="ouvrir()">
+      <lc-icone nom="plus" />{{ 'canaux.enregistrer' | transloco }}
+    </button>
+  </div>
+</header>
+
+@if (!auth.ministereImpose()) {
+  <div class="lc-filtres">
+    <div class="lf-field">
+      <label class="lf-label" for="c-min">{{ 'agents.filtre.ministere' | transloco }}</label>
+      <select id="c-min" class="lf-input" (change)="filtrer($any($event.target).value)">
+        <option value="">{{ 'agents.filtre.tous' | transloco }}</option>
+        @for (m of referentiel.ministeres(); track m.code) {
+          <option [value]="m.code" [selected]="m.code === filtreMinistere()">{{ m.sigle }} — {{ m.nom }}</option>
+        }
+      </select>
+    </div>
+  </div>
+}
+
+@if (erreur(); as e) {
+  <div class="lf-alert lf-alert--danger" role="alert">
+    <div>
+      <p>{{ e }}</p>
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="charger()">{{ 'commun.reessayer' | transloco }}</button>
+    </div>
+  </div>
+} @else if (canaux() === null) {
+  <div class="lf-table-wrap"><div class="lf-card__body">
+    @for (i of [1, 2, 3]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }
+  </div></div>
+} @else if (canaux()!.length === 0) {
+  <div class="lf-table-wrap">
+    <div class="lf-empty">
+      <p class="lf-empty__title">{{ 'canaux.vide' | transloco }}</p>
+      <p class="lf-empty__text">{{ 'canaux.videTexte' | transloco }}</p>
+      <button type="button" class="lf-btn lf-btn--primary" (click)="ouvrir()">{{ 'canaux.enregistrer' | transloco }}</button>
+    </div>
+  </div>
+} @else {
+  <div class="lf-table-wrap">
+    <table class="lf-table lf-table--stack">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'canaux.col.nom' | transloco }}</th>
+          <th scope="col">{{ 'canaux.col.ministere' | transloco }}</th>
+          <th scope="col">{{ 'canaux.col.classification' | transloco }}</th>
+          <th scope="col">{{ 'canaux.col.salon' | transloco }}</th>
+          <th scope="col" class="lf-table__num">{{ 'canaux.col.enregistre' | transloco }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (c of canaux(); track c.id) {
+          <tr>
+            <td [attr.data-label]="'canaux.col.nom' | transloco">
+              <span class="nom">{{ c.nom }}</span>
+              @if (c.description) { <br /><span class="desc">{{ c.description }}</span> }
+            </td>
+            <td [attr.data-label]="'canaux.col.ministere' | transloco">
+              <abbr [title]="referentiel.nom(c.ministere)">{{ referentiel.sigle(c.ministere) }}</abbr>
+            </td>
+            <td [attr.data-label]="'canaux.col.classification' | transloco"><lc-classification [niveau]="c.classification" /></td>
+            <td [attr.data-label]="'canaux.col.salon' | transloco"><span class="lc-hash">{{ c.roomId }}</span></td>
+            <td class="lf-table__num" [attr.data-label]="'canaux.col.enregistre' | transloco">
+              {{ c.creeLe | date: 'd MMM y' }}<br /><span class="desc lf-mono">{{ c.creePar }}</span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+<dialog #dlg class="lf-modal lf-modal--wide" aria-labelledby="dc-titre" (cancel)="envoi() && $event.preventDefault()">
+  <form [formGroup]="form" (ngSubmit)="enregistrer()" novalidate>
+    <header class="lf-modal__header">
+      <h2 id="dc-titre" class="lf-modal__title">{{ 'canaux.enregistrer' | transloco }}</h2>
+      <button type="button" class="lf-close" [attr.aria-label]="'commun.fermer' | transloco" (click)="fermer()"><lc-icone nom="fermer" /></button>
+    </header>
+    <div class="lf-modal__body">
+      <div class="lf-field">
+        <label class="lf-label lf-label--required" for="dc-nom">{{ 'canaux.col.nom' | transloco }}</label>
+        <input id="dc-nom" class="lf-input" formControlName="nom" [attr.aria-invalid]="invalide('nom')" />
+        @if (invalide('nom')) { <p class="lf-error">{{ 'form.requis' | transloco }}</p> }
+      </div>
+      <div class="lf-field">
+        <label class="lf-label lf-label--required" for="dc-room">{{ 'canaux.roomId' | transloco }}</label>
+        <input id="dc-room" class="lf-input lf-mono" formControlName="roomId" spellcheck="false" autocomplete="off"
+               placeholder="!AbCdEf123:laafi.local" [attr.aria-invalid]="invalide('roomId')" aria-describedby="dc-room-aide" />
+        <p id="dc-room-aide" class="lf-hint">{{ 'canaux.roomIdAide' | transloco }}</p>
+        @if (invalide('roomId')) { <p class="lf-error">{{ 'canaux.roomIdInvalide' | transloco }}</p> }
+      </div>
+      <div class="lf-field">
+        <label class="lf-label lf-label--required" for="dc-min">{{ 'agent.ministere' | transloco }}</label>
+        <select id="dc-min" class="lf-input" formControlName="ministere" [attr.aria-invalid]="invalide('ministere')">
+          <option value="" disabled>{{ 'enroler.choisirMinistere' | transloco }}</option>
+          @for (m of referentiel.ministeres(); track m.code) { <option [value]="m.code">{{ m.sigle }} — {{ m.nom }}</option> }
+        </select>
+      </div>
+      <fieldset class="lf-field cls">
+        <legend class="lf-label lf-label--required">{{ 'canaux.col.classification' | transloco }}</legend>
+        <div class="lf-cluster">
+          @for (n of classifications; track n) {
+            <label class="lf-check">
+              <input type="radio" formControlName="classification" [value]="n" />
+              <lc-classification [niveau]="n" />
+            </label>
+          }
+        </div>
+      </fieldset>
+      <div class="lf-field">
+        <label class="lf-label" for="dc-desc">{{ 'canaux.description' | transloco }}</label>
+        <textarea id="dc-desc" class="lf-input" rows="2" formControlName="description"></textarea>
+      </div>
+      @if (erreurForm(); as e) { <p class="lf-error" role="alert">{{ e }}</p> }
+    </div>
+    <footer class="lf-modal__footer">
+      <button type="button" class="lf-btn lf-btn--secondary" (click)="fermer()" [disabled]="envoi()">{{ 'commun.annuler' | transloco }}</button>
+      <button type="submit" class="lf-btn lf-btn--primary" [disabled]="envoi()" [attr.aria-busy]="envoi()">
+        {{ (envoi() ? 'commun.enCours' : 'canaux.valider') | transloco }}
+      </button>
+    </footer>
+  </form>
+</dialog>

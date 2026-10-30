@@ -1,0 +1,147 @@
+<header class="lc-entete">
+  <div class="lc-entete__texte">
+    <h1>{{ 'agents.titre' | transloco }}</h1>
+    <p class="lc-entete__desc">
+      @if (auth.ministereImpose(); as m) {
+        {{ 'agents.descMinistere' | transloco: { ministere: referentiel.nom(m) } }}
+      } @else {
+        {{ 'agents.descNational' | transloco }}
+      }
+    </p>
+  </div>
+  <div class="lc-entete__actions">
+    <a class="lf-btn lf-btn--primary" routerLink="/agents/enroler">
+      <lc-icone nom="enroler" />
+      {{ 'nav.enroler' | transloco }}
+    </a>
+  </div>
+</header>
+
+<form class="lc-filtres" role="search" (submit)="$event.preventDefault()">
+  <div class="lf-field">
+    <label class="lf-label" for="f-q">{{ 'agents.filtre.recherche' | transloco }}</label>
+    <div class="lf-search">
+      <input id="f-q" class="lf-input" type="search" autocomplete="off"
+             [placeholder]="'agents.filtre.recherchePlaceholder' | transloco"
+             [value]="recherche()" (input)="majFiltre('q', $any($event.target).value)" />
+    </div>
+  </div>
+  <div class="lf-field">
+    <label class="lf-label" for="f-min">{{ 'agents.filtre.ministere' | transloco }}</label>
+    @if (auth.ministereImpose(); as m) {
+      <select id="f-min" class="lf-input" disabled [attr.aria-describedby]="'f-min-aide'">
+        <option>{{ referentiel.sigle(m) }}</option>
+      </select>
+      <span id="f-min-aide" class="lf-hint">{{ 'agents.filtre.ministereImpose' | transloco }}</span>
+    } @else {
+      <select id="f-min" class="lf-input" [value]="filtreMinistere()" (change)="majFiltre('ministere', $any($event.target).value)">
+        <option value="">{{ 'agents.filtre.tous' | transloco }}</option>
+        @for (m of referentiel.ministeres(); track m.code) {
+          <option [value]="m.code" [selected]="m.code === filtreMinistere()">{{ m.sigle }} — {{ m.nom }}</option>
+        }
+      </select>
+    }
+  </div>
+  <div class="lf-field">
+    <label class="lf-label" for="f-statut">{{ 'agents.filtre.statut' | transloco }}</label>
+    <select id="f-statut" class="lf-input" (change)="majFiltre('statut', $any($event.target).value)">
+      <option value="" [selected]="!filtreStatut()">{{ 'agents.filtre.tous' | transloco }}</option>
+      @for (s of statuts; track s) {
+        <option [value]="s" [selected]="s === filtreStatut()">{{ 'statut.' + s | transloco }}</option>
+      }
+    </select>
+  </div>
+  <button type="button" class="lf-btn lf-btn--ghost reinit" [disabled]="!filtreActif()" (click)="reinitialiser()">
+    {{ 'agents.filtre.reinitialiser' | transloco }}
+  </button>
+</form>
+
+@if (erreur(); as e) {
+  <div class="lf-alert lf-alert--danger" role="alert">
+    <div>
+      <p class="lf-alert__title">{{ 'agents.erreurChargement' | transloco }}</p>
+      <p>{{ e }}</p>
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="charger()">{{ 'commun.reessayer' | transloco }}</button>
+    </div>
+  </div>
+} @else if (agents() === null) {
+  <div class="lf-table-wrap" aria-busy="true">
+    <div class="lf-card__body">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }
+    </div>
+  </div>
+} @else if (filtres().length === 0) {
+  <div class="lf-table-wrap">
+    <div class="lf-empty">
+      @if (agents()!.length === 0) {
+        <p class="lf-empty__title">{{ 'agents.vide' | transloco }}</p>
+        <p class="lf-empty__text">{{ 'agents.videTexte' | transloco }}</p>
+        <a class="lf-btn lf-btn--primary" routerLink="/agents/enroler">{{ 'nav.enroler' | transloco }}</a>
+      } @else {
+        <p class="lf-empty__title">{{ 'agents.aucunResultat' | transloco }}</p>
+        <button type="button" class="lf-btn lf-btn--secondary" (click)="reinitialiser()">{{ 'agents.filtre.reinitialiser' | transloco }}</button>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="lf-table-wrap">
+    <table class="lf-table lf-table--stack">
+      <caption class="lf-sr-only">{{ 'agents.titre' | transloco }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">{{ 'agents.col.agent' | transloco }}</th>
+          <th scope="col">{{ 'agents.col.ministere' | transloco }}</th>
+          <th scope="col">{{ 'agents.col.fonction' | transloco }}</th>
+          <th scope="col">{{ 'agents.col.matricule' | transloco }}</th>
+          <th scope="col">{{ 'agents.col.statut' | transloco }}</th>
+          <th scope="col" class="lf-table__num">{{ 'agents.col.enroleLe' | transloco }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (a of visibles(); track a.username) {
+          <tr class="lc-ligne-lien" (click)="ouvrir(a, $event)">
+            <td [attr.data-label]="'agents.col.agent' | transloco">
+              <div class="lc-identite">
+                <span class="lf-avatar lf-avatar--sm" [attr.data-tint]="teinte(a)"
+                      [class.lf-avatar--revoked]="a.statut === 'REVOQUE'" aria-hidden="true">{{ initiales(a) }}</span>
+                <span class="lc-identite__texte">
+                  <a class="lc-identite__nom" [routerLink]="['/agents', a.username]">{{ a.nomComplet || a.username }}</a>
+                  <span class="lc-identite__id">{{ a.username }}</span>
+                </span>
+              </div>
+            </td>
+            <td [attr.data-label]="'agents.col.ministere' | transloco">
+              <abbr [title]="referentiel.nom(a.ministere)">{{ referentiel.sigle(a.ministere) }}</abbr>
+            </td>
+            <td [attr.data-label]="'agents.col.fonction' | transloco">
+              {{ a.fonction || '—' }}
+              @if (a.direction) { <span class="lf-muted"> · {{ a.direction }}</span> }
+            </td>
+            <td [attr.data-label]="'agents.col.matricule' | transloco"><span class="lf-mono">{{ a.matricule || '—' }}</span></td>
+            <td [attr.data-label]="'agents.col.statut' | transloco"><lc-statut [statut]="a.statut" /></td>
+            <td class="lf-table__num" [attr.data-label]="'agents.col.enroleLe' | transloco">
+              {{ a.creeLe ? (a.creeLe | date: 'd MMM y') : '—' }}
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="lc-pied-tableau">
+    <p class="compte" aria-live="polite">
+      {{ 'commun.plage' | transloco: { debut: debut(), fin: fin(), total: filtres().length } }}
+    </p>
+    @if (pages() > 1) {
+      <nav class="lc-pagination" [attr.aria-label]="'commun.pagination' | transloco">
+        <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" [disabled]="page() === 0" (click)="page.set(page() - 1)">
+          <lc-icone nom="precedent" /> {{ 'commun.precedent' | transloco }}
+        </button>
+        <span class="lc-num">{{ 'commun.pageSur' | transloco: { page: page() + 1, total: pages() } }}</span>
+        <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" [disabled]="page() >= pages() - 1" (click)="page.set(page() + 1)">
+          {{ 'commun.suivant' | transloco }} <lc-icone nom="suivant" />
+        </button>
+      </nav>
+    }
+  </div>
+}
