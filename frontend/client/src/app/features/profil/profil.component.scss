@@ -1,0 +1,142 @@
+.identite {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lf-space-4);
+
+  h2 {
+    margin: 0;
+    font-size: var(--lf-text-2xl);
+  }
+
+  p {
+    margin: var(--lf-space-1) 0 0;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-1);
+}
+
+.id {
+  font-size: var(--lf-text-xs);
+  word-break: break-all;
+}
+
+.securite {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+}
+
+.etat {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--lf-space-3);
+
+  p {
+    margin: var(--lf-space-1) 0 0;
+  }
+
+  .ok {
+    color: var(--lf-success-text);
+  }
+
+  .attention {
+    color: var(--lf-warning-text);
+  }
+}
+
+.empreinte {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-1);
+
+  code {
+    padding: var(--lf-space-2);
+    border-radius: var(--lf-radius-sm);
+    background: var(--lf-surface-2);
+    font-size: var(--lf-text-xs);
+    word-break: break-all;
+  }
+}
+
+.carte {
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-lg);
+  background: var(--lf-surface);
+}
+
+.squelettes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+}
+
+.preferences {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+
+  .lf-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lf-space-1);
+  }
+}
+
+.themes {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choix-themes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-4);
+}
+
+.urgence {
+  border-color: color-mix(in srgb, var(--lf-danger) 45%, var(--lf-border));
+
+  p {
+    margin: 0 0 var(--lf-space-3);
+  }
+}
+
+.cle {
+  display: block;
+  margin: var(--lf-space-3) 0;
+  padding: var(--lf-space-3);
+  border: 1px dashed var(--lf-border-strong);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-surface-2);
+  font-size: var(--lf-text-md);
+  line-height: 1.7;
+  word-spacing: 0.3em;
+  user-select: all;
+}
+
+.gauche {
+  justify-content: flex-start;
+}
+
+.note {
+  margin-top: var(--lf-space-4);
+}
+
+.consequences {
+  margin: 0 0 var(--lf-space-4);
+  padding-inline-start: var(--lf-space-5);
+
+  li + li {
+    margin-top: var(--lf-space-1);
+  }
+}
+
+form .actions {
+  margin-top: var(--lf-space-4);
+}

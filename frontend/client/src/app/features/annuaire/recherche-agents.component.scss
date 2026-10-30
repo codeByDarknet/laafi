@@ -1,0 +1,44 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+}
+
+.filtres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-2);
+
+  .lf-search {
+    flex: 2 1 14rem;
+  }
+}
+
+.ministere {
+  flex: 1 1 12rem;
+}
+
+.compte {
+  margin: 0;
+  font-size: var(--lf-text-sm);
+}
+
+.squelette {
+  gap: var(--lf-space-2);
+}
+
+.choix {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--lf-border-strong);
+  border-radius: 50%;
+  color: var(--lf-ink-2);
+
+  &--pris {
+    border-color: var(--lf-accent);
+    background: var(--lf-accent);
+    color: var(--lf-accent-contrast);
+  }
+}

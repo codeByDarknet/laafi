@@ -1,0 +1,61 @@
+.carte-identite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--lf-space-2);
+  text-align: center;
+
+  h2 {
+    margin: var(--lf-space-2) 0 0;
+    font-size: var(--lf-text-2xl);
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+.garanties {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--lf-space-2);
+
+  .lf-badge {
+    gap: 4px;
+  }
+}
+
+.titre-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lf-space-2);
+
+  h2 {
+    margin: 0;
+    font-size: var(--lf-text-md);
+  }
+}
+
+.carte {
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-lg);
+  background: var(--lf-surface);
+}
+
+.large {
+  flex: 1;
+}
+
+.verifie {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: var(--lf-success-text);
+  font-weight: var(--lf-weight-semibold);
+}
+
+.non-verifie {
+  color: var(--lf-ink-3);
+}

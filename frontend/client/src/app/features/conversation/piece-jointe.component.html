@@ -1,0 +1,90 @@
+@let m = message();
+@switch (m.genre) {
+  @case ('image') {
+    <div class="image" [style.aspect-ratio]="ratio()">
+      @switch (etat()) {
+        @case ('pret') {
+          <img [src]="url()" [alt]="m.nomFichier || ('piece.image' | transloco)" draggable="false" (contextmenu)="!copieAutorisee() && $event.preventDefault()" />
+        }
+        @case ('chargement') {
+          <span class="lf-skeleton lf-skeleton--block remplir" [attr.aria-label]="'piece.dechiffrement' | transloco"></span>
+        }
+        @case ('erreur') {
+          <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm centre" (click)="charger()">
+            <lf-icone nom="recharger" [taille]="16" />
+            {{ 'piece.erreur' | transloco }}
+          </button>
+        }
+        @default {
+          <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm centre" (click)="charger()">
+            <lf-icone nom="image" [taille]="16" />
+            {{ 'piece.afficher_image' | transloco: { taille: taille() } }}
+          </button>
+        }
+      }
+    </div>
+  }
+  @case ('vocal') {
+    <div class="audio">
+      <button
+        type="button"
+        class="lf-btn lf-btn--icon lecture"
+        [attr.aria-label]="(lecture() ? 'piece.pause' : 'piece.ecouter') | transloco"
+        [attr.aria-busy]="etat() === 'chargement'"
+        (click)="basculerLecture()"
+      >
+        <lf-icone [nom]="lecture() ? 'pause' : 'lecture'" [taille]="18" />
+      </button>
+      <span class="onde" (click)="chercher($event)" aria-hidden="true">
+        @for (b of barres(); track $index) {
+          <span class="barre" [style.--h]="b" [class.jouee]="$index / barres().length < progression()"></span>
+        }
+      </span>
+      <span class="temps">{{ lecture() || position() > 0 ? ecoule() : duree() }}</span>
+      @if (etat() === 'erreur') {
+        <span class="lf-sr-only" role="alert">{{ 'piece.erreur' | transloco }}</span>
+        <lf-icone class="erreur" nom="alerte" [taille]="16" />
+      }
+      <audio
+        #audio
+        [src]="url() ?? ''"
+        preload="none"
+        (play)="lecture.set(true)"
+        (pause)="lecture.set(false)"
+        (ended)="lecture.set(false); position.set(0)"
+        (timeupdate)="position.set($any($event.target).currentTime)"
+      ></audio>
+    </div>
+    <span class="lf-sr-only">{{ 'piece.vocal_duree' | transloco: { duree: duree() } }}</span>
+  }
+  @default {
+    <div class="fichier">
+      <lf-icone class="fichier__icone" nom="fichier" [taille]="28" />
+      <span class="fichier__corps">
+        <span class="fichier__nom">{{ m.nomFichier || ('piece.fichier' | transloco) }}</span>
+        <span class="fichier__meta">{{ taille() }}</span>
+      </span>
+      @if (m.genre === 'audio' && url()) {
+        <audio [src]="url()" controls preload="none"></audio>
+      }
+      @if (copieAutorisee()) {
+        <button
+          type="button"
+          class="lf-btn lf-btn--ghost lf-btn--icon"
+          [attr.aria-label]="'piece.telecharger' | transloco: { nom: m.nomFichier }"
+          [attr.aria-busy]="etat() === 'chargement'"
+          (click)="telecharger()"
+        >
+          <lf-icone [nom]="etat() === 'erreur' ? 'recharger' : 'telecharger'" />
+        </button>
+      } @else if (m.genre === 'audio') {
+        <button type="button" class="lf-btn lf-btn--ghost lf-btn--icon" [attr.aria-label]="'piece.ecouter' | transloco" (click)="charger()">
+          <lf-icone nom="lecture" />
+        </button>
+      }
+    </div>
+    @if (etat() === 'erreur') {
+      <span class="lf-error" role="alert">{{ 'piece.erreur' | transloco }}</span>
+    }
+  }
+}

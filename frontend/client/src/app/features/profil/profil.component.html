@@ -1,0 +1,257 @@
+<header class="entete">
+  <a routerLink="/salons" class="lf-btn lf-btn--ghost lf-btn--icon retour" [attr.aria-label]="'commun.retour' | transloco">
+    <lf-icone nom="retour" />
+  </a>
+  <h1>{{ 'profil.titre' | transloco }}</h1>
+</header>
+
+<div class="page">
+  <!-- Identité -->
+  <section class="identite">
+    <lf-avatar [nom]="nom()" [id]="monId" taille="xl" [verifie]="!!crypto.etat()?.appareilVerifie" />
+    <div>
+      <h2>{{ nom() }}</h2>
+      @if (profil.profil(); as p) {
+        <p class="lf-muted">{{ joindre(p.fonction, p.direction) }}</p>
+        <p class="tags">
+          @if (p.ministere) {
+            <span class="lf-badge">{{ p.ministere }}</span>
+          }
+          @if (p.matricule) {
+            <span class="lf-badge lf-mono">{{ 'profil.matricule' | transloco }} {{ p.matricule }}</span>
+          }
+          @for (r of p.roles; track r) {
+            <span class="lf-badge">{{ 'roles.' + r | transloco }}</span>
+          }
+        </p>
+      }
+      <p class="lf-mono lf-muted id">{{ monId }}</p>
+    </div>
+  </section>
+  @if (!keycloak.authentifie()) {
+    <div class="lf-alert lf-alert--warning">
+      <lf-icone nom="alerte" />
+      <div>
+        <p>{{ 'profil.api_indisponible' | transloco }}</p>
+        <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="keycloak.seConnecter()">{{ 'annuaire.se_connecter' | transloco }}</button>
+      </div>
+    </div>
+  }
+
+  <!-- Sécurité de cet appareil -->
+  <section class="section" aria-labelledby="t-securite">
+    <h2 id="t-securite">{{ 'securite.titre' | transloco }}</h2>
+    <div class="lf-card">
+      <div class="lf-card__body securite">
+        @if (crypto.etat(); as e) {
+          <div class="etat">
+            @if (e.appareilVerifie) {
+              <lf-icone class="ok" nom="bouclier" [taille]="32" />
+              <div>
+                <strong>{{ 'securite.verifie_titre' | transloco }}</strong>
+                <p class="lf-muted">{{ 'securite.verifie_texte' | transloco }}</p>
+              </div>
+            } @else {
+              <lf-icone class="attention" nom="bouclierAlerte" [taille]="32" />
+              <div>
+                <strong>{{ 'securite.non_verifie_titre' | transloco }}</strong>
+                <p class="lf-muted">
+                  {{ (e.compteAvecCles ? 'securite.non_verifie_texte_cle' : 'securite.non_verifie_texte_premier') | transloco }}
+                </p>
+              </div>
+            }
+          </div>
+          @if (e.empreinteAppareil) {
+            <div class="empreinte">
+              <span class="lf-label">{{ 'securite.empreinte' | transloco }}</span>
+              <code class="lf-mono">{{ e.empreinteAppareil }}</code>
+            </div>
+          }
+          <div class="actions">
+            @if (!e.compteAvecCles) {
+              <button type="button" class="lf-btn lf-btn--primary" [disabled]="configuration()" [attr.aria-busy]="configuration()" (click)="configurer()">
+                <lf-icone nom="cle" />
+                {{ 'securite.configurer' | transloco }}
+              </button>
+            } @else if (!e.appareilVerifie || !e.signatureCroiseePrete) {
+              <button type="button" class="lf-btn lf-btn--primary" (click)="saisieOuverte.set(true)">
+                <lf-icone nom="cle" />
+                {{ 'securite.saisir_cle' | transloco }}
+              </button>
+            }
+          </div>
+        } @else {
+          <div class="squelettes" aria-busy="true">
+            <span class="lf-skeleton lf-skeleton--title"></span>
+            <span class="lf-skeleton lf-skeleton--text"></span>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Appareils -->
+  <section class="section" aria-labelledby="t-appareils">
+    <h2 id="t-appareils">{{ 'appareils.titre' | transloco }}</h2>
+    <p class="lf-muted intro">{{ 'appareils.aide' | transloco }}</p>
+    @if (erreurAppareils()) {
+      <div class="lf-alert lf-alert--danger" role="alert">
+        <lf-icone nom="alerte" />
+        <div>
+          <p>{{ 'appareils.erreur' | transloco }}</p>
+          <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="chargerAppareils()">{{ 'commun.reessayer' | transloco }}</button>
+        </div>
+      </div>
+    } @else if (appareils(); as liste) {
+      <ul class="lf-list lf-list--divided carte">
+        @for (a of liste; track a.deviceId) {
+          <li class="lf-list__item">
+            <lf-icone nom="appareil" [taille]="24" />
+            <span class="lf-list__body">
+              <span class="lf-list__title">{{ a.nom }}</span>
+              <span class="lf-list__meta">
+                <span class="lf-mono">{{ a.deviceId }}</span>
+                @if (a.derniereActivite) {
+                  · {{ 'appareils.activite' | transloco: { date: date(a.derniereActivite) } }}
+                }
+              </span>
+            </span>
+            <span class="lf-list__trailing">
+              @if (a.courant) {
+                <span class="lf-badge">{{ 'appareils.courant' | transloco }}</span>
+              }
+              @if (a.verifie === true) {
+                <span class="lf-badge lf-badge--success">{{ 'appareils.verifie' | transloco }}</span>
+              } @else if (a.verifie === false) {
+                <span class="lf-badge lf-badge--warning">{{ 'appareils.non_verifie' | transloco }}</span>
+              }
+            </span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <div class="squelettes" aria-busy="true">
+        <span class="lf-skeleton lf-skeleton--text"></span>
+        <span class="lf-skeleton lf-skeleton--text"></span>
+      </div>
+    }
+  </section>
+
+  <!-- Préférences -->
+  <section class="section" aria-labelledby="t-preferences">
+    <h2 id="t-preferences">{{ 'profil.preferences' | transloco }}</h2>
+    <div class="lf-card">
+      <div class="lf-card__body preferences">
+        <label class="lf-field">
+          <span class="lf-label"><lf-icone nom="langue" [taille]="16" /> {{ 'profil.langue' | transloco }}</span>
+          <select class="lf-input" (change)="choisirLangue($any($event.target).value)">
+            @for (l of langues; track l) {
+              <option [value]="l" [selected]="preferences.langue() === l">{{ 'langues.' + l | transloco }}</option>
+            }
+          </select>
+          @if (preferences.langue() !== 'fr') {
+            <span class="lf-hint">{{ 'profil.langue_aide' | transloco }}</span>
+          }
+        </label>
+        <fieldset class="lf-field themes">
+          <legend class="lf-label"><lf-icone nom="theme" [taille]="16" /> {{ 'profil.theme' | transloco }}</legend>
+          <div class="choix-themes">
+            @for (t of themes; track t) {
+              <label class="lf-check">
+                <input type="radio" name="theme" [value]="t" [checked]="preferences.theme() === t" (change)="preferences.choisirTheme(t)" />
+                {{ 'profil.themes.' + t | transloco }}
+              </label>
+            }
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </section>
+
+  <!-- Urgence -->
+  <section class="section" aria-labelledby="t-urgence">
+    <h2 id="t-urgence">{{ 'urgence.titre' | transloco }}</h2>
+    <div class="lf-card urgence">
+      <div class="lf-card__body">
+        <p>{{ 'urgence.texte' | transloco }}</p>
+        <button type="button" class="lf-btn lf-btn--danger lf-btn--block" (click)="urgenceOuverte.set(true); confirmation.set('')">
+          <lf-icone nom="bouclierAlerte" />
+          {{ 'urgence.bouton' | transloco }}
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Clé de récupération : affichée UNE fois -->
+<lf-dialogue [ouvert]="!!cleAffichee()" [bloque]="!cleNotee()" [titre]="'securite.cle_titre' | transloco" (ferme)="fermerCle()">
+  @if (cleAffichee(); as cle) {
+    <p>{{ 'securite.cle_texte' | transloco }}</p>
+    <code class="cle lf-mono">{{ cle }}</code>
+    <div class="actions gauche">
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="copierCle(cle)">{{ 'securite.copier' | transloco }}</button>
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="telechargerCle(cle)">
+        <lf-icone nom="telecharger" [taille]="16" />
+        {{ 'securite.telecharger' | transloco }}
+      </button>
+    </div>
+    <label class="lf-check note">
+      <input type="checkbox" [checked]="cleNotee()" (change)="cleNotee.set($any($event.target).checked)" />
+      {{ 'securite.cle_notee' | transloco }}
+    </label>
+  }
+  <footer pied class="lf-modal__footer">
+    <button type="button" class="lf-btn lf-btn--primary" [disabled]="!cleNotee()" (click)="fermerCle()">{{ 'commun.terminer' | transloco }}</button>
+  </footer>
+</lf-dialogue>
+
+<!-- Saisie de la clé (nouvel appareil) -->
+<lf-dialogue [ouvert]="saisieOuverte()" [bloque]="deverrouillage()" [titre]="'securite.saisir_cle' | transloco" (ferme)="saisieOuverte.set(false); erreurCle.set(null)">
+  <form (submit)="$event.preventDefault(); deverrouiller()">
+    <p>{{ 'securite.saisir_texte' | transloco }}</p>
+    <div class="lf-field">
+      <label class="lf-label" for="cle-recuperation">{{ 'securite.cle' | transloco }}</label>
+      <textarea
+        id="cle-recuperation"
+        class="lf-input lf-mono"
+        rows="3"
+        autocomplete="off"
+        spellcheck="false"
+        [attr.aria-invalid]="!!erreurCle()"
+        [attr.aria-describedby]="erreurCle() ? 'erreur-cle' : null"
+        [value]="cleSaisie()"
+        (input)="cleSaisie.set($any($event.target).value)"
+      ></textarea>
+      @if (erreurCle(); as e) {
+        <p id="erreur-cle" class="lf-error">{{ e | transloco }}</p>
+      }
+    </div>
+    <div class="actions">
+      <button type="button" class="lf-btn lf-btn--ghost" (click)="saisieOuverte.set(false)">{{ 'commun.annuler' | transloco }}</button>
+      <button type="submit" class="lf-btn lf-btn--primary" [disabled]="cleSaisie().trim().length < 20 || deverrouillage()" [attr.aria-busy]="deverrouillage()">
+        {{ 'securite.verifier' | transloco }}
+      </button>
+    </div>
+  </form>
+</lf-dialogue>
+
+<!-- Urgence : confirmation forte -->
+<lf-dialogue [ouvert]="urgenceOuverte()" [danger]="true" [bloque]="urgenceEnCours()" [titre]="'urgence.confirmer_titre' | transloco" (ferme)="urgenceOuverte.set(false)">
+  <form (submit)="$event.preventDefault(); declencherUrgence()">
+    <ul class="consequences">
+      <li>{{ 'urgence.consequence_1' | transloco }}</li>
+      <li>{{ 'urgence.consequence_2' | transloco }}</li>
+      <li>{{ 'urgence.consequence_3' | transloco }}</li>
+    </ul>
+    <div class="lf-field">
+      <label class="lf-label" for="mot-urgence">{{ 'urgence.taper' | transloco: { mot: motAttendu() } }}</label>
+      <input id="mot-urgence" class="lf-input" autocomplete="off" autocapitalize="characters" [value]="confirmation()" (input)="confirmation.set($any($event.target).value)" />
+    </div>
+    <div class="actions">
+      <button type="button" class="lf-btn lf-btn--ghost" [disabled]="urgenceEnCours()" (click)="urgenceOuverte.set(false)">{{ 'commun.annuler' | transloco }}</button>
+      <button type="submit" class="lf-btn lf-btn--danger" [disabled]="!urgenceConfirmee() || urgenceEnCours()" [attr.aria-busy]="urgenceEnCours()">
+        {{ 'urgence.confirmer' | transloco }}
+      </button>
+    </div>
+  </form>
+</lf-dialogue>

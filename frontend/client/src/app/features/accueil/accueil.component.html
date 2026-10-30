@@ -1,0 +1,51 @@
+<main id="contenu" class="accueil">
+  <div class="lf-fani accueil__fani" aria-hidden="true"></div>
+  <div class="accueil__corps">
+    <header class="accueil__marque">
+      <img src="assets/brand/laafi-logo.svg" class="accueil__logo accueil__logo--clair" alt="Laafi" width="168" height="48" />
+      <img src="assets/brand/laafi-logo-dark.svg" class="accueil__logo accueil__logo--sombre" alt="Laafi" width="168" height="48" />
+    </header>
+
+    <h1 class="accueil__titre">{{ 'accueil.titre' | transloco }}</h1>
+    <p class="accueil__texte">{{ 'accueil.texte' | transloco }}</p>
+
+    @if (cleErreur(); as cle) {
+      <div class="lf-alert lf-alert--danger" role="alert">
+        <lf-icone nom="alerte" />
+        <div>
+          <p>{{ cle | transloco }}</p>
+          <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm accueil__reessayer" (click)="recharger()">
+            {{ 'commun.reessayer' | transloco }}
+          </button>
+        </div>
+      </div>
+    }
+
+    <button
+      type="button"
+      class="lf-btn lf-btn--primary lf-btn--lg lf-btn--block"
+      [attr.aria-busy]="enCours()"
+      [disabled]="enCours()"
+      (click)="connecter()"
+    >
+      <lf-icone nom="cadenas" />
+      {{ 'accueil.connexion' | transloco }}
+    </button>
+
+    <ul class="accueil__garanties">
+      <li><lf-icone nom="bouclier" [taille]="18" /> {{ 'accueil.garantie_chiffrement' | transloco }}</li>
+      <li><lf-icone nom="cle" [taille]="18" /> {{ 'accueil.garantie_2fa' | transloco }}</li>
+      <li><lf-icone nom="appareil" [taille]="18" /> {{ 'accueil.garantie_appareil' | transloco }}</li>
+    </ul>
+
+    <div class="lf-field accueil__langue">
+      <label class="lf-label" for="langue-accueil">{{ 'profil.langue' | transloco }}</label>
+      <select id="langue-accueil" class="lf-input" [value]="prefs.langue()" (change)="changerLangue($event)">
+        @for (l of langues; track l) {
+          <option [value]="l">{{ 'langues.' + l | transloco }}</option>
+        }
+      </select>
+    </div>
+  </div>
+  <p class="accueil__pied lf-muted">{{ 'accueil.pied' | transloco }}</p>
+</main>

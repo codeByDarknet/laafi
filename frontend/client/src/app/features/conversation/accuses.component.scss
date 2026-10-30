@@ -1,0 +1,57 @@
+.resume {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--lf-space-1) var(--lf-space-4);
+  margin: var(--lf-space-3) 0;
+
+  dt {
+    color: var(--lf-ink-2);
+  }
+  dd {
+    margin: 0;
+    font-weight: var(--lf-weight-semibold);
+  }
+}
+
+.json {
+  max-height: 40dvh;
+  overflow: auto;
+  padding: var(--lf-space-3);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-surface-2);
+  font-size: var(--lf-text-xs);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.boutons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--lf-space-2);
+  margin-top: var(--lf-space-3);
+}
+
+.squelettes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-3);
+}
+
+.conforme,
+.non-conforme {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: var(--lf-text-xs);
+  font-weight: var(--lf-weight-semibold);
+}
+
+.conforme {
+  color: var(--lf-success-text);
+}
+
+.non-conforme {
+  color: var(--lf-danger-text);
+}
