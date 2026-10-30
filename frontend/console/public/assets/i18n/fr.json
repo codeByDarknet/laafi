@@ -1,0 +1,362 @@
+{
+  "app": {
+    "titreOnglet": "Console Laafi",
+    "console": "Console d'administration",
+    "perimetreNational": "Périmètre national"
+  },
+  "nav": {
+    "principale": "Navigation principale",
+    "allerAuContenu": "Aller au contenu",
+    "deconnexion": "Se déconnecter",
+    "pied": "Messages chiffrés de bout en bout : la console ne voit aucun contenu.",
+    "tableau": "Tableau de bord",
+    "agents": "Agents",
+    "enroler": "Enrôler un agent",
+    "canaux": "Canaux institutionnels",
+    "politiques": "Politiques de classification",
+    "journal": "Journal probant",
+    "audit": "Audit",
+    "groupe": {
+      "pilotage": "Pilotage",
+      "agents": "Agents",
+      "communication": "Communication",
+      "tracabilite": "Traçabilité"
+    }
+  },
+  "role": {
+    "agent": "Agent",
+    "chef_service": "Chef de service",
+    "admin_ministere": "Administrateur ministériel",
+    "super_admin": "Super-administrateur"
+  },
+  "statut": {
+    "ACTIF": "Actif",
+    "REVOQUE": "Révoqué",
+    "APPAREILS_REVOQUES": "Appareils révoqués"
+  },
+  "classification": {
+    "NORMAL": "Normal",
+    "DIFFUSION_RESTREINTE": "Diffusion restreinte",
+    "CONFIDENTIEL": "Confidentiel"
+  },
+  "commun": {
+    "fermer": "Fermer",
+    "annuler": "Annuler",
+    "enregistrer": "Enregistrer",
+    "modifier": "Modifier",
+    "actions": "Actions",
+    "actualiser": "Actualiser",
+    "reessayer": "Réessayer",
+    "enCours": "Traitement…",
+    "oui": "Oui",
+    "non": "Non",
+    "precedent": "Précédent",
+    "suivant": "Suivant",
+    "pagination": "Pagination",
+    "page": "Page {{page}}",
+    "pageSur": "Page {{page}} sur {{total}}",
+    "plage": "{{debut}}–{{fin}} sur {{total}}"
+  },
+  "form": {
+    "requis": "Ce champ est obligatoire.",
+    "email": "Adresse électronique invalide."
+  },
+  "erreurs": {
+    "reseau": "Serveur injoignable. Vérifiez la connexion au réseau de l'administration.",
+    "session": "Votre session a expiré. Reconnectez-vous.",
+    "interdit": "Action non autorisée pour votre rôle ou votre périmètre.",
+    "introuvable": "Élément introuvable.",
+    "serveur": "Erreur du serveur. Réessayez dans un instant.",
+    "generique": "Une erreur inattendue est survenue."
+  },
+  "accesRefuse": {
+    "titre": "Accès refusé",
+    "texte": "La console est réservée aux administrateurs ministériels et aux super-administrateurs. Votre compte n'a pas ce rôle.",
+    "texteRole": "Votre rôle ne permet pas d'ouvrir cette page.",
+    "connecteEnTantQue": "Connecté en tant que",
+    "versMessagerie": "Ouvrir la messagerie",
+    "changerDeCompte": "Changer de compte",
+    "aide": "Besoin d'un accès administrateur ? Adressez-vous au super-administrateur de la DGTD."
+  },
+  "agent": {
+    "titreOnglet": "Fiche agent",
+    "prenom": "Prénom",
+    "nom": "Nom",
+    "identifiant": "Identifiant",
+    "matrixId": "Identifiant Matrix",
+    "email": "Adresse électronique",
+    "ministere": "Ministère",
+    "direction": "Direction",
+    "fonction": "Fonction",
+    "matricule": "Matricule",
+    "roles": "Rôles",
+    "enroleLe": "Enrôlé le"
+  },
+  "tableau": {
+    "titre": "Tableau de bord",
+    "descNational": "Vue nationale des agents, des révocations et de l'intégrité du journal probant.",
+    "descMinistere": "Agents et activité du ministère : {{ministere}}.",
+    "indicateurs": "Indicateurs clés",
+    "actifs": "Agents actifs",
+    "surTotal": "sur {{total}} comptes",
+    "revoques": "Agents révoqués",
+    "appareilsRevoques": "{{n}} avec appareils révoqués",
+    "recents": "Enrôlés ({{jours}} jours)",
+    "recentsNote": "nouveaux comptes",
+    "integrite": "Journal probant",
+    "erreurAgents": "Impossible de charger les agents",
+    "derniersEnroles": "Derniers enrôlements",
+    "voirTous": "Voir tous les agents",
+    "aucunEnrole": "Aucun agent enrôlé pour l'instant.",
+    "activite": "Activité récente",
+    "journalAudit": "Journal d'audit"
+  },
+  "agents": {
+    "titre": "Agents",
+    "descNational": "Tous les agents de l'administration enrôlés sur Laafi.",
+    "descMinistere": "Agents du ministère : {{ministere}}.",
+    "erreurChargement": "Impossible de charger les agents",
+    "vide": "Aucun agent enrôlé",
+    "videTexte": "Enrôlez un premier agent pour qu'il puisse se connecter à la messagerie.",
+    "aucunResultat": "Aucun agent ne correspond à ces filtres.",
+    "filtre": {
+      "recherche": "Rechercher",
+      "recherchePlaceholder": "Nom, identifiant, matricule…",
+      "ministere": "Ministère",
+      "ministereImpose": "Votre périmètre est limité à votre ministère.",
+      "statut": "Statut",
+      "tous": "Tous",
+      "reinitialiser": "Réinitialiser"
+    },
+    "col": {
+      "agent": "Agent",
+      "ministere": "Ministère",
+      "fonction": "Fonction",
+      "matricule": "Matricule",
+      "statut": "Statut",
+      "enroleLe": "Enrôlé le"
+    }
+  },
+  "enroler": {
+    "titre": "Enrôler un agent",
+    "desc": "Le compte est créé dans l'annuaire Keycloak avec un mot de passe temporaire et une double authentification (TOTP) obligatoire.",
+    "identite": "Identité",
+    "affectation": "Affectation",
+    "roles": "Rôles",
+    "regenerer": "Régénérer à partir du prénom et du nom",
+    "usernameAide": "Généré automatiquement (prenom.nom), modifiable. Adresse Matrix :",
+    "usernameInvalide": "Minuscules, chiffres, « . », « _ » ou « - » uniquement (2 à 64 caractères).",
+    "emailAide": "Adresse fictive de démonstration (domaine {{domaine}}).",
+    "choisirMinistere": "Choisir un ministère",
+    "ministereImpose": "Vous ne pouvez enrôler que dans votre ministère.",
+    "directionExemple": "Ex. Direction des systèmes d'information",
+    "roleDesc": {
+      "agent": "Messagerie chiffrée, annuaire officiel. Toujours attribué.",
+      "chef_service": "Peut diffuser des instructions officielles à son service.",
+      "admin_ministere": "Administre les agents de son ministère depuis cette console."
+    },
+    "noteSecurite": "Aucune clé de chiffrement n'est créée ici : les clés Olm/Megolm sont générées sur l'appareil de l'agent à sa première connexion et ne quittent jamais cet appareil.",
+    "echec": "Enrôlement impossible",
+    "valider": "Enrôler l'agent",
+    "envoiEnCours": "Enrôlement…",
+    "succes": "Agent {{username}} enrôlé.",
+    "copieImpossible": "Copie impossible : sélectionnez le mot de passe manuellement.",
+    "resultat": {
+      "titre": "Agent enrôlé",
+      "desc": "Remettez ces informations à l'agent en main propre ou par un canal sûr. Ce mot de passe ne sera plus jamais affiché.",
+      "motDePasse": "Mot de passe temporaire",
+      "afficher": "Afficher",
+      "masquer": "Masquer",
+      "copier": "Copier",
+      "copie": "Copié",
+      "uneFois": "Affiché une seule fois : la console ne le conserve pas. En cas de perte, il faudra réinitialiser le compte.",
+      "voirFiche": "Voir la fiche de l'agent",
+      "autre": "Enrôler un autre agent"
+    },
+    "consignes": {
+      "titre": "Première connexion : double authentification obligatoire",
+      "e1": "L'agent installe une application d'authentification hors ligne (FreeOTP ou Aegis, par exemple) sur son téléphone.",
+      "e2": "Il ouvre Laafi, saisit son identifiant et ce mot de passe temporaire.",
+      "e3": "Il choisit un nouveau mot de passe personnel, puis scanne le QR code TOTP affiché et saisit le code à 6 chiffres.",
+      "e4": "Ses clés de chiffrement sont alors créées sur son appareil ; pensez à lui faire sauvegarder sa phrase de récupération."
+    }
+  },
+  "fiche": {
+    "erreur": "Impossible de charger la fiche de {{username}}",
+    "premiereConnexionAttendue": "Première connexion attendue",
+    "revoquer": "Révoquer l'agent",
+    "revoquerAppareils": "Révoquer les appareils",
+    "reactiver": "Réactiver",
+    "revoqueTitre": "Accès révoqué",
+    "revoqueTexte": "Le compte est désactivé dans Keycloak et Matrix : l'agent ne peut plus se connecter ni déchiffrer les nouveaux messages.",
+    "reactivationReservee": "Seul un super-administrateur peut le réactiver.",
+    "identite": "Identité et affectation",
+    "appareils": "Appareils",
+    "aucunAppareil": "Aucun appareil connecté pour l'instant.",
+    "aucunAppareilRevoque": "Aucun appareil : tous ont été supprimés.",
+    "appareilSansNom": "Appareil sans nom",
+    "derniereActivite": "Dernière activité",
+    "appareilsNote": "Chaque appareil possède ses propres clés de chiffrement. Le supprimer les rend inutilisables.",
+    "historique": "Historique d'audit",
+    "historiqueVide": "Aucun événement récent pour cet agent.",
+    "historiqueNote": "Événements parmi les 200 plus récents du journal d'audit.",
+    "motif": "Motif",
+    "motifFacultatif": "Motif (facultatif)",
+    "motifAide": "{{min}} caractères minimum, conservé dans l'audit. {{n}} saisis.",
+    "revocation": {
+      "titre": "Révoquer définitivement l'accès",
+      "intro": "Vous allez révoquer {{nom}}. Effets immédiats :",
+      "effet1": "compte Keycloak désactivé et toutes ses sessions fermées ;",
+      "effet2": "compte Matrix désactivé : appareils et jetons supprimés, départ de tous les salons ;",
+      "effet3": "les clés de groupe Megolm sont renouvelées : il ne pourra pas lire les messages envoyés ensuite.",
+      "saisir": "Pour confirmer, saisissez l'identifiant",
+      "saisirAide": "Saisie exacte, sensible à la casse.",
+      "confirmer": "Révoquer l'agent",
+      "enCours": "Révocation…",
+      "succes": "Accès de {{username}} révoqué."
+    },
+    "appareils": {
+      "titre": "Révoquer tous les appareils",
+      "intro": "Téléphone perdu ou volé : les {{n}} appareil(s) de l'agent sont supprimés et leurs clés deviennent inutilisables.",
+      "suite": "Le compte reste actif : l'agent se reconnecte sur un nouvel appareil avec son mot de passe et son code TOTP.",
+      "exemple": "Ex. Téléphone déclaré perdu le 12/10",
+      "confirmer": "Révoquer les appareils",
+      "succes": "Appareils de {{username}} révoqués."
+    },
+    "reactivation": {
+      "titre": "Réactiver l'agent",
+      "intro": "{{nom}} pourra de nouveau se connecter.",
+      "suite": "Il devra se reconnecter (mot de passe + TOTP) ; les messages échangés pendant la révocation lui resteront illisibles.",
+      "confirmer": "Réactiver",
+      "succes": "{{username}} réactivé."
+    }
+  },
+  "canaux": {
+    "titre": "Canaux institutionnels",
+    "desc": "Salons officiels référencés par l'administration, avec leur classification par défaut. Leur contenu reste chiffré de bout en bout.",
+    "enregistrer": "Enregistrer un canal",
+    "valider": "Enregistrer",
+    "succes": "Canal « {{nom}} » enregistré.",
+    "vide": "Aucun canal enregistré",
+    "videTexte": "Créez le salon chiffré depuis la messagerie, puis enregistrez-le ici.",
+    "roomId": "Identifiant du salon Matrix",
+    "roomIdAide": "Visible dans les paramètres avancés du salon, dans la messagerie.",
+    "roomIdInvalide": "Format attendu : !identifiant:serveur",
+    "description": "Description",
+    "col": {
+      "nom": "Nom",
+      "ministere": "Ministère",
+      "classification": "Classification",
+      "salon": "Salon",
+      "enregistre": "Enregistré le"
+    }
+  },
+  "politiques": {
+    "titre": "Politiques de classification",
+    "desc": "Règles appliquées par les applications à chaque niveau de classification.",
+    "lectureSeule": "Lecture seule : seul un super-administrateur peut modifier ces politiques.",
+    "rappel": "Ces règles limitent les fuites par maladresse (copie, transfert, capture). La confidentialité elle-même repose sur le chiffrement de bout en bout.",
+    "modifie": "Modifié par {{par}} le",
+    "transfert": {
+      "AUTORISE": "Autorisé",
+      "INTERNE_MINISTERE": "Interne au ministère",
+      "INTERDIT": "Interdit"
+    },
+    "autorisee": "Autorisée",
+    "bloquee": "Bloquée",
+    "aucune": "Aucune",
+    "jours": "{{n}} jours",
+    "nominatif": "Nominatif",
+    "editer": "Modifier la politique",
+    "libelle": "Libellé",
+    "protections": "Protections",
+    "copieAutorisee": "Copie autorisée",
+    "filigraneNominatif": "Filigrane nominatif (nom, matricule, date)",
+    "expireApres": "Les messages expirent après",
+    "nbJours": "Nombre de jours",
+    "joursUnite": "jours",
+    "succes": "Politique « {{niveau}} » mise à jour.",
+    "col": {
+      "niveau": "Niveau",
+      "transfert": "Transfert",
+      "copie": "Copie",
+      "expiration": "Expiration",
+      "filigrane": "Filigrane",
+      "flou": "Flou hors focus"
+    }
+  },
+  "journal": {
+    "titre": "Journal probant",
+    "desc": "Accusés de lecture chaînés (SHA-256) et signés (Ed25519) : toute suppression ou modification est détectable.",
+    "integriteTitre": "Intégrité de la chaîne",
+    "integriteTexte": "Le serveur recalcule chaque empreinte et vérifie chaque signature, de la première à la dernière entrée.",
+    "verifier": "Vérifier l'intégrité de la chaîne",
+    "verificationEnCours": "Vérification…",
+    "pasEncore": "Aucune vérification lancée depuis l'ouverture de cette page.",
+    "integre": "Chaîne intègre",
+    "rompu": "Chaîne rompue",
+    "verdictOk": "Chaîne intègre",
+    "verdictOkTexte": "Les {{n}} entrées sont chaînées et signées correctement. Aucune altération détectée.",
+    "verdictRompu": "Altération détectée",
+    "verdictRompuTexte": "La vérification s'arrête à l'entrée n° {{id}} :",
+    "chaineAria": "Représentation de la chaîne d'entrées",
+    "legende": {
+      "ok": "Vérifiée",
+      "rompu": "Première entrée invalide",
+      "nonverifie": "Non garantie"
+    },
+    "vide": "Le journal ne contient encore aucune entrée.",
+    "nbEntrees": "{{n}} entrées",
+    "verifieA": "vérifié à",
+    "entrees": "Entrées",
+    "verifieLe": "Vérifié le",
+    "dernierHash": "Dernière empreinte",
+    "accusesTitre": "Accusés de lecture d'un message",
+    "eventId": "Identifiant de l'événement Matrix",
+    "eventIdAide": "L'identifiant ($…) d'un message officiel. Un administrateur ministériel doit être membre du salon.",
+    "chercher": "Afficher les accusés",
+    "aucunAccuse": "Aucun accusé de lecture pour ce message.",
+    "voirPreuve": "Preuve",
+    "preuveTitre": "Preuve de lecture n° {{id}}",
+    "preuveValide": "Signature et empreinte vérifiées par le serveur.",
+    "preuveInvalide": "Cette entrée ne se vérifie pas : elle a été altérée.",
+    "salon": "Salon",
+    "hashPrecedent": "Empreinte précédente",
+    "hashEntree": "Empreinte de l'entrée",
+    "signature": "Signature",
+    "algorithme": "Algorithme",
+    "clePublique": "Clé publique",
+    "serialisation": "Sérialisation canonique signée",
+    "telecharger": "Télécharger la preuve (JSON)",
+    "col": {
+      "entree": "Entrée",
+      "agent": "Agent",
+      "horodatage": "Horodatage",
+      "empreinte": "Empreinte"
+    }
+  },
+  "audit": {
+    "titre": "Audit",
+    "desc": "Actions d'administration tracées : enrôlements, révocations, réactivations, modifications de politique. Aucun contenu de message.",
+    "vide": "Aucun événement d'audit.",
+    "par": "par",
+    "total": "{{n}} événements",
+    "action": {
+      "ENROLEMENT": "Enrôlement",
+      "REVOCATION_TOTALE": "Révocation",
+      "REVOCATION_APPAREILS": "Appareils révoqués",
+      "REACTIVATION": "Réactivation",
+      "URGENCE": "Alerte d'urgence",
+      "POLITIQUE_MODIFIEE": "Politique modifiée",
+      "CANAL_ENREGISTRE": "Canal enregistré"
+    },
+    "col": {
+      "date": "Date",
+      "action": "Action",
+      "cible": "Cible",
+      "acteur": "Acteur",
+      "ministere": "Ministère",
+      "motif": "Motif"
+    }
+  }
+}

@@ -1,0 +1,279 @@
+<a class="lc-retour" routerLink="/agents"><lc-icone nom="retour" />{{ 'nav.agents' | transloco }}</a>
+
+@if (erreur(); as e) {
+  <div class="lf-alert lf-alert--danger" role="alert">
+    <lc-icone nom="alerte" />
+    <div>
+      <p class="lf-alert__title">{{ 'fiche.erreur' | transloco: { username: username() } }}</p>
+      <p>{{ e }}</p>
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="charger()">{{ 'commun.reessayer' | transloco }}</button>
+    </div>
+  </div>
+} @else if (detail(); as d) {
+  <header class="lc-entete">
+    <div class="lc-entete__texte identite">
+      <span class="lf-avatar lf-avatar--lg" data-tint="2" [class.lf-avatar--revoked]="estRevoque()" aria-hidden="true">
+        {{ (d.agent.prenom?.[0] ?? '') + (d.agent.nom?.[0] ?? '') }}
+      </span>
+      <div>
+        <h1>{{ d.agent.nomComplet || d.agent.username }}</h1>
+        <p class="lc-entete__desc">
+          {{ d.agent.fonction || '—' }}
+          @if (d.agent.direction) { · {{ d.agent.direction }} }
+          · <abbr [title]="referentiel.nom(d.agent.ministere)">{{ referentiel.sigle(d.agent.ministere) }}</abbr>
+        </p>
+        <p class="identite__badges">
+          <lc-statut [statut]="d.agent.statut" />
+          @if (!d.agent.enrole && d.agent.statut !== 'REVOQUE') {
+            <span class="lf-badge">{{ 'fiche.premiereConnexionAttendue' | transloco }}</span>
+          }
+        </p>
+      </div>
+    </div>
+    <div class="lc-entete__actions">
+      @if (estRevoque()) {
+        @if (auth.estSuperAdmin()) {
+          <button type="button" class="lf-btn lf-btn--primary" (click)="ouvrir('reactivation')">
+            <lc-icone nom="reactiver" />{{ 'fiche.reactiver' | transloco }}
+          </button>
+        }
+      } @else {
+        <button type="button" class="lf-btn lf-btn--secondary" (click)="ouvrir('appareils')">
+          <lc-icone nom="telephone-barre" />{{ 'fiche.revoquerAppareils' | transloco }}
+        </button>
+        <button type="button" class="lf-btn lf-btn--danger" (click)="ouvrir('revocation')">
+          <lc-icone nom="revoquer" />{{ 'fiche.revoquer' | transloco }}
+        </button>
+      }
+    </div>
+  </header>
+
+  @if (estRevoque()) {
+    <div class="lf-alert lf-alert--danger" role="status">
+      <lc-icone nom="cadenas" />
+      <div>
+        <p class="lf-alert__title">{{ 'fiche.revoqueTitre' | transloco }}</p>
+        <p>
+          {{ 'fiche.revoqueTexte' | transloco }}
+          @if (!auth.estSuperAdmin()) { {{ 'fiche.reactivationReservee' | transloco }} }
+        </p>
+      </div>
+    </div>
+  }
+
+  <div class="grille">
+    <section class="lf-card" aria-labelledby="t-identite">
+      <div class="lf-card__header"><h2 id="t-identite" class="lf-card__title">{{ 'fiche.identite' | transloco }}</h2></div>
+      <div class="lf-card__body">
+        <dl class="lc-dl">
+          <dt>{{ 'agent.identifiant' | transloco }}</dt><dd class="lf-mono">{{ d.agent.username }}</dd>
+          <dt>{{ 'agent.matrixId' | transloco }}</dt><dd class="lf-mono">{{ d.agent.matrixId }}</dd>
+          <dt>{{ 'agent.matricule' | transloco }}</dt><dd class="lf-mono">{{ d.agent.matricule || '—' }}</dd>
+          <dt>{{ 'agent.email' | transloco }}</dt><dd>{{ d.agent.email || '—' }}</dd>
+          <dt>{{ 'agent.ministere' | transloco }}</dt><dd>{{ referentiel.nom(d.agent.ministere) }}</dd>
+          <dt>{{ 'agent.direction' | transloco }}</dt><dd>{{ d.agent.direction || '—' }}</dd>
+          <dt>{{ 'agent.enroleLe' | transloco }}</dt>
+          <dd class="lc-num">{{ d.agent.creeLe ? (d.agent.creeLe | date: 'd MMMM y, HH:mm') : '—' }}</dd>
+          <dt>{{ 'agent.roles' | transloco }}</dt>
+          <dd class="roles">
+            @for (r of d.roles; track r) { <span class="lf-badge">{{ 'role.' + r | transloco }}</span> }
+          </dd>
+        </dl>
+      </div>
+    </section>
+
+    <section class="lf-card" aria-labelledby="t-appareils">
+      <div class="lf-card__header">
+        <h2 id="t-appareils" class="lf-card__title">{{ 'fiche.appareils' | transloco }}</h2>
+        <span class="lf-badge lc-num">{{ d.appareils.length }}</span>
+      </div>
+      @if (d.appareils.length === 0) {
+        <div class="lf-empty">
+          <lc-icone nom="telephone-barre" class="lf-empty__art" />
+          <p class="lf-empty__text">{{ (estRevoque() ? 'fiche.aucunAppareilRevoque' : 'fiche.aucunAppareil') | transloco }}</p>
+        </div>
+      } @else {
+        <ul class="lf-list lf-list--divided" role="list">
+          @for (a of d.appareils; track a.deviceId) {
+            <li class="lf-list__item">
+              <lc-icone nom="telephone" class="appareil__icone" />
+              <div class="lf-list__body">
+                <span class="lf-list__title">{{ a.nom || ('fiche.appareilSansNom' | transloco) }}</span>
+                <span class="lf-list__meta lf-mono">{{ a.deviceId }}</span>
+              </div>
+              <div class="lf-list__trailing">
+                @if (a.derniereActivite) {
+                  <span>{{ 'fiche.derniereActivite' | transloco }}</span>
+                  <time class="lc-num" [attr.datetime]="a.derniereActivite">{{ a.derniereActivite | date: 'd MMM, HH:mm' }}</time>
+                }
+              </div>
+            </li>
+          }
+        </ul>
+        <p class="lf-hint note">{{ 'fiche.appareilsNote' | transloco }}</p>
+      }
+    </section>
+  </div>
+
+  <section class="lc-section" aria-labelledby="t-historique">
+    <h2 id="t-historique" class="lc-section__titre">{{ 'fiche.historique' | transloco }}</h2>
+    @if (erreurHistorique(); as e) {
+      <p class="lf-error">{{ e }}</p>
+    } @else if (historique() === null) {
+      <div class="lf-card"><div class="lf-card__body">
+        @for (i of [1, 2, 3]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }
+      </div></div>
+    } @else if (historique()!.length === 0) {
+      <div class="lf-card"><div class="lf-empty"><p class="lf-empty__text">{{ 'fiche.historiqueVide' | transloco }}</p></div></div>
+    } @else {
+      <div class="lf-table-wrap">
+        <table class="lf-table lf-table--stack">
+          <thead>
+            <tr>
+              <th scope="col">{{ 'audit.col.date' | transloco }}</th>
+              <th scope="col">{{ 'audit.col.action' | transloco }}</th>
+              <th scope="col">{{ 'audit.col.acteur' | transloco }}</th>
+              <th scope="col">{{ 'audit.col.motif' | transloco }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (ev of historique(); track ev.id) {
+              <tr>
+                <td [attr.data-label]="'audit.col.date' | transloco" class="lc-num">{{ ev.horodatage | date: 'd MMM y, HH:mm' }}</td>
+                <td [attr.data-label]="'audit.col.action' | transloco">
+                  <span class="lf-badge" [attr.data-action]="ev.action">{{ libelleAction(ev.action) }}</span>
+                </td>
+                <td [attr.data-label]="'audit.col.acteur' | transloco"><span class="lf-mono">{{ ev.acteur }}</span></td>
+                <td [attr.data-label]="'audit.col.motif' | transloco">{{ ev.motif || '—' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="lf-hint note">{{ 'fiche.historiqueNote' | transloco }}</p>
+    }
+  </section>
+
+  <!-- ===== Révocation totale : confirmation forte ===== -->
+  <dialog #dlgRevocation class="lf-modal lf-modal--danger" aria-labelledby="dr-titre" (cancel)="surAnnulation($event)">
+    <form class="lf-modal__contenu" (submit)="$event.preventDefault(); confirmerRevocation()" novalidate>
+      <header class="lf-modal__header">
+        <h2 id="dr-titre" class="lf-modal__title">{{ 'fiche.revocation.titre' | transloco }}</h2>
+        <button type="button" class="lf-close" [attr.aria-label]="'commun.fermer' | transloco" (click)="fermer('revocation')">
+          <lc-icone nom="fermer" />
+        </button>
+      </header>
+      <div class="lf-modal__body">
+        <p>{{ 'fiche.revocation.intro' | transloco: { nom: d.agent.nomComplet || d.agent.username } }}</p>
+        <ul class="effets">
+          <li>{{ 'fiche.revocation.effet1' | transloco }}</li>
+          <li>{{ 'fiche.revocation.effet2' | transloco }}</li>
+          <li>{{ 'fiche.revocation.effet3' | transloco }}</li>
+        </ul>
+
+        <div class="lf-field">
+          <label class="lf-label lf-label--required" for="dr-motif">{{ 'fiche.motif' | transloco }}</label>
+          <textarea id="dr-motif" class="lf-input" rows="3" [attr.maxlength]="motifMax"
+                    [value]="motif()" (input)="motif.set($any($event.target).value)"
+                    [attr.aria-invalid]="tentative() && !verification().motifValide"
+                    aria-describedby="dr-motif-aide"></textarea>
+          <p id="dr-motif-aide" class="lf-hint lc-num">
+            {{ 'fiche.motifAide' | transloco: { min: motifMin, n: longueurMotif() } }}
+          </p>
+        </div>
+
+        <div class="lf-field">
+          <label class="lf-label lf-label--required" for="dr-confirm">
+            {{ 'fiche.revocation.saisir' | transloco }} <strong class="lf-mono">{{ username() }}</strong>
+          </label>
+          <input id="dr-confirm" class="lf-input lf-mono" autocomplete="off" spellcheck="false" autocapitalize="off"
+                 [value]="saisieUsername()" (input)="saisieUsername.set($any($event.target).value)"
+                 [attr.aria-invalid]="tentative() && !verification().confirmationValide"
+                 aria-describedby="dr-confirm-aide" />
+          <p id="dr-confirm-aide" class="lf-hint">{{ 'fiche.revocation.saisirAide' | transloco }}</p>
+        </div>
+
+        @if (erreurAction(); as e) { <p class="lf-error" role="alert">{{ e }}</p> }
+      </div>
+      <footer class="lf-modal__footer">
+        <button type="button" class="lf-btn lf-btn--secondary" (click)="fermer('revocation')" [disabled]="envoi()">{{ 'commun.annuler' | transloco }}</button>
+        <button type="submit" class="lf-btn lf-btn--danger" [disabled]="!verification().peutConfirmer || envoi()" [attr.aria-busy]="envoi()">
+          <lc-icone nom="revoquer" />
+          {{ (envoi() ? 'fiche.revocation.enCours' : 'fiche.revocation.confirmer') | transloco }}
+        </button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ===== Perte de téléphone : révocation des appareils ===== -->
+  <dialog #dlgAppareils class="lf-modal" aria-labelledby="da-titre" (cancel)="surAnnulation($event)">
+    <form (submit)="$event.preventDefault(); confirmerAppareils()" novalidate>
+      <header class="lf-modal__header">
+        <h2 id="da-titre" class="lf-modal__title">{{ 'fiche.appareils.titre' | transloco }}</h2>
+        <button type="button" class="lf-close" [attr.aria-label]="'commun.fermer' | transloco" (click)="fermer('appareils')">
+          <lc-icone nom="fermer" />
+        </button>
+      </header>
+      <div class="lf-modal__body">
+        <p>{{ 'fiche.appareils.intro' | transloco: { n: d.appareils.length } }}</p>
+        <p class="lf-hint">{{ 'fiche.appareils.suite' | transloco }}</p>
+        <div class="lf-field">
+          <label class="lf-label" for="da-motif">{{ 'fiche.motifFacultatif' | transloco }}</label>
+          <textarea id="da-motif" class="lf-input" rows="2" [attr.maxlength]="motifMax"
+                    [placeholder]="'fiche.appareils.exemple' | transloco"
+                    [value]="motif()" (input)="motif.set($any($event.target).value)"></textarea>
+        </div>
+        @if (erreurAction(); as e) { <p class="lf-error" role="alert">{{ e }}</p> }
+      </div>
+      <footer class="lf-modal__footer">
+        <button type="button" class="lf-btn lf-btn--secondary" (click)="fermer('appareils')" [disabled]="envoi()">{{ 'commun.annuler' | transloco }}</button>
+        <button type="submit" class="lf-btn lf-btn--danger-outline" [disabled]="envoi()" [attr.aria-busy]="envoi()">
+          <lc-icone nom="telephone-barre" />
+          {{ (envoi() ? 'commun.enCours' : 'fiche.appareils.confirmer') | transloco }}
+        </button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- ===== Réactivation (super_admin) ===== -->
+  @if (auth.estSuperAdmin()) {
+    <dialog #dlgReactivation class="lf-modal" aria-labelledby="dx-titre" (cancel)="surAnnulation($event)">
+      <form (submit)="$event.preventDefault(); confirmerReactivation()" novalidate>
+        <header class="lf-modal__header">
+          <h2 id="dx-titre" class="lf-modal__title">{{ 'fiche.reactivation.titre' | transloco }}</h2>
+          <button type="button" class="lf-close" [attr.aria-label]="'commun.fermer' | transloco" (click)="fermer('reactivation')">
+            <lc-icone nom="fermer" />
+          </button>
+        </header>
+        <div class="lf-modal__body">
+          <p>{{ 'fiche.reactivation.intro' | transloco: { nom: d.agent.nomComplet || d.agent.username } }}</p>
+          <p class="lf-hint">{{ 'fiche.reactivation.suite' | transloco }}</p>
+          <div class="lf-field">
+            <label class="lf-label" for="dx-motif">{{ 'fiche.motifFacultatif' | transloco }}</label>
+            <textarea id="dx-motif" class="lf-input" rows="2" [attr.maxlength]="motifMax"
+                      [value]="motif()" (input)="motif.set($any($event.target).value)"></textarea>
+          </div>
+          @if (erreurAction(); as e) { <p class="lf-error" role="alert">{{ e }}</p> }
+        </div>
+        <footer class="lf-modal__footer">
+          <button type="button" class="lf-btn lf-btn--secondary" (click)="fermer('reactivation')" [disabled]="envoi()">{{ 'commun.annuler' | transloco }}</button>
+          <button type="submit" class="lf-btn lf-btn--primary" [disabled]="envoi()" [attr.aria-busy]="envoi()">
+            <lc-icone nom="reactiver" />
+            {{ (envoi() ? 'commun.enCours' : 'fiche.reactivation.confirmer') | transloco }}
+          </button>
+        </footer>
+      </form>
+    </dialog>
+  }
+} @else {
+  <div class="lc-entete" aria-busy="true">
+    <div class="lc-entete__texte">
+      <span class="lf-skeleton lf-skeleton--title"></span>
+      <span class="lf-skeleton lf-skeleton--text"></span>
+    </div>
+  </div>
+  <div class="grille">
+    <div class="lf-card"><div class="lf-card__body">@for (i of [1, 2, 3, 4, 5]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }</div></div>
+    <div class="lf-card"><div class="lf-card__body">@for (i of [1, 2]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }</div></div>
+  </div>
+}

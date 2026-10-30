@@ -1,0 +1,193 @@
+<a class="lc-retour" routerLink="/agents"><lc-icone nom="retour" />{{ 'nav.agents' | transloco }}</a>
+
+@if (resultat(); as r) {
+  <!-- Résultat : mot de passe temporaire affiché une seule fois. -->
+  <section class="resultat" aria-labelledby="resultat-titre">
+    <header class="lc-entete">
+      <div class="lc-entete__texte">
+        <h1 id="resultat-titre" tabindex="-1">{{ 'enroler.resultat.titre' | transloco }}</h1>
+        <p class="lc-entete__desc">{{ 'enroler.resultat.desc' | transloco }}</p>
+      </div>
+    </header>
+
+    <div class="lf-card">
+      <div class="lf-card__body">
+        <dl class="lc-dl">
+          <dt>{{ 'agent.identifiant' | transloco }}</dt>
+          <dd class="lf-mono">{{ r.username }}</dd>
+          <dt>{{ 'agent.matrixId' | transloco }}</dt>
+          <dd class="lf-mono">{{ r.matrixId }}</dd>
+        </dl>
+
+        <div class="secret">
+          <p class="secret__label" id="mdp-label">{{ 'enroler.resultat.motDePasse' | transloco }}</p>
+          <div class="secret__ligne">
+            <output class="secret__valeur lf-mono" aria-labelledby="mdp-label">
+              {{ revele() ? r.motDePasseTemporaire : '••••••••••••••••' }}
+            </output>
+            <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" [attr.aria-pressed]="revele()" (click)="revele.set(!revele())">
+              <lc-icone nom="oeil" />
+              {{ (revele() ? 'enroler.resultat.masquer' : 'enroler.resultat.afficher') | transloco }}
+            </button>
+            <button type="button" class="lf-btn lf-btn--primary lf-btn--sm" (click)="copier()">
+              <lc-icone [nom]="copie() ? 'coche' : 'copier'" />
+              {{ (copie() ? 'enroler.resultat.copie' : 'enroler.resultat.copier') | transloco }}
+            </button>
+          </div>
+          <p class="lf-hint">{{ 'enroler.resultat.uneFois' | transloco }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lf-alert lf-alert--warning consignes" role="note">
+      <lc-icone nom="cle" />
+      <div>
+        <p class="lf-alert__title">{{ 'enroler.consignes.titre' | transloco }}</p>
+        <ol>
+          <li>{{ 'enroler.consignes.e1' | transloco }}</li>
+          <li>{{ 'enroler.consignes.e2' | transloco }}</li>
+          <li>{{ 'enroler.consignes.e3' | transloco }}</li>
+          <li>{{ 'enroler.consignes.e4' | transloco }}</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="lc-actions">
+      <a class="lf-btn lf-btn--secondary" [routerLink]="['/agents', r.username]">{{ 'enroler.resultat.voirFiche' | transloco }}</a>
+      <button type="button" class="lf-btn lf-btn--primary" (click)="nouveau()">
+        <lc-icone nom="plus" />{{ 'enroler.resultat.autre' | transloco }}
+      </button>
+    </div>
+  </section>
+} @else {
+  <header class="lc-entete">
+    <div class="lc-entete__texte">
+      <h1>{{ 'enroler.titre' | transloco }}</h1>
+      <p class="lc-entete__desc">{{ 'enroler.desc' | transloco }}</p>
+    </div>
+  </header>
+
+  <form [formGroup]="form" (ngSubmit)="soumettre()" novalidate class="formulaire">
+    <fieldset class="lf-card bloc">
+      <legend class="bloc__titre">{{ 'enroler.identite' | transloco }}</legend>
+      <div class="lc-champs">
+        <div class="lf-field">
+          <label class="lf-label lf-label--required" for="e-prenom">{{ 'agent.prenom' | transloco }}</label>
+          <input id="e-prenom" class="lf-input" formControlName="prenom" autocomplete="off"
+                 [attr.aria-invalid]="invalide('prenom')" aria-describedby="e-prenom-err" />
+          @if (invalide('prenom')) { <p id="e-prenom-err" class="lf-error">{{ 'form.requis' | transloco }}</p> }
+        </div>
+        <div class="lf-field">
+          <label class="lf-label lf-label--required" for="e-nom">{{ 'agent.nom' | transloco }}</label>
+          <input id="e-nom" class="lf-input" formControlName="nom" autocomplete="off"
+                 [attr.aria-invalid]="invalide('nom')" aria-describedby="e-nom-err" />
+          @if (invalide('nom')) { <p id="e-nom-err" class="lf-error">{{ 'form.requis' | transloco }}</p> }
+        </div>
+        <div class="lf-field">
+          <label class="lf-label lf-label--required" for="e-username">{{ 'agent.identifiant' | transloco }}</label>
+          <div class="avec-bouton">
+            <input id="e-username" class="lf-input lf-mono" formControlName="username" autocomplete="off" spellcheck="false"
+                   (input)="usernameSaisi()" [attr.aria-invalid]="invalide('username')" aria-describedby="e-username-aide e-username-err" />
+            <button type="button" class="lf-btn lf-btn--ghost lf-btn--icon" (click)="regenererUsername()"
+                    [attr.aria-label]="'enroler.regenerer' | transloco" [title]="'enroler.regenerer' | transloco">
+              <lc-icone nom="rafraichir" />
+            </button>
+          </div>
+          <p id="e-username-aide" class="lf-hint">
+            {{ 'enroler.usernameAide' | transloco }}
+            @if (apercuMatrix()) { <span class="lf-mono">{{ apercuMatrix() }}</span> }
+          </p>
+          @if (invalide('username')) { <p id="e-username-err" class="lf-error">{{ 'enroler.usernameInvalide' | transloco }}</p> }
+        </div>
+        <div class="lf-field">
+          <label class="lf-label" for="e-email">{{ 'agent.email' | transloco }}</label>
+          <input id="e-email" class="lf-input" type="email" formControlName="email" autocomplete="off" (input)="emailSaisi()"
+                 [attr.aria-invalid]="invalide('email')" aria-describedby="e-email-aide e-email-err" />
+          <p id="e-email-aide" class="lf-hint">{{ 'enroler.emailAide' | transloco: { domaine: domaine } }}</p>
+          @if (invalide('email')) { <p id="e-email-err" class="lf-error">{{ 'form.email' | transloco }}</p> }
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="lf-card bloc">
+      <legend class="bloc__titre">{{ 'enroler.affectation' | transloco }}</legend>
+      <div class="lc-champs">
+        <div class="lf-field lc-champs__large">
+          <label class="lf-label lf-label--required" for="e-ministere">{{ 'agent.ministere' | transloco }}</label>
+          <select id="e-ministere" class="lf-input" formControlName="ministere"
+                  [attr.aria-invalid]="invalide('ministere')" aria-describedby="e-min-aide e-min-err">
+            <option value="" disabled>{{ 'enroler.choisirMinistere' | transloco }}</option>
+            @for (m of referentiel.ministeres(); track m.code) {
+              <option [value]="m.code">{{ m.sigle }} — {{ m.nom }}</option>
+            }
+          </select>
+          @if (auth.ministereImpose()) {
+            <p id="e-min-aide" class="lf-hint">{{ 'enroler.ministereImpose' | transloco }}</p>
+          }
+          @if (invalide('ministere')) { <p id="e-min-err" class="lf-error">{{ 'form.requis' | transloco }}</p> }
+        </div>
+        <div class="lf-field">
+          <label class="lf-label" for="e-direction">{{ 'agent.direction' | transloco }}</label>
+          <input id="e-direction" class="lf-input" formControlName="direction" autocomplete="off"
+                 [placeholder]="'enroler.directionExemple' | transloco" />
+        </div>
+        <div class="lf-field">
+          <label class="lf-label lf-label--required" for="e-fonction">{{ 'agent.fonction' | transloco }}</label>
+          <input id="e-fonction" class="lf-input" formControlName="fonction" autocomplete="off"
+                 [attr.aria-invalid]="invalide('fonction')" aria-describedby="e-fonction-err" />
+          @if (invalide('fonction')) { <p id="e-fonction-err" class="lf-error">{{ 'form.requis' | transloco }}</p> }
+        </div>
+        <div class="lf-field">
+          <label class="lf-label lf-label--required" for="e-matricule">{{ 'agent.matricule' | transloco }}</label>
+          <input id="e-matricule" class="lf-input lf-mono" formControlName="matricule" autocomplete="off" spellcheck="false"
+                 [attr.aria-invalid]="invalide('matricule')" aria-describedby="e-matricule-err" />
+          @if (invalide('matricule')) { <p id="e-matricule-err" class="lf-error">{{ 'form.requis' | transloco }}</p> }
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="lf-card bloc">
+      <legend class="bloc__titre">{{ 'enroler.roles' | transloco }}</legend>
+      <ul class="roles" role="list">
+        @for (o of roles(); track o.role) {
+          <li>
+            <label class="lf-check role">
+              @switch (o.role) {
+                @case ('agent') { <input type="checkbox" checked disabled /> }
+                @case ('chef_service') { <input type="checkbox" formControlName="chefService" /> }
+                @case ('admin_ministere') { <input type="checkbox" formControlName="adminMinistere" /> }
+              }
+              <span>
+                <strong>{{ 'role.' + o.role | transloco }}</strong>
+                <span class="role__desc">{{ 'enroler.roleDesc.' + o.role | transloco }}</span>
+              </span>
+            </label>
+          </li>
+        }
+      </ul>
+    </fieldset>
+
+    <div class="lf-alert securite" role="note">
+      <lc-icone nom="cadenas" />
+      <p>{{ 'enroler.noteSecurite' | transloco }}</p>
+    </div>
+
+    @if (erreur(); as e) {
+      <div class="lf-alert lf-alert--danger" role="alert">
+        <lc-icone nom="alerte" />
+        <div>
+          <p class="lf-alert__title">{{ 'enroler.echec' | transloco }}</p>
+          <p>{{ e }}</p>
+        </div>
+      </div>
+    }
+
+    <div class="lc-actions">
+      <a class="lf-btn lf-btn--ghost" routerLink="/agents">{{ 'commun.annuler' | transloco }}</a>
+      <button type="submit" class="lf-btn lf-btn--primary" [disabled]="envoi()" [attr.aria-busy]="envoi()">
+        <lc-icone nom="enroler" />
+        {{ (envoi() ? 'enroler.envoiEnCours' : 'enroler.valider') | transloco }}
+      </button>
+    </div>
+  </form>
+}

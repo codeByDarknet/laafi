@@ -1,0 +1,81 @@
+<header class="lc-entete">
+  <div class="lc-entete__texte">
+    <h1>{{ 'audit.titre' | transloco }}</h1>
+    <p class="lc-entete__desc">{{ 'audit.desc' | transloco }}</p>
+  </div>
+  <div class="lc-entete__actions">
+    <button type="button" class="lf-btn lf-btn--secondary" (click)="charger(numero())" [disabled]="chargement()">
+      <lc-icone nom="rafraichir" />{{ 'commun.actualiser' | transloco }}
+    </button>
+  </div>
+</header>
+
+@if (erreur(); as e) {
+  <div class="lf-alert lf-alert--danger" role="alert">
+    <div><p>{{ e }}</p>
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="charger(numero())">{{ 'commun.reessayer' | transloco }}</button></div>
+  </div>
+} @else if (page() === null) {
+  <div class="lf-table-wrap"><div class="lf-card__body">
+    @for (i of [1, 2, 3, 4, 5]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }
+  </div></div>
+} @else if (page()!.elements.length === 0) {
+  <div class="lf-table-wrap"><div class="lf-empty"><p class="lf-empty__text">{{ 'audit.vide' | transloco }}</p></div></div>
+} @else {
+  <div class="lf-table-wrap" [attr.aria-busy]="chargement()">
+    <table class="lf-table lf-table--stack">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'audit.col.date' | transloco }}</th>
+          <th scope="col">{{ 'audit.col.action' | transloco }}</th>
+          <th scope="col">{{ 'audit.col.cible' | transloco }}</th>
+          <th scope="col">{{ 'audit.col.acteur' | transloco }}</th>
+          <th scope="col">{{ 'audit.col.ministere' | transloco }}</th>
+          <th scope="col">{{ 'audit.col.motif' | transloco }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ev of page()!.elements; track ev.id) {
+          <tr>
+            <td class="lc-num" [attr.data-label]="'audit.col.date' | transloco">
+              <time [attr.datetime]="ev.horodatage">{{ ev.horodatage | date: 'd MMM y, HH:mm' }}</time>
+            </td>
+            <td [attr.data-label]="'audit.col.action' | transloco"><span class="lf-badge" [attr.data-action]="ev.action">{{ libelleAction(ev.action) }}</span></td>
+            <td [attr.data-label]="'audit.col.cible' | transloco">
+              @if (cibleAgent(ev)) {
+                <a class="lf-mono" [routerLink]="['/agents', ev.cible]">{{ ev.cible }}</a>
+              } @else {
+                <span class="lc-hash">{{ ev.cible || '—' }}</span>
+              }
+            </td>
+            <td [attr.data-label]="'audit.col.acteur' | transloco"><span class="lf-mono">{{ ev.acteur }}</span></td>
+            <td [attr.data-label]="'audit.col.ministere' | transloco">{{ ev.ministere ? referentiel.sigle(ev.ministere) : '—' }}</td>
+            <td [attr.data-label]="'audit.col.motif' | transloco"><span class="motif">{{ ev.motif || '—' }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="lc-pied-tableau">
+    <p>
+      @if (page()!.total != null) {
+        {{ 'audit.total' | transloco: { n: page()!.total } }}
+      }
+    </p>
+    <nav class="lc-pagination" [attr.aria-label]="'commun.pagination' | transloco">
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" [disabled]="numero() === 0 || chargement()" (click)="charger(numero() - 1)">
+        <lc-icone nom="precedent" /> {{ 'commun.precedent' | transloco }}
+      </button>
+      <span class="lc-num">
+        @if (totalPages(); as tp) {
+          {{ 'commun.pageSur' | transloco: { page: numero() + 1, total: tp } }}
+        } @else {
+          {{ 'commun.page' | transloco: { page: numero() + 1 } }}
+        }
+      </span>
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" [disabled]="!page()!.pageSuivante || chargement()" (click)="charger(numero() + 1)">
+        {{ 'commun.suivant' | transloco }} <lc-icone nom="suivant" />
+      </button>
+    </nav>
+  </div>
+}
