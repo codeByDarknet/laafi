@@ -40,7 +40,9 @@ if [ ! -s /data/signing.key ]; then
 fi
 
 # Synapse tourne sous l'utilisateur non privilégié 991 (UID/GID de l'image).
-chown -R "${UID:-991}:${GID:-991}" /data
+# Attention : en bash, $UID est une variable interne (0 pour root) ; on ne peut donc pas
+# écrire "${UID:-991}" : /data resterait à root et Synapse ne pourrait pas écrire les médias.
+chown -R 991:991 /data
 
 export SYNAPSE_CONFIG_PATH="$CONFIG"
 exec /start.py
