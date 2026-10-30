@@ -54,14 +54,14 @@ postgres (interne uniquement) : bases `synapse`, `keycloak`, `laafi`
   - `laafi-backend` : confidentiel, service account avec rôles `realm-management` : `manage-users`, `view-users`, `query-users`. Secret `KEYCLOAK_BACKEND_SECRET` (défaut `backend-dev-secret`).
 - Comptes de démonstration **fictifs** (mot de passe `Laafi2026!`, TOTP pré-enregistré avec le secret de démo base32 `JBSWY3DPEHPK3PXP`, label « Laafi démo ») :
 
-| username | Prénom Nom | Rôles | Ministère | Fonction |
-|---|---|---|---|---|
-| `super.admin` | Admin DGTD | super_admin, agent | MTDPCE | Administrateur plateforme |
-| `admin.sante` | Rasmata Compaoré | admin_ministere, agent | MSHP | Administratrice ministère |
-| `awa.sawadogo` | Awa Sawadogo | chef_service, agent | MSHP | Directrice des ressources humaines |
-| `issa.kabore` | Issa Kaboré | agent | MSHP | Médecin-chef de district |
-| `mariam.traore` | Mariam Traoré | agent | MTDPCE | Chargée d'études |
-| `paul.zongo` | Paul Zongo | agent | MEF | Contrôleur financier |
+| username          | Prénom Nom       | Rôles                 | Ministère | Fonction                           |
+| ----------------- | ----------------- | ---------------------- | ---------- | ---------------------------------- |
+| `super.admin`   | Admin DGTD        | super_admin, agent     | MTDPCE     | Administrateur plateforme          |
+| `admin.sante`   | Rasmata Compaoré | admin_ministere, agent | MSHP       | Administratrice ministère         |
+| `awa.sawadogo`  | Awa Sawadogo      | chef_service, agent    | MSHP       | Directrice des ressources humaines |
+| `issa.kabore`   | Issa Kaboré      | agent                  | MSHP       | Médecin-chef de district          |
+| `mariam.traore` | Mariam Traoré    | agent                  | MTDPCE     | Chargée d'études                 |
+| `paul.zongo`    | Paul Zongo        | agent                  | MEF        | Contrôleur financier              |
 
   Codes ministères (référentiel `infra/referentiel/ministeres.json`, servi par le backend) : `MTDPCE`, `MSHP` (Santé), `MEF` (Économie et Finances), `MENAPLN` (Éducation), `MATDS` (Administration territoriale), `MSECU` (Sécurité), `MAEC` (Affaires étrangères). Noms complets fictifs/plausibles.
   Un compte `intrus` n'existe PAS (sert à l'épreuve « Intrus »).
@@ -75,27 +75,27 @@ postgres (interne uniquement) : bases `synapse`, `keycloak`, `laafi`
 
 ### API REST `/api/v1`
 
-| Méthode | Chemin | Rôle | Description |
-|---|---|---|---|
-| GET | `/me` | agent | profil courant (username, matrixId, nom, ministère, fonction, rôles) |
-| GET | `/ministeres` | authentifié | référentiel |
-| GET | `/annuaire?q=&ministere=&page=` | agent | annuaire officiel (agents actifs : matrixId, nom, ministère, direction, fonction) |
-| GET | `/agents?q=&ministere=&statut=` | admin_ministere, super_admin | liste admin (statut `ACTIF`/`REVOQUE`/`APPAREILS_REVOQUES`) |
-| POST | `/agents` | admin_ministere (son ministère seulement), super_admin | **enrôlement** : crée l'utilisateur Keycloak (attributs, rôles, `enrole=true`, mot de passe temporaire, actions requises `CONFIGURE_TOTP` + `UPDATE_PASSWORD`) puis pré-crée l'utilisateur Synapse (Admin API v2 `PUT /_synapse/admin/v2/users/{mxid}` avec `external_ids:[{auth_provider:"oidc-keycloak", external_id:<sub keycloak>}]`). Renvoie `{ username, matrixId, motDePasseTemporaire }` |
-| GET | `/agents/{username}` | admin | détail + appareils Synapse (`GET /_synapse/admin/v2/users/{mxid}/devices`) |
-| POST | `/agents/{username}/revocation` | admin (scope ministère) | **révocation totale** `{motif}` : Keycloak `enabled=false` + logout de toutes les sessions + `enrole=false` ; Synapse `POST /_synapse/admin/v1/deactivate/{mxid}` `{erase:false}` (supprime appareils et tokens, quitte tous les salons → rotation Megolm côté clients). Journalisé. |
-| POST | `/agents/{username}/appareils/revocation` | admin | **perte de téléphone** : supprime tous les appareils Synapse (`POST /_synapse/admin/v2/users/{mxid}/delete_devices`) + logout Keycloak ; le compte reste actif, reconnexion avec 2FA obligatoire. |
-| POST | `/agents/{username}/reactivation` | super_admin | réactive (Keycloak enabled, Synapse `deactivated:false`) |
-| GET | `/politiques` | authentifié | politiques de classification (voir §6) |
-| PUT | `/politiques/{niveau}` | super_admin | modifie une politique |
-| GET/POST | `/canaux` | GET agent / POST chef_service+ | registre des canaux institutionnels `{roomId, nom, ministere, description, classification}` (le salon Matrix est créé par le client ; le backend n'enregistre que les métadonnées) |
-| POST | `/accuses` | agent | **accusé de lecture probant** `{roomId, eventId, empreinte}` (empreinte = SHA-256 hex du contenu déchiffré canonique, calculée par le client via WebCrypto) → enregistré avec horodatage serveur, chaîné (hash de l'entrée précédente) et signé (Ed25519 via JCA standard, clé serveur persistée). Renvoie la preuve. |
-| GET | `/accuses?eventId=` | agent (membre émetteur) | liste des accusés d'une instruction |
-| GET | `/accuses/{id}/preuve` | agent | preuve JSON vérifiable (entrée, hash précédent, signature, clé publique) |
-| GET | `/journal/verification` | admin | vérifie l'intégrité de toute la chaîne |
-| GET | `/audit?page=` | admin | journal d'audit administratif (enrôlements, révocations, urgences) — **jamais de contenu** |
-| POST | `/me/urgence` | agent | **bouton d'urgence** : supprime tous les appareils Synapse de l'agent + logout Keycloak ; journalisé |
-| GET | `/sante` | public | healthcheck |
+| Méthode | Chemin                                      | Rôle                                                   | Description                                                                                                                                                                                                                                                                                                                                                                                                              |
+| -------- | ------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| GET      | `/me`                                     | agent                                                   | profil courant (username, matrixId, nom, ministère, fonction, rôles)                                                                                                                                                                                                                                                                                                                                                   |
+| GET      | `/ministeres`                             | authentifié                                            | référentiel                                                                                                                                                                                                                                                                                                                                                                                                            |
+| GET      | `/annuaire?q=&ministere=&page=`           | agent                                                   | annuaire officiel (agents actifs : matrixId, nom, ministère, direction, fonction)                                                                                                                                                                                                                                                                                                                                       |
+| GET      | `/agents?q=&ministere=&statut=`           | admin_ministere, super_admin                            | liste admin (statut `ACTIF`/`REVOQUE`/`APPAREILS_REVOQUES`)                                                                                                                                                                                                                                                                                                                                                        |
+| POST     | `/agents`                                 | admin_ministere (son ministère seulement), super_admin | **enrôlement** : crée l'utilisateur Keycloak (attributs, rôles, `enrole=true`, mot de passe temporaire, actions requises `CONFIGURE_TOTP` + `UPDATE_PASSWORD`) puis pré-crée l'utilisateur Synapse (Admin API v2 `PUT /_synapse/admin/v2/users/{mxid}` avec `external_ids:[{auth_provider:"oidc-keycloak", external_id:<sub keycloak>}]`). Renvoie `{ username, matrixId, motDePasseTemporaire }` |
+| GET      | `/agents/{username}`                      | admin                                                   | détail + appareils Synapse (`GET /_synapse/admin/v2/users/{mxid}/devices`)                                                                                                                                                                                                                                                                                                                                            |
+| POST     | `/agents/{username}/revocation`           | admin (scope ministère)                                | **révocation totale** `{motif}` : Keycloak `enabled=false` + logout de toutes les sessions + `enrole=false` ; Synapse `POST /_synapse/admin/v1/deactivate/{mxid}` `{erase:false}` (supprime appareils et tokens, quitte tous les salons → rotation Megolm côté clients). Journalisé.                                                                                                                |
+| POST     | `/agents/{username}/appareils/revocation` | admin                                                   | **perte de téléphone** : supprime tous les appareils Synapse (`POST /_synapse/admin/v2/users/{mxid}/delete_devices`) + logout Keycloak ; le compte reste actif, reconnexion avec 2FA obligatoire.                                                                                                                                                                                                              |
+| POST     | `/agents/{username}/reactivation`         | super_admin                                             | réactive (Keycloak enabled, Synapse `deactivated:false`)                                                                                                                                                                                                                                                                                                                                                              |
+| GET      | `/politiques`                             | authentifié                                            | politiques de classification (voir §6)                                                                                                                                                                                                                                                                                                                                                                                  |
+| PUT      | `/politiques/{niveau}`                    | super_admin                                             | modifie une politique                                                                                                                                                                                                                                                                                                                                                                                                    |
+| GET/POST | `/canaux`                                 | GET agent / POST chef_service+                          | registre des canaux institutionnels `{roomId, nom, ministere, description, classification}` (le salon Matrix est créé par le client ; le backend n'enregistre que les métadonnées)                                                                                                                                                                                                                                 |
+| POST     | `/accuses`                                | agent                                                   | **accusé de lecture probant** `{roomId, eventId, empreinte}` (empreinte = SHA-256 hex du contenu déchiffré canonique, calculée par le client via WebCrypto) → enregistré avec horodatage serveur, chaîné (hash de l'entrée précédente) et signé (Ed25519 via JCA standard, clé serveur persistée). Renvoie la preuve.                                                                              |
+| GET      | `/accuses?eventId=`                       | agent (membre émetteur)                                | liste des accusés d'une instruction                                                                                                                                                                                                                                                                                                                                                                                     |
+| GET      | `/accuses/{id}/preuve`                    | agent                                                   | preuve JSON vérifiable (entrée, hash précédent, signature, clé publique)                                                                                                                                                                                                                                                                                                                                            |
+| GET      | `/journal/verification`                   | admin                                                   | vérifie l'intégrité de toute la chaîne                                                                                                                                                                                                                                                                                                                                                                               |
+| GET      | `/audit?page=`                            | admin                                                   | journal d'audit administratif (enrôlements, révocations, urgences) — **jamais de contenu**                                                                                                                                                                                                                                                                                                                      |
+| POST     | `/me/urgence`                             | agent                                                   | **bouton d'urgence** : supprime tous les appareils Synapse de l'agent + logout Keycloak ; journalisé                                                                                                                                                                                                                                                                                                              |
+| GET      | `/sante`                                  | public                                                  | healthcheck                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 Note : les primitives cryptographiques du backend (SHA-256, Ed25519) proviennent de la JCA standard Java et servent uniquement à l'**intégrité du journal probant**, jamais à la confidentialité des messages (assurée exclusivement par Olm/Megolm via matrix-js-sdk / vodozemac).
 
@@ -109,6 +109,7 @@ Note : les primitives cryptographiques du backend (SHA-256, Ed25519) proviennent
 - Détection de révocation : sur `Session.logged_out` / `M_UNKNOWN_TOKEN` / soft-logout → **effacement local** (IndexedDB crypto, stores, localStorage) et écran « Accès révoqué ».
 
 ### Champs personnalisés (DANS le contenu chiffré `m.room.message`)
+
 - `bf.laafi.classification` : `NORMAL` | `DIFFUSION_RESTREINTE` | `CONFIDENTIEL`
 - `bf.laafi.expire_at` : timestamp ms (expiration auto ; le client masque puis l'émetteur rédige l'événement)
 - `bf.laafi.instruction` : `true` → instruction de service nécessitant un accusé probant
@@ -116,11 +117,11 @@ Note : les primitives cryptographiques du backend (SHA-256, Ed25519) proviennent
 
 ## 6. Politiques de classification (défauts)
 
-| niveau | transfert | copie | expiration défaut | filigrane | flou hors focus |
-|---|---|---|---|---|---|
-| `NORMAL` | oui | oui | aucune | non | non |
-| `DIFFUSION_RESTREINTE` | interne au ministère seulement | oui | 30 jours | oui | non |
-| `CONFIDENTIEL` | non | non | 7 jours | oui (nom + matricule + date) | oui |
+| niveau                   | transfert                       | copie | expiration défaut | filigrane                    | flou hors focus |
+| ------------------------ | ------------------------------- | ----- | ------------------ | ---------------------------- | --------------- |
+| `NORMAL`               | oui                             | oui   | aucune             | non                          | non             |
+| `DIFFUSION_RESTREINTE` | interne au ministère seulement | oui   | 30 jours           | oui                          | non             |
+| `CONFIDENTIEL`         | non                             | non   | 7 jours            | oui (nom + matricule + date) | oui             |
 
 Le blocage des captures d'écran est impossible à garantir sur le web : on applique filigrane nominatif + flou hors focus + interdiction copie/transfert (dissuasion + traçabilité) — à documenter honnêtement comme limite.
 
