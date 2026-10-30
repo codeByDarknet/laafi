@@ -1,0 +1,352 @@
+{
+  "commun": {
+    "aller_au_contenu": "Aller au contenu",
+    "annuler": "Annuler",
+    "chargement": "Chargement…",
+    "fermer": "Fermer",
+    "reessayer": "Réessayer",
+    "retour": "Retour",
+    "terminer": "Terminer"
+  },
+  "nav": {
+    "annuaire": "Annuaire des agents",
+    "profil": "Profil et sécurité"
+  },
+  "langues": {
+    "fr": "Français",
+    "mos": "Mooré",
+    "dyu": "Dioula"
+  },
+  "roles": {
+    "agent": "Agent",
+    "chef_service": "Chef de service",
+    "admin_ministere": "Administrateur du ministère",
+    "super_admin": "Super-administrateur"
+  },
+  "accueil": {
+    "titre": "La messagerie sécurisée des agents de l'État",
+    "texte": "Échangez avec vos collègues en toute confidentialité. Vos messages sont chiffrés sur votre appareil et seuls vos destinataires peuvent les lire.",
+    "connexion": "Se connecter avec mon compte agent",
+    "garantie_chiffrement": "Chiffrement de bout en bout : le serveur ne lit jamais vos messages",
+    "garantie_2fa": "Connexion par compte officiel et code de vérification",
+    "garantie_appareil": "Accès révocable à tout moment en cas de perte ou de vol",
+    "pied": "Plateforme souveraine hébergée au Burkina Faso",
+    "erreur_jeton": "La connexion n'a pas abouti. Le lien de connexion a peut-être expiré : recommencez.",
+    "erreur_demarrage": "Impossible de démarrer la messagerie. Vérifiez votre connexion puis réessayez."
+  },
+  "demarrage": {
+    "connexion": "Connexion en cours…",
+    "chargement": "Ouverture de votre messagerie…",
+    "chiffrement": "Préparation du chiffrement sur cet appareil. Cela peut prendre quelques secondes la première fois."
+  },
+  "reseau": {
+    "hors_ligne": "Hors ligne. Vos messages seront envoyés dès le retour du réseau.",
+    "reconnexion": "Connexion instable, reconnexion en cours…",
+    "reessayer": "Réessayer maintenant"
+  },
+  "salons": {
+    "titre": "Conversations",
+    "rechercher": "Rechercher une conversation",
+    "nouvelle": "Nouvelle conversation",
+    "invitations": "Invitations",
+    "invite_par": "Invitation de {{nom}}",
+    "accepter": "Accepter",
+    "refuser": "Refuser",
+    "non_lus": "{{n}} message(s) non lu(s)",
+    "aucun_resultat": "Aucune conversation trouvée",
+    "aucun_resultat_texte": "Aucune conversation ne correspond à « {{q}} ».",
+    "vide_titre": "Aucune conversation pour l'instant",
+    "vide_texte": "Recherchez un collègue dans l'annuaire pour lui écrire, ou créez un groupe de travail.",
+    "aucun_ouvert_titre": "Choisissez une conversation",
+    "aucun_ouvert_texte": "Sélectionnez une conversation dans la liste, ou commencez-en une nouvelle.",
+    "erreur_accepter": "Impossible d'accepter l'invitation. Réessayez.",
+    "erreur_refuser": "Impossible de refuser l'invitation. Réessayez."
+  },
+  "apercu": {
+    "image": "Photo",
+    "vocal": "Message vocal",
+    "fichier": "Fichier",
+    "supprime": "Message supprimé",
+    "indechiffrable": "Message impossible à déchiffrer",
+    "dechiffrement": "Déchiffrement…",
+    "inconnu": "Message",
+    "confidentiel": "Message confidentiel",
+    "vous": "Vous",
+    "vide": "Aucun message"
+  },
+  "classification": {
+    "niveau": {
+      "NORMAL": "Normal",
+      "DIFFUSION_RESTREINTE": "Diffusion restreinte",
+      "CONFIDENTIEL": "Confidentiel"
+    },
+    "court": {
+      "NORMAL": "N",
+      "DIFFUSION_RESTREINTE": "DR",
+      "CONFIDENTIEL": "C"
+    },
+    "bandeau": {
+      "NORMAL": "Conversation non classifiée.",
+      "DIFFUSION_RESTREINTE": "Diffusion restreinte : les messages ne peuvent être transférés qu'à des agents de votre ministère.",
+      "CONFIDENTIEL": "Confidentiel : copie et transfert interdits, contenu filigrané à votre nom et masqué hors de la fenêtre active."
+    }
+  },
+  "piece": {
+    "image": "Image chiffrée",
+    "dechiffrement": "Déchiffrement de la pièce jointe…",
+    "erreur": "Impossible de déchiffrer cette pièce jointe.",
+    "afficher_image": "Afficher l'image ({{taille}})",
+    "pause": "Mettre en pause",
+    "ecouter": "Écouter le message vocal",
+    "vocal_duree": "Message vocal, {{duree}}",
+    "fichier": "Fichier chiffré",
+    "telecharger": "Télécharger {{nom}}"
+  },
+  "instruction": {
+    "etiquette": "Instruction officielle",
+    "voir_accuses": "Voir les accusés de réception",
+    "deja_reconnue": "Vous avez pris connaissance de cette instruction",
+    "prendre_connaissance": "J'en ai pris connaissance",
+    "session_api": "Connectez-vous au service Laafi pour accuser réception.",
+    "se_connecter": "Se connecter",
+    "accuse_ok": "Accusé de réception enregistré."
+  },
+  "conversation": {
+    "message_supprime": "Ce message a été supprimé.",
+    "indechiffrable": "Ce message ne peut pas être déchiffré sur cet appareil. Vérifiez cet appareil avec votre clé de récupération.",
+    "dechiffrement": "Déchiffrement…",
+    "non_pris_en_charge": "Ce type de message n'est pas pris en charge.",
+    "expire": "Disparaît {{quand}}",
+    "envoi_en_cours": "Envoi en cours",
+    "envoye": "Envoyé",
+    "echec_envoi": "Échec de l'envoi",
+    "actions": "Actions sur le message",
+    "transferer": "Transférer",
+    "supprimer": "Supprimer",
+    "erreur_envoi": "Le message n'a pas pu être envoyé.",
+    "introuvable_titre": "Conversation introuvable",
+    "introuvable_texte": "Cette conversation n'existe pas ou vous n'en faites plus partie.",
+    "direct": "Conversation directe",
+    "canal": "Canal officiel",
+    "groupe": "Groupe",
+    "membres": "{{n}} membre(s)",
+    "details": "Détails de la conversation",
+    "invitation_titre": "Vous êtes invité dans cette conversation",
+    "invitation_texte": "Acceptez l'invitation pour lire et envoyer des messages.",
+    "fil": "Messages",
+    "charger_anciens": "Afficher les messages précédents",
+    "debut": "Début de la conversation. Les messages sont chiffrés de bout en bout.",
+    "vide": "Aucun message. Écrivez le premier.",
+    "aller_en_bas": "Aller aux derniers messages",
+    "lecture_seule": "Canal officiel : seuls les responsables peuvent publier.",
+    "supprimer_titre": "Supprimer ce message ?",
+    "supprimer_texte": "Le message sera supprimé pour tous les participants. Cette action est définitive.",
+    "erreur_suppression": "Impossible de supprimer le message."
+  },
+  "envoi": {
+    "preparation": "Préparation ({{taille}})…",
+    "televersement": "Envoi chiffré ({{taille}})…",
+    "echec": "Envoi en attente ({{taille}}) : nouvel essai au retour du réseau"
+  },
+  "composeur": {
+    "options": "Options du message",
+    "classification": "Classification",
+    "expiration": "Disparition automatique",
+    "instruction": "Instruction officielle",
+    "instruction_aide": "Les destinataires devront confirmer en avoir pris connaissance.",
+    "enregistrement": "Enregistrement en cours",
+    "annuler_vocal": "Annuler l'enregistrement",
+    "envoyer_vocal": "Envoyer le message vocal",
+    "joindre_image": "Joindre une photo",
+    "joindre_fichier": "Joindre un fichier",
+    "message": "Message",
+    "placeholder": "Écrire un message chiffré…",
+    "placeholder_instruction": "Rédiger l'instruction…",
+    "envoyer": "Envoyer",
+    "enregistrer_vocal": "Enregistrer un message vocal",
+    "fichier_trop_gros": "« {{nom}} » dépasse la taille maximale de 50 Mo.",
+    "micro_refuse": "Accès au microphone refusé. Autorisez-le dans les réglages du navigateur.",
+    "vocal_trop_court": "Message vocal trop court : maintenez l'enregistrement plus longtemps.",
+    "duree": {
+      "jamais": "Jamais",
+      "h1": "Après 1 heure",
+      "j1": "Après 1 jour",
+      "j7": "Après 7 jours",
+      "j30": "Après 30 jours"
+    }
+  },
+  "transfert": {
+    "titre": "Transférer le message",
+    "dr_regle": "Message en diffusion restreinte : transfert possible uniquement vers des agents du ministère « {{ministere}} ».",
+    "aucune_cible": "Aucune conversation disponible pour ce transfert.",
+    "refuse_dr": "Transfert refusé : cette conversation contient des agents extérieurs à votre ministère.",
+    "erreur": "Le transfert a échoué. Réessayez.",
+    "ok": "Message transféré à {{nom}}."
+  },
+  "accuses": {
+    "titre": "Accusés de réception",
+    "preuve_titre": "Preuve de prise de connaissance",
+    "preuve_texte": "Document signé par le serveur Laafi attestant que l'agent a pris connaissance de cette instruction exacte (empreinte SHA-256).",
+    "agent": "Agent",
+    "date": "Date",
+    "signature": "Signature du serveur",
+    "signature_valide": "Signature vérifiée",
+    "signature_invalide": "Signature non vérifiée",
+    "telecharger": "Télécharger la preuve",
+    "compte": "{{n}} accusé(s) de réception",
+    "conforme": "Empreinte conforme",
+    "non_conforme": "Empreinte différente du message affiché",
+    "voir_preuve": "Voir la preuve",
+    "aucun": "Aucun accusé de réception pour l'instant."
+  },
+  "annuaire": {
+    "titre": "Annuaire des agents",
+    "intro": "Trouvez un collègue par son nom, sa fonction ou son ministère.",
+    "ouverture": "Ouverture de la conversation…",
+    "rechercher": "Nom, prénom ou fonction",
+    "ministere": "Ministère",
+    "tous_ministeres": "Tous les ministères",
+    "indisponible": "L'annuaire nécessite une connexion au service Laafi.",
+    "se_connecter": "Se connecter au service",
+    "resultats": "{{n}} agent(s)",
+    "vous": "Vous",
+    "selectionne": "Sélectionné",
+    "plus": "Afficher plus d'agents",
+    "aucun": "Aucun agent ne correspond à cette recherche.",
+    "utiliser_id": "Utiliser l'identifiant {{id}}",
+    "choisir": "Choisir",
+    "ecrire": "Écrire"
+  },
+  "nouveau": {
+    "titre": "Nouvelle conversation",
+    "type": "Type de conversation",
+    "onglet": {
+      "direct": "Directe",
+      "groupe": "Groupe",
+      "canal": "Canal officiel"
+    },
+    "aide": {
+      "direct": "Échange privé et chiffré avec un seul collègue.",
+      "groupe": "Groupe de travail chiffré : tous les membres peuvent écrire.",
+      "canal": "Canal de diffusion de votre ministère : seuls les responsables publient, les membres lisent."
+    },
+    "nom": "Nom",
+    "sujet": "Sujet (facultatif)",
+    "avertissement_nom": "Le nom et le sujet ne sont pas chiffrés : n'y mettez aucune information sensible.",
+    "membres": "Membres ({{n}})",
+    "retirer": "Retirer {{nom}}",
+    "aucun_membre": "Aucun membre sélectionné.",
+    "ajouter": "Ajouter des membres",
+    "creer": {
+      "groupe": "Créer le groupe",
+      "canal": "Créer le canal"
+    },
+    "erreur_creation": "La conversation n'a pas pu être créée. Réessayez.",
+    "canal_non_declare": "Canal créé, mais non déclaré au service Laafi. Il n'apparaîtra pas dans la liste officielle."
+  },
+  "details": {
+    "titre": "Détails",
+    "chiffre": "Chiffrée de bout en bout",
+    "avertissement_metadonnees": "Le nom, le sujet et la liste des membres sont visibles par le serveur. Le contenu des messages ne l'est pas.",
+    "membres": "Membres ({{n}})",
+    "inviter": "Inviter",
+    "invite": "Invité",
+    "role": {
+      "admin": "Administrateur",
+      "moderateur": "Modérateur"
+    },
+    "verifie": "Identité vérifiée",
+    "non_verifie": "Identité non vérifiée",
+    "quitter": "Quitter la conversation",
+    "quitter_titre": "Quitter cette conversation ?",
+    "quitter_texte": "Vous ne recevrez plus les messages. Pour revenir, un membre devra vous inviter à nouveau.",
+    "invitation_ok": "{{nom}} a été invité.",
+    "erreur_invitation": "L'invitation n'a pas pu être envoyée.",
+    "erreur_depart": "Impossible de quitter la conversation."
+  },
+  "profil": {
+    "titre": "Profil et sécurité",
+    "matricule": "Matricule",
+    "api_indisponible": "Profil officiel, annuaire et accusés de réception indisponibles : connectez-vous au service Laafi.",
+    "preferences": "Préférences",
+    "langue": "Langue",
+    "langue_aide": "Traduction en cours : certains textes restent en français.",
+    "theme": "Apparence",
+    "themes": {
+      "systeme": "Comme l'appareil",
+      "clair": "Clair",
+      "sombre": "Sombre"
+    }
+  },
+  "securite": {
+    "titre": "Sécurité de cet appareil",
+    "verifie_titre": "Appareil vérifié",
+    "verifie_texte": "Cet appareil est reconnu par votre identité cryptographique. Vos collègues peuvent lui faire confiance.",
+    "non_verifie_titre": "Appareil non vérifié",
+    "non_verifie_texte_cle": "Saisissez votre clé de récupération pour vérifier cet appareil et retrouver l'historique chiffré.",
+    "non_verifie_texte_premier": "Créez votre clé de récupération : elle protège votre identité et vos messages si vous changez d'appareil.",
+    "empreinte": "Empreinte de cet appareil",
+    "configurer": "Créer ma clé de récupération",
+    "saisir_cle": "Saisir ma clé de récupération",
+    "saisir_texte": "Saisissez la clé de récupération notée lors de votre première connexion.",
+    "cle": "Clé de récupération",
+    "cle_titre": "Votre clé de récupération",
+    "cle_texte": "Notez cette clé et conservez-la en lieu sûr, hors de cet appareil. Elle ne sera plus jamais affichée. Sans elle, vos messages seront illisibles sur un nouvel appareil.",
+    "cle_notee": "J'ai noté ma clé en lieu sûr",
+    "copier": "Copier",
+    "telecharger": "Télécharger",
+    "cle_copiee": "Clé copiée. Pensez à effacer le presse-papiers.",
+    "copie_impossible": "Copie impossible : recopiez la clé à la main.",
+    "cle_incorrecte": "Clé incorrecte. Vérifiez la saisie, espaces compris.",
+    "verifier": "Vérifier cet appareil",
+    "appareil_verifie": "Appareil vérifié.",
+    "erreur_configuration": "La clé de récupération n'a pas pu être créée. Réessayez."
+  },
+  "appareils": {
+    "titre": "Mes appareils",
+    "aide": "Appareils connectés à votre compte. En cas de perte ou de vol, utilisez le bouton d'urgence ci-dessous ou contactez votre administrateur.",
+    "activite": "dernière activité le {{date}}",
+    "courant": "Cet appareil",
+    "verifie": "Vérifié",
+    "non_verifie": "Non vérifié",
+    "erreur": "Impossible de charger la liste des appareils."
+  },
+  "urgence": {
+    "titre": "Urgence",
+    "texte": "Téléphone perdu, volé ou menacé ? Déconnectez immédiatement tous vos appareils et effacez les données de celui-ci.",
+    "bouton": "Déconnecter tous mes appareils",
+    "confirmer_titre": "Déconnexion d'urgence",
+    "consequence_1": "Tous vos appareils sont déconnectés immédiatement.",
+    "consequence_2": "Toutes les données de cet appareil sont effacées : messages, clés de chiffrement, préférences.",
+    "consequence_3": "Pour revenir, vous devrez vous reconnecter et saisir votre clé de récupération.",
+    "mot": "URGENCE",
+    "taper": "Pour confirmer, tapez {{mot}}",
+    "confirmer": "Tout déconnecter et effacer"
+  },
+  "revoque": {
+    "titre": "Accès révoqué",
+    "motif": {
+      "jeton-invalide": "Cet appareil a été déconnecté de votre compte par l'administration ou depuis un autre appareil.",
+      "compte-desactive": "Votre compte a été désactivé par l'administration.",
+      "deconnexion-distante": "Votre session a été fermée à distance.",
+      "urgence": "Déconnexion d'urgence effectuée."
+    },
+    "efface_cles": "Clés de chiffrement effacées de cet appareil",
+    "efface_messages": "Messages et pièces jointes effacés",
+    "efface_session": "Session et préférences effacées",
+    "rapport": "Détail de l'effacement",
+    "rapport_detail": "{{bases}} base(s) de données et {{caches}} cache(s) supprimés.",
+    "rapport_erreurs": "{{n}} élément(s) n'ont pas pu être supprimés immédiatement ; ils le seront à la fermeture de l'onglet.",
+    "aide": "Si vous pensez qu'il s'agit d'une erreur, contactez l'administrateur de votre ministère.",
+    "reconnecter": "Se reconnecter"
+  },
+  "erreurs": {
+    "reseau": "Le service est injoignable. Vérifiez votre connexion.",
+    "session_api": "Votre session sur le service Laafi a expiré. Reconnectez-vous.",
+    "interdit": "Vous n'avez pas les droits nécessaires pour cette action.",
+    "introuvable": "Élément introuvable.",
+    "conflit": "Cette action a déjà été effectuée.",
+    "serveur": "Le service a rencontré une erreur. Réessayez plus tard.",
+    "inconnue": "Une erreur inattendue est survenue."
+  }
+}

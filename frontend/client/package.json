@@ -1,0 +1,39 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "Laafi — messagerie souveraine chiffrée de bout en bout des agents de l'administration (client web Angular).",
+  "license": "EUPL-1.2",
+  "private": true,
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test --watch=false"
+  },
+  "packageManager": "npm@11.9.0",
+  "dependencies": {
+    "@angular/common": "21.2.25",
+    "@angular/compiler": "21.2.25",
+    "@angular/core": "21.2.25",
+    "@angular/forms": "21.2.25",
+    "@angular/platform-browser": "21.2.25",
+    "@angular/router": "21.2.25",
+    "@angular/service-worker": "21.2.25",
+    "@jsverse/transloco": "8.4.0",
+    "@matrix-org/matrix-sdk-crypto-wasm": "18.9.0",
+    "keycloak-js": "26.2.5",
+    "matrix-encrypt-attachment": "1.0.3",
+    "matrix-js-sdk": "45.0.0",
+    "rxjs": "7.8.2",
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "21.2.29",
+    "@angular/cli": "21.2.29",
+    "@angular/compiler-cli": "21.2.25",
+    "jsdom": "28.1.0",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}

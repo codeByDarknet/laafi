@@ -1,0 +1,36 @@
+<a class="lf-skip-link" href="#contenu">{{ 'commun.aller_au_contenu' | transloco }}</a>
+
+@if (chargement()) {
+  <div class="ecran-demarrage" role="status" aria-live="polite">
+    <img class="ecran-demarrage__marque" src="assets/brand/laafi-mark.svg" alt="" width="56" height="56" />
+    <span class="lf-spinner" aria-hidden="true"></span>
+    <p class="ecran-demarrage__texte">
+      {{ (connexion() ? 'demarrage.connexion' : 'demarrage.chargement') | transloco }}
+    </p>
+    <p class="ecran-demarrage__detail lf-muted">{{ 'demarrage.chiffrement' | transloco }}</p>
+  </div>
+}
+
+<router-outlet />
+
+<div class="lf-toast-region" aria-live="polite" aria-relevant="additions">
+  @for (t of toasts.toasts(); track t.id) {
+    <div
+      class="lf-toast"
+      [class.lf-toast--danger]="t.type === 'erreur'"
+      [class.lf-toast--warning]="t.type === 'attention'"
+      [class.lf-toast--neutral]="t.type === 'info'"
+      [attr.role]="t.type === 'erreur' ? 'alert' : 'status'"
+    >
+      <div class="lf-toast__body">{{ t.cle | transloco: t.params }}</div>
+      @if (t.action; as action) {
+        <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="action.faire(); toasts.fermer(t.id)">
+          {{ action.cle | transloco }}
+        </button>
+      }
+      <button type="button" class="lf-close" (click)="toasts.fermer(t.id)" [attr.aria-label]="'commun.fermer' | transloco">
+        <lf-icone nom="fermer" [taille]="16" />
+      </button>
+    </div>
+  }
+</div>
