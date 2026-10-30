@@ -1,0 +1,47 @@
+/* Laafi — habillage institutionnel de la page de connexion.
+   Couleurs du drapeau du Burkina Faso utilisées avec retenue :
+   vert (#00843d) pour l'action principale, or (#f5c400) en filet, rouge réservé aux erreurs. */
+:root {
+  --laafi-vert: #00843d;
+  --laafi-vert-fonce: #006b31;
+  --laafi-or: #f5c400;
+  --laafi-rouge: #c8102e;
+  --laafi-fond: #f4f6f3;
+  --keycloak-logo-url: url('../img/laafi-logo.svg');
+  --keycloak-logo-height: 64px;
+  --keycloak-logo-width: 240px;
+  --keycloak-card-top-color: var(--laafi-or);
+  --pf-v5-global--primary-color--100: var(--laafi-vert);
+  --pf-v5-global--primary-color--200: var(--laafi-vert-fonce);
+  --pf-v5-global--link--Color: var(--laafi-vert-fonce);
+  --pf-v5-global--link--Color--hover: var(--laafi-vert);
+  --pf-v5-global--danger-color--100: var(--laafi-rouge);
+}
+
+.login-pf body {
+  background: var(--laafi-fond);
+  background-image: linear-gradient(180deg, var(--laafi-vert) 0, var(--laafi-vert) 6px, transparent 6px);
+}
+
+.pf-v5-c-login__main {
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+}
+
+.pf-v5-c-button.pf-m-primary {
+  background-color: var(--laafi-vert);
+}
+.pf-v5-c-button.pf-m-primary:hover,
+.pf-v5-c-button.pf-m-primary:focus {
+  background-color: var(--laafi-vert-fonce);
+}
+
+.pf-v5-c-form-control:focus-within {
+  --pf-v5-c-form-control--after--BorderBottomColor: var(--laafi-vert);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --laafi-fond: #101512;
+  }
+}
