@@ -1,0 +1,82 @@
+<header class="entete">
+  <a routerLink="/salons" class="lf-btn lf-btn--ghost lf-btn--icon retour" [attr.aria-label]="'commun.retour' | transloco">
+    <lf-icone nom="retour" />
+  </a>
+  <h1>{{ 'nouveau.titre' | transloco }}</h1>
+</header>
+
+<div class="page">
+  <div class="lf-tabs" role="tablist" [attr.aria-label]="'nouveau.type' | transloco" (keydown)="touche($event)">
+    @for (o of onglets(); track o) {
+      <button
+        type="button"
+        role="tab"
+        class="lf-tab"
+        [id]="'onglet-' + o"
+        [attr.aria-selected]="onglet() === o"
+        [attr.aria-controls]="'panneau-nouveau'"
+        [tabindex]="onglet() === o ? 0 : -1"
+        (click)="changerOnglet(o)"
+      >
+        <lf-icone [nom]="o === 'direct' ? 'personne' : o === 'groupe' ? 'groupe' : 'canal'" [taille]="18" />
+        {{ 'nouveau.onglet.' + o | transloco }}
+      </button>
+    }
+  </div>
+
+  <section id="panneau-nouveau" class="lf-tabpanel section" role="tabpanel" [attr.aria-labelledby]="'onglet-' + onglet()">
+    <p class="lf-muted intro">{{ 'nouveau.aide.' + onglet() | transloco }}</p>
+
+    @if (erreur(); as e) {
+      <div class="lf-alert lf-alert--danger" role="alert">
+        <lf-icone nom="alerte" />
+        <div>{{ e | transloco }}</div>
+      </div>
+    }
+
+    @if (onglet() !== 'direct') {
+      <div class="lf-field">
+        <label class="lf-label lf-label--required" for="nom-salon">{{ 'nouveau.nom' | transloco }}</label>
+        <input id="nom-salon" class="lf-input" maxlength="80" [value]="nom()" (input)="nom.set($any($event.target).value)" />
+      </div>
+      <div class="lf-field">
+        <label class="lf-label" for="sujet-salon">{{ 'nouveau.sujet' | transloco }}</label>
+        <input id="sujet-salon" class="lf-input" maxlength="200" [value]="sujet()" (input)="sujet.set($any($event.target).value)" />
+        <p class="lf-hint">{{ 'nouveau.avertissement_nom' | transloco }}</p>
+      </div>
+
+      <div class="membres">
+        <h2 class="lf-label">{{ 'nouveau.membres' | transloco: { n: membres().length } }}</h2>
+        @if (membres().length) {
+          <ul class="puces">
+            @for (m of membres(); track m.matrixId) {
+              <li class="lf-chip">
+                <lf-avatar [nom]="m.nom" [id]="m.matrixId" taille="xs" />
+                {{ m.nom }}
+                <button type="button" class="lf-chip__remove" [attr.aria-label]="'nouveau.retirer' | transloco: { nom: m.nom }" (click)="retirer(m.matrixId)">
+                  <lf-icone nom="fermer" [taille]="14" />
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p class="lf-hint">{{ 'nouveau.aucun_membre' | transloco }}</p>
+        }
+      </div>
+    }
+
+    <lf-recherche-agents [choisis]="ids()" [action]="onglet() === 'direct' ? 'annuaire.ecrire' : 'nouveau.ajouter'" (choisir)="choisir($event)" />
+
+    @if (onglet() !== 'direct') {
+      <div class="actions creer">
+        <a routerLink="/salons" class="lf-btn lf-btn--ghost">{{ 'commun.annuler' | transloco }}</a>
+        <button type="button" class="lf-btn lf-btn--primary" [disabled]="!valide() || creation()" [attr.aria-busy]="creation()" (click)="creer()">
+          <lf-icone [nom]="onglet() === 'canal' ? 'canal' : 'groupe'" />
+          {{ 'nouveau.creer.' + onglet() | transloco }}
+        </button>
+      </div>
+    } @else if (creation()) {
+      <p class="lf-muted" role="status"><span class="lf-spinner petit" aria-hidden="true"></span> {{ 'annuaire.ouverture' | transloco }}</p>
+    }
+  </section>
+</div>

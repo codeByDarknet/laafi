@@ -1,0 +1,80 @@
+<lf-dialogue [ouvert]="!!message()" [large]="!!preuve()" [titre]="(preuve() ? 'accuses.preuve_titre' : 'accuses.titre') | transloco" (ferme)="ferme.emit()">
+  @if (preuve(); as p) {
+    <p class="lf-muted">{{ 'accuses.preuve_texte' | transloco }}</p>
+    <dl class="resume">
+      <dt>{{ 'accuses.agent' | transloco }}</dt>
+      <dd>{{ nom(p.entree.agent) }}</dd>
+      <dt>{{ 'accuses.date' | transloco }}</dt>
+      <dd>{{ date(p.entree.horodatage) }}</dd>
+      @if (p.verifieeParLeServeur !== undefined) {
+        <dt>{{ 'accuses.signature' | transloco }}</dt>
+        <dd>
+          @if (p.verifieeParLeServeur) {
+            <span class="lf-badge lf-badge--success">{{ 'accuses.signature_valide' | transloco }}</span>
+          } @else {
+            <span class="lf-badge lf-badge--danger">{{ 'accuses.signature_invalide' | transloco }}</span>
+          }
+        </dd>
+      }
+    </dl>
+    <pre class="lf-mono json" tabindex="0">{{ json(p) }}</pre>
+    <div class="boutons">
+      <button type="button" class="lf-btn lf-btn--ghost" (click)="preuve.set(null)">
+        <lf-icone nom="retour" />
+        {{ 'commun.retour' | transloco }}
+      </button>
+      <button type="button" class="lf-btn lf-btn--primary" (click)="telecharger(p)">
+        <lf-icone nom="telecharger" />
+        {{ 'accuses.telecharger' | transloco }}
+      </button>
+    </div>
+  } @else {
+    @switch (etat()) {
+      @case ('chargement') {
+        <div class="squelettes" aria-busy="true">
+          <span class="lf-skeleton lf-skeleton--text"></span>
+          <span class="lf-skeleton lf-skeleton--text"></span>
+          <span class="lf-skeleton lf-skeleton--text"></span>
+        </div>
+      }
+      @case ('erreur') {
+        <div class="lf-alert lf-alert--danger" role="alert">
+          <lf-icone nom="alerte" />
+          <div>
+            <p>{{ erreur() | transloco }}</p>
+            <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="message() && charger(message()!)">{{ 'commun.reessayer' | transloco }}</button>
+          </div>
+        </div>
+      }
+      @default {
+        @if (entrees().length) {
+          <p class="lf-muted">{{ 'accuses.compte' | transloco: { n: entrees().length } }}</p>
+          <ul class="lf-list lf-list--divided">
+            @for (e of entrees(); track e.id) {
+              <li class="lf-list__item">
+                <span class="lf-list__body">
+                  <span class="lf-list__title">{{ nom(e.agent) }}</span>
+                  <span class="lf-list__meta">{{ date(e.horodatage) }}</span>
+                  @if (e.empreinte === empreinteLocale()) {
+                    <span class="conforme"><lf-icone nom="coche" [taille]="14" /> {{ 'accuses.conforme' | transloco }}</span>
+                  } @else {
+                    <span class="non-conforme"><lf-icone nom="alerte" [taille]="14" /> {{ 'accuses.non_conforme' | transloco }}</span>
+                  }
+                </span>
+                <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" [attr.aria-busy]="chargementPreuve() === '' + e.id" (click)="ouvrirPreuve(e)">
+                  <lf-icone nom="preuve" [taille]="16" />
+                  {{ 'accuses.voir_preuve' | transloco }}
+                </button>
+              </li>
+            }
+          </ul>
+        } @else {
+          <div class="lf-empty">
+            <lf-icone class="lf-empty__art" nom="instruction" [taille]="48" />
+            <p class="lf-empty__text">{{ 'accuses.aucun' | transloco }}</p>
+          </div>
+        }
+      }
+    }
+  }
+</lf-dialogue>

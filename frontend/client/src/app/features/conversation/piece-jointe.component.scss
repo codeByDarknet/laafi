@@ -1,0 +1,116 @@
+@use 'tokens' as lf;
+
+:host {
+  display: block;
+  margin-block: var(--lf-space-1);
+}
+
+.image {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(18rem, 70vw);
+  max-height: 22rem;
+  overflow: hidden;
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-surface-2);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.remplir {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+}
+
+.audio {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  min-width: min(16rem, 62vw);
+}
+
+.lecture {
+  flex: none;
+  border-radius: 50%;
+  background: var(--lf-accent);
+  color: var(--lf-accent-contrast);
+
+  &:hover {
+    background: var(--lf-accent-hover);
+  }
+}
+
+.onde {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 2px;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.barre {
+  flex: 1;
+  min-width: 2px;
+  height: calc(var(--h) * 100%);
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.35;
+  transition: opacity var(--lf-duration-fast) var(--lf-ease-out);
+
+  &.jouee {
+    opacity: 1;
+  }
+}
+
+.temps {
+  font-size: var(--lf-text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.erreur {
+  color: var(--lf-danger);
+}
+
+audio {
+  display: none;
+}
+
+.fichier {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-3);
+  min-width: min(16rem, 62vw);
+  padding: var(--lf-space-2);
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-md);
+  background: color-mix(in srgb, var(--lf-surface) 60%, transparent);
+
+  audio {
+    display: block;
+    max-width: 12rem;
+  }
+
+  &__corps {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__nom {
+    font-weight: var(--lf-weight-semibold);
+    @include lf.truncate;
+  }
+
+  &__meta {
+    font-size: var(--lf-text-xs);
+    opacity: 0.75;
+  }
+}

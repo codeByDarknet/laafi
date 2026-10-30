@@ -1,0 +1,192 @@
+@use 'tokens' as lf;
+
+:host {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--lf-bg);
+}
+
+.introuvable {
+  flex: 1;
+  place-content: center;
+}
+
+.entete {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  min-height: 3.5rem;
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border-bottom: 1px solid var(--lf-border);
+  background: var(--lf-surface);
+}
+
+.retour {
+  @include lf.bp(lg) {
+    display: none;
+  }
+}
+
+.identite {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--lf-space-3);
+  min-width: 0;
+  padding: var(--lf-space-1);
+  border-radius: var(--lf-radius-md);
+  color: inherit;
+  text-decoration: none;
+  @include lf.focus-ring;
+
+  &:hover {
+    background: var(--lf-surface-2);
+  }
+
+  &__texte {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__nom {
+    margin: 0;
+    font-size: var(--lf-text-md);
+    @include lf.truncate;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-xs);
+    @include lf.truncate;
+  }
+}
+
+.bandeau {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lf-space-2);
+  padding: var(--lf-space-2) var(--lf-gutter);
+  border-bottom: 1px solid var(--lf-cls-dr-line);
+  background: var(--lf-cls-dr-bg);
+  color: var(--lf-cls-dr-fg);
+  font-size: var(--lf-text-sm);
+
+  &[data-cls='CONFIDENTIEL'] {
+    border-bottom-color: var(--lf-cls-conf-line);
+    background: var(--lf-cls-conf-bg);
+    color: var(--lf-cls-conf-fg);
+  }
+}
+
+.cadre {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fil {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  outline: none;
+}
+
+.lf-thread {
+  max-width: 56rem;
+  min-height: 100%;
+  margin-inline: auto;
+  justify-content: flex-end;
+}
+
+.anciens,
+.debut {
+  align-self: center;
+}
+
+.debut {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-1);
+  margin: var(--lf-space-2) 0;
+  color: var(--lf-ink-2);
+  font-size: var(--lf-text-xs);
+}
+
+.vide {
+  flex: 1;
+}
+
+.attente {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  align-self: flex-end;
+  max-width: min(85%, 24rem);
+  padding: var(--lf-space-2) var(--lf-space-3);
+  border: 1px dashed var(--lf-border-strong);
+  border-radius: var(--lf-radius-lg);
+  background: var(--lf-surface);
+
+  &--echec {
+    border-color: var(--lf-danger);
+  }
+
+  &__corps {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__nom {
+    font-weight: var(--lf-weight-semibold);
+    @include lf.truncate;
+  }
+
+  &__statut {
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-xs);
+  }
+}
+
+.petit {
+  width: 1rem;
+  height: 1rem;
+}
+
+.bas {
+  position: absolute;
+  inset-block-end: var(--lf-space-4);
+  inset-inline-end: var(--lf-space-4);
+  z-index: 2;
+  border-radius: 50%;
+  box-shadow: var(--lf-shadow-2);
+}
+
+.vers-bas {
+  transform: rotate(-90deg);
+}
+
+.lecture-seule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--lf-space-2);
+  margin: 0;
+  padding: var(--lf-space-3) var(--lf-gutter);
+  border-top: 1px solid var(--lf-border);
+  background: var(--lf-surface);
+  color: var(--lf-ink-2);
+  font-size: var(--lf-text-sm);
+}

@@ -1,0 +1,103 @@
+@use 'tokens' as lf;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  &.sortant {
+    align-items: flex-end;
+  }
+}
+
+.lf-bubble {
+  @include lf.focus-ring;
+
+  &.echec {
+    border-color: var(--lf-danger);
+  }
+}
+
+.texte {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.discret {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-1);
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.petit {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.etiquette-instruction {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  color: var(--lf-accent-text);
+  font-size: var(--lf-text-xs);
+  font-weight: var(--lf-weight-semibold);
+
+  :host(.sortant) & {
+    color: inherit;
+  }
+}
+
+.instruction {
+  margin-top: var(--lf-space-2);
+}
+
+.reconnue {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-1);
+  color: var(--lf-success-text);
+  font-size: var(--lf-text-sm);
+  font-weight: var(--lf-weight-semibold);
+}
+
+.expire {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-inline-end: var(--lf-space-1);
+}
+
+.echec__ligne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lf-space-1);
+  margin-top: var(--lf-space-1);
+}
+
+// Actions : visibles au survol ou quand la bulle a le focus (tactile : toucher la bulle)
+.actions {
+  position: absolute;
+  inset-block-start: calc(-1 * var(--lf-space-4));
+  inset-inline-end: var(--lf-space-2);
+  z-index: 2;
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-pill);
+  background: var(--lf-surface);
+  color: var(--lf-ink);
+  box-shadow: var(--lf-shadow-2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--lf-duration-fast) var(--lf-ease-out);
+
+  .lf-bubble:hover &,
+  .lf-bubble:focus-within & {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

@@ -1,0 +1,143 @@
+@let r = room();
+@let s = resume();
+@if (!r || !s) {
+  <div class="lf-empty introuvable">
+    @if (!matrix_pret()) {
+      <span class="lf-spinner" aria-hidden="true"></span>
+      <p class="lf-empty__text">{{ 'commun.chargement' | transloco }}</p>
+    } @else {
+      <lf-icone class="lf-empty__art" nom="message" [taille]="56" />
+      <h2 class="lf-empty__title">{{ 'conversation.introuvable_titre' | transloco }}</h2>
+      <p class="lf-empty__text">{{ 'conversation.introuvable_texte' | transloco }}</p>
+      <a routerLink="/salons" class="lf-btn lf-btn--secondary">{{ 'commun.retour' | transloco }}</a>
+    }
+  </div>
+} @else {
+  <header class="entete">
+    <a routerLink="/salons" class="lf-btn lf-btn--ghost lf-btn--icon retour" [attr.aria-label]="'commun.retour' | transloco">
+      <lf-icone nom="retour" />
+    </a>
+    <a class="identite" [routerLink]="['/salons', s.id, 'details']">
+      <lf-avatar [nom]="s.nom" [id]="s.correspondant || s.id" [groupe]="s.type !== 'direct'" />
+      <span class="identite__texte">
+        <h1 class="identite__nom">{{ s.nom }}</h1>
+        <span class="identite__meta">
+          <lf-icone nom="cadenas" [taille]="12" />
+          {{ sousTitre() | transloco }}
+          @if (s.type !== 'direct') {
+            · {{ 'conversation.membres' | transloco: { n: nbMembres() } }}
+          }
+        </span>
+      </span>
+    </a>
+    <a [routerLink]="['/salons', s.id, 'details']" class="lf-btn lf-btn--ghost lf-btn--icon" [attr.aria-label]="'conversation.details' | transloco" [title]="'conversation.details' | transloco">
+      <lf-icone nom="info" />
+    </a>
+  </header>
+
+  @if (niveauSalon() !== 'NORMAL') {
+    <div class="bandeau" [attr.data-cls]="niveauSalon()" role="note">
+      <span class="lf-cls" [attr.data-cls]="niveauSalon()">{{ 'classification.niveau.' + niveauSalon() | transloco }}</span>
+      <span>{{ 'classification.bandeau.' + niveauSalon() | transloco }}</span>
+    </div>
+  }
+
+  @if (invitation()) {
+    <div class="lf-empty">
+      <lf-icone class="lf-empty__art" nom="message" [taille]="56" />
+      <h2 class="lf-empty__title">{{ 'conversation.invitation_titre' | transloco }}</h2>
+      <p class="lf-empty__text">{{ 'conversation.invitation_texte' | transloco }}</p>
+      <button type="button" class="lf-btn lf-btn--primary" [attr.aria-busy]="acceptation()" [disabled]="acceptation()" (click)="accepter()">
+        {{ 'salons.accepter' | transloco }}
+      </button>
+    </div>
+  } @else {
+    <div
+      class="cadre"
+      [class.lf-watermark]="!!filigrane()"
+      [attr.data-watermark]="filigrane()"
+      [class.lf-blur-guard]="reglesSalon().flouHorsFocus"
+      [class.is-blurred]="reglesSalon().flouHorsFocus && flou()"
+    >
+      <div #fil class="fil" (scroll)="defilement()" role="log" [attr.aria-label]="'conversation.fil' | transloco" tabindex="-1">
+        <div class="lf-thread">
+          @if (plusAnciens()) {
+            <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm anciens" [attr.aria-busy]="chargementAnciens()" (click)="chargerAnciens()">
+              {{ 'conversation.charger_anciens' | transloco }}
+            </button>
+          } @else {
+            <p class="debut">
+              <lf-icone nom="cadenas" [taille]="16" />
+              {{ 'conversation.debut' | transloco }}
+            </p>
+          }
+
+          @for (e of elements(); track e.id) {
+            @if (e.type === 'jour') {
+              <div class="lf-day">{{ e.libelle }}</div>
+            } @else {
+              <lf-message
+                [message]="e.message"
+                [regles]="e.regles"
+                [auteur]="e.auteur"
+                [roomId]="s.id"
+                (transferer)="aTransferer.set($event)"
+                (voirAccuses)="accusesDe.set($event)"
+                (supprimer)="aSupprimer.set($event)"
+              />
+            }
+          } @empty {
+            <div class="lf-empty vide">
+              <lf-icone class="lf-empty__art" nom="cadenas" [taille]="48" />
+              <p class="lf-empty__text">{{ 'conversation.vide' | transloco }}</p>
+            </div>
+          }
+
+          @for (p of envoisEnAttente(); track p.id) {
+            <div class="attente" [class.attente--echec]="p.statut === 'echec'">
+              <lf-icone [nom]="p.genre === 'image' ? 'image' : p.genre === 'vocal' ? 'micro' : 'fichier'" [taille]="18" />
+              <span class="attente__corps">
+                <span class="attente__nom">{{ p.genre === 'vocal' ? ('apercu.vocal' | transloco) : p.nom }}</span>
+                <span class="attente__statut">{{ 'envoi.' + p.statut | transloco: { taille: taille(p.taille) } }}</span>
+              </span>
+              @if (p.statut === 'echec') {
+                <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="envoi.reessayer(p.id)">{{ 'commun.reessayer' | transloco }}</button>
+              } @else {
+                <span class="lf-spinner petit" aria-hidden="true"></span>
+              }
+              <button type="button" class="lf-btn lf-btn--ghost lf-btn--icon lf-btn--sm" [attr.aria-label]="'commun.annuler' | transloco" (click)="envoi.abandonner(p.id)">
+                <lf-icone nom="fermer" [taille]="16" />
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+      @if (!colle()) {
+        <button type="button" class="lf-btn lf-btn--secondary lf-btn--icon bas" [attr.aria-label]="'conversation.aller_en_bas' | transloco" (click)="allerEnBas()">
+          <lf-icone nom="retour" class="vers-bas" />
+        </button>
+      }
+    </div>
+
+    @if (peutPublier()) {
+      <lf-composeur [roomId]="s.id" />
+    } @else {
+      <p class="lecture-seule">
+        <lf-icone nom="canal" [taille]="16" />
+        {{ 'conversation.lecture_seule' | transloco }}
+      </p>
+    }
+  }
+
+  <lf-transfert [message]="aTransferer()" [regles]="aTransferer() ? reglesFor(aTransferer()!) : reglesSalon()" [roomSource]="s.id" (ferme)="aTransferer.set(null)" />
+  <lf-accuses [message]="accusesDe()" [roomId]="s.id" (ferme)="accusesDe.set(null)" />
+  <lf-dialogue [ouvert]="!!aSupprimer()" [danger]="true" [bloque]="suppression()" [titre]="'conversation.supprimer_titre' | transloco" (ferme)="aSupprimer.set(null)">
+    <p>{{ 'conversation.supprimer_texte' | transloco }}</p>
+    <footer pied class="lf-modal__footer">
+      <button type="button" class="lf-btn lf-btn--ghost" (click)="aSupprimer.set(null)">{{ 'commun.annuler' | transloco }}</button>
+      <button type="button" class="lf-btn lf-btn--danger" [attr.aria-busy]="suppression()" [disabled]="suppression()" (click)="confirmerSuppression()">
+        {{ 'conversation.supprimer' | transloco }}
+      </button>
+    </footer>
+  </lf-dialogue>
+}
