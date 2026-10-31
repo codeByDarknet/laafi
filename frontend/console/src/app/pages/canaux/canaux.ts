@@ -52,7 +52,7 @@ export class Canaux {
 
   protected readonly form = inject(FormBuilder).nonNullable.group({
     // Identifiant de salon Matrix : « !opaque:serveur ».
-    roomId: ['', [Validators.required, Validators.maxLength(255), Validators.pattern(/^![^:\s]+:[^\s]+$/)]],
+    roomId: ['', [Validators.required, Validators.maxLength(255), Validators.pattern(/^![^:\s]+(:[^\s]+)?$/)]], // « :serveur » absent en salons v12
     nom: ['', [Validators.required, Validators.maxLength(255)]],
     ministere: [this.auth.ministereImpose() ?? '', [Validators.required]],
     description: ['', [Validators.maxLength(1000)]],

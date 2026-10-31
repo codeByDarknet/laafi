@@ -92,7 +92,7 @@
       <div class="lf-field">
         <label class="lf-label lf-label--required" for="dc-room">{{ 'canaux.roomId' | transloco }}</label>
         <input id="dc-room" class="lf-input lf-mono" formControlName="roomId" spellcheck="false" autocomplete="off"
-               placeholder="!AbCdEf123:laafi.local" [attr.aria-invalid]="invalide('roomId')" aria-describedby="dc-room-aide" />
+               placeholder="!AbCdEf123…" [attr.aria-invalid]="invalide('roomId')" aria-describedby="dc-room-aide" />
         <p id="dc-room-aide" class="lf-hint">{{ 'canaux.roomIdAide' | transloco }}</p>
         @if (invalide('roomId')) { <p class="lf-error">{{ 'canaux.roomIdInvalide' | transloco }}</p> }
       </div>
