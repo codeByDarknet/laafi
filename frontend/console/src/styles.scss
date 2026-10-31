@@ -1,0 +1,241 @@
+// Design system partagé Laafi (jetons, polices auto-hébergées, base, composants .lf-*).
+@use 'laafi';
+@use 'tokens' as lf;
+
+// =============================================================================
+// Motifs propres à la console (préfixe lc-) : réutilisés par tous les écrans.
+// =============================================================================
+
+// Écran d'attente pendant la redirection Keycloak (rendu avant Angular).
+.lc-boot {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--lf-space-3);
+  min-height: 100dvh;
+  padding: var(--lf-space-6);
+  color: var(--lf-ink-2);
+  text-align: center;
+
+  &--erreur p:first-child {
+    color: var(--lf-danger-text);
+    font-weight: var(--lf-weight-bold);
+  }
+}
+
+// En-tête de page : titre + phrase d'orientation à gauche, actions à droite.
+.lc-entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--lf-space-4);
+  margin-bottom: var(--lf-space-6);
+
+  &__texte {
+    flex: 1 1 24rem;
+    min-width: 0;
+  }
+
+  h1 {
+    font-size: var(--lf-text-2xl);
+    font-stretch: var(--lf-display-stretch);
+    font-weight: var(--lf-weight-black);
+    line-height: var(--lf-leading-tight);
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  &__desc {
+    max-width: var(--lf-measure);
+    margin-top: var(--lf-space-2);
+    color: var(--lf-ink-2);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lf-space-2);
+  }
+}
+
+// Lien de retour au-dessus d'un titre (fil d'Ariane minimal).
+.lc-retour {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-1);
+  margin-bottom: var(--lf-space-3);
+  color: var(--lf-ink-2);
+  font-size: var(--lf-text-sm);
+  font-weight: var(--lf-weight-medium);
+  text-decoration: none;
+  --lc-icone: 1rem;
+  @include lf.focus-ring;
+
+  &:hover {
+    color: var(--lf-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+// Titre de section à l'intérieur d'une page.
+.lc-section {
+  margin-top: var(--lf-space-8);
+
+  &__titre {
+    margin-bottom: var(--lf-space-3);
+    font-size: var(--lf-text-lg);
+    font-stretch: var(--lf-display-stretch);
+    font-weight: var(--lf-weight-bold);
+  }
+}
+
+// Barre de filtres au-dessus d'un tableau.
+.lc-filtres {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--lf-space-3);
+  margin-bottom: var(--lf-space-4);
+
+  @include lf.bp(md) {
+    grid-template-columns: minmax(14rem, 2fr) minmax(10rem, 1fr) minmax(10rem, 1fr) auto;
+    align-items: end;
+  }
+}
+
+// Ligne de méta-informations sous un tableau (compte + pagination).
+.lc-pied-tableau {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--lf-space-3);
+  margin-top: var(--lf-space-3);
+  color: var(--lf-ink-2);
+  font-size: var(--lf-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.lc-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+}
+
+// Identité dans une cellule de tableau : nom + identifiant Matrix.
+.lc-identite {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-3);
+  min-width: 0;
+
+  &__texte {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__nom {
+    color: var(--lf-ink);
+    font-weight: var(--lf-weight-semibold);
+    text-decoration: none;
+    @include lf.focus-ring;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 0.2em;
+    }
+  }
+
+  &__id {
+    color: var(--lf-ink-2);
+    font-family: var(--lf-font-mono);
+    font-size: var(--lf-text-xs);
+    @include lf.truncate;
+  }
+}
+
+// Liste de définitions en grille (fiche agent, preuve).
+.lc-dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--lf-space-1) var(--lf-space-4);
+  margin: 0;
+
+  @include lf.bp(sm) {
+    grid-template-columns: 10rem minmax(0, 1fr);
+  }
+
+  dt {
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-sm);
+
+    @include lf.bp(sm) {
+      padding-block: var(--lf-space-1);
+    }
+  }
+
+  dd {
+    margin: 0 0 var(--lf-space-2);
+    overflow-wrap: anywhere;
+
+    @include lf.bp(sm) {
+      margin: 0;
+      padding-block: var(--lf-space-1);
+    }
+  }
+}
+
+// Empreintes, signatures, identifiants : chasse fixe, coupure n'importe où.
+.lc-hash {
+  font-family: var(--lf-font-mono);
+  font-size: var(--lf-text-xs);
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+// Rangée d'actions alignée à droite (pieds de formulaires).
+.lc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--lf-space-2);
+}
+
+// Grille de champs de formulaire (2 colonnes à partir de md).
+.lc-champs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--lf-space-4) var(--lf-space-5);
+
+  @include lf.bp(md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lc-champs__large {
+    @include lf.bp(md) {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+// Ligne de tableau cliquable (toute la ligne mène à la fiche).
+.lf-table tbody tr.lc-ligne-lien {
+  cursor: pointer;
+}
+
+// Icône en tête d'un bouton : taille alignée sur le texte.
+.lf-btn lc-icone {
+  --lc-icone: 1.125rem;
+}
+
+.lf-btn--sm lc-icone {
+  --lc-icone: 1rem;
+}
+
+// Chiffres alignés dans les tableaux et les dates.
+.lc-num {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

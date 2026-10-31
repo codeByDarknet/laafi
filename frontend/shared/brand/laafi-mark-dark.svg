@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-labelledby="t">
+  <title id="t">Laafi</title>
+  <g>
+    <!-- Bulle de dialogue : la messagerie -->
+    <path fill="#34C27A" d="M9 2h14a7 7 0 0 1 7 7v10a7 7 0 0 1-7 7H13.5L7 30.6V25.6A7 7 0 0 1 2 19V9a7 7 0 0 1 7-7Z"/>
+    <!-- « L » de Laafi -->
+    <path fill="#0D1A13" d="M9.6 7.2h4.2v11.2h8.4v4H9.6Z"/>
+    <!-- Étoile d'or du drapeau -->
+    <polygon fill="#FCD116" stroke="#0D1A13" stroke-width="0.8" stroke-linejoin="round" points="22.60,5.80 23.72,8.86 26.97,8.98 24.41,10.99 25.30,14.12 22.60,12.30 19.90,14.12 20.79,10.99 18.23,8.98 21.48,8.86"/>
+  </g>
+</svg>

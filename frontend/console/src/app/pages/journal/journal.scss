@@ -1,0 +1,202 @@
+@use 'tokens' as lf;
+
+.verif {
+  padding: var(--lf-space-5);
+
+  &__tete {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--lf-space-4);
+  }
+
+  &__titre {
+    font-size: var(--lf-text-lg);
+    font-weight: var(--lf-weight-bold);
+    font-stretch: var(--lf-display-stretch);
+  }
+
+  &__texte {
+    max-width: var(--lf-measure);
+    margin-top: var(--lf-space-1);
+    color: var(--lf-ink-2);
+  }
+
+  &__resultat {
+    margin-top: var(--lf-space-5);
+    padding-top: var(--lf-space-5);
+    border-top: 1px solid var(--lf-border);
+  }
+}
+
+.verdict {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--lf-space-3);
+  padding: var(--lf-space-4);
+  border-radius: var(--lf-radius-md);
+  background: var(--lf-surface-2);
+
+  &__icone {
+    --lc-icone: 2rem;
+    flex: none;
+  }
+
+  &__titre {
+    font-size: var(--lf-text-xl);
+    font-weight: var(--lf-weight-black);
+    font-stretch: var(--lf-display-stretch);
+  }
+
+  &__texte {
+    margin-top: var(--lf-space-1);
+  }
+
+  [data-etat='ok'] & {
+    background: var(--lf-success-soft);
+    color: var(--lf-success-text);
+  }
+
+  [data-etat='rompu'] & {
+    background: var(--lf-danger-soft);
+    color: var(--lf-danger-text);
+  }
+}
+
+// Représentation de la chaîne : chaque maillon est une entrée (ou un groupe d'entrées).
+.chaine {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(1.25rem, 1fr));
+  gap: 3px;
+  margin: var(--lf-space-5) 0 var(--lf-space-2);
+  padding: 0;
+  list-style: none;
+
+  &__maillon {
+    height: 0.9rem;
+    border: 2px solid var(--_c);
+    border-radius: var(--lf-radius-pill);
+    background: color-mix(in srgb, var(--_c) 18%, transparent);
+
+    &[data-etat='ok'] {
+      --_c: var(--lf-accent);
+    }
+    &[data-etat='rompu'] {
+      --_c: var(--lf-danger);
+      background: var(--lf-danger);
+    }
+    &[data-etat='nonverifie'] {
+      --_c: var(--lf-border-strong);
+      background: transparent;
+      border-style: dashed;
+    }
+
+    @include lf.motion-safe {
+      animation: maillon-in var(--lf-duration-base) var(--lf-ease-out) backwards;
+      @for $i from 1 through 24 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 18}ms;
+        }
+      }
+    }
+  }
+
+  &__legende {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lf-space-4);
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-xs);
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--lf-space-1);
+    }
+
+    i {
+      display: inline-block;
+      width: 1rem;
+      height: 0.6rem;
+      border: 2px solid var(--_c);
+      border-radius: var(--lf-radius-pill);
+
+      &[data-etat='ok'] {
+        --_c: var(--lf-accent);
+      }
+      &[data-etat='rompu'] {
+        --_c: var(--lf-danger);
+        background: var(--lf-danger);
+      }
+      &[data-etat='nonverifie'] {
+        --_c: var(--lf-border-strong);
+        border-style: dashed;
+      }
+    }
+  }
+}
+
+@keyframes maillon-in {
+  from {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+}
+
+.details {
+  margin-top: var(--lf-space-5);
+}
+
+.recherche {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--lf-space-3);
+  margin-bottom: var(--lf-space-4);
+
+  .lf-field {
+    flex: 1 1 22rem;
+  }
+
+  .lf-btn {
+    margin-top: 1.6rem;
+  }
+}
+
+.preuve__statut {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  margin-bottom: var(--lf-space-4);
+  font-weight: var(--lf-weight-semibold);
+  --lc-icone: 1.25rem;
+
+  &[data-ok='true'] {
+    color: var(--lf-success-text);
+  }
+  &[data-ok='false'] {
+    color: var(--lf-danger-text);
+  }
+}
+
+.canon {
+  margin-top: var(--lf-space-4);
+
+  summary {
+    cursor: pointer;
+    font-weight: var(--lf-weight-semibold);
+  }
+
+  pre {
+    margin-top: var(--lf-space-2);
+    padding: var(--lf-space-3);
+    border-radius: var(--lf-radius-sm);
+    background: var(--lf-surface-2);
+    white-space: pre-wrap;
+  }
+}
+
+.methode {
+  margin-top: var(--lf-space-3);
+}

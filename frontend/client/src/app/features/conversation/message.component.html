@@ -1,0 +1,129 @@
+@let m = message();
+@let r = regles();
+<article
+  class="lf-bubble"
+  [class.lf-bubble--out]="m.sortant"
+  [class.lf-bubble--instruction]="m.instruction"
+  [class.lf-no-copy]="!r.copieAutorisee"
+  [class.echec]="m.statut === 'echec'"
+  [attr.data-cls]="m.niveau"
+  tabindex="0"
+  (copy)="bloquer($event)"
+  (cut)="bloquer($event)"
+  (contextmenu)="bloquer($event)"
+  (dragstart)="bloquer($event)"
+>
+  @if (auteur(); as a) {
+    <span class="lf-bubble__author">{{ a }}</span>
+  }
+  @if (m.niveau !== 'NORMAL' || m.instruction) {
+    <span class="lf-bubble__head">
+      @if (m.niveau !== 'NORMAL') {
+        <span class="lf-cls" [attr.data-cls]="m.niveau">{{ 'classification.niveau.' + m.niveau | transloco }}</span>
+      }
+      @if (m.instruction) {
+        <span class="etiquette-instruction">
+          <lf-icone nom="instruction" [taille]="14" />
+          {{ 'instruction.etiquette' | transloco }}
+        </span>
+      }
+    </span>
+  }
+
+  @switch (m.genre) {
+    @case ('texte') {
+      <p class="texte">{{ m.texte }}</p>
+    }
+    @case ('supprime') {
+      <p class="texte discret">{{ 'conversation.message_supprime' | transloco }}</p>
+    }
+    @case ('indechiffrable') {
+      <p class="texte discret">
+        <lf-icone nom="cadenas" [taille]="14" />
+        {{ 'conversation.indechiffrable' | transloco }}
+      </p>
+    }
+    @case ('dechiffrement') {
+      <p class="texte discret">
+        <span class="lf-spinner petit" aria-hidden="true"></span>
+        {{ 'conversation.dechiffrement' | transloco }}
+      </p>
+    }
+    @case ('inconnu') {
+      <p class="texte discret">{{ 'conversation.non_pris_en_charge' | transloco }}</p>
+    }
+    @default {
+      <lf-piece-jointe [message]="m" [copieAutorisee]="r.copieAutorisee" />
+    }
+  }
+
+  @if (m.instruction && lisible()) {
+    <div class="instruction">
+      @if (m.sortant) {
+        <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" [disabled]="!m.eventId" (click)="voirAccuses.emit(m)">
+          <lf-icone nom="preuve" [taille]="16" />
+          {{ 'instruction.voir_accuses' | transloco }}
+        </button>
+      } @else if (reconnue()) {
+        <span class="reconnue">
+          <lf-icone nom="coche" [taille]="16" />
+          {{ 'instruction.deja_reconnue' | transloco }}
+        </span>
+      } @else {
+        <button
+          type="button"
+          class="lf-btn lf-btn--primary lf-btn--sm"
+          [attr.aria-busy]="envoiAccuse()"
+          [disabled]="envoiAccuse() || !m.eventId"
+          (click)="prendreConnaissance()"
+        >
+          <lf-icone nom="coche" [taille]="16" />
+          {{ 'instruction.prendre_connaissance' | transloco }}
+        </button>
+      }
+    </div>
+  }
+
+  <footer class="lf-bubble__meta">
+    @if (expireDans(); as e) {
+      <span class="expire" [title]="'conversation.expire' | transloco: { quand: e }">
+        <lf-icone nom="horloge" [taille]="12" />
+        {{ e }}
+      </span>
+    }
+    <time>{{ heure() }}</time>
+    @if (m.sortant) {
+      @switch (m.statut) {
+        @case ('en-cours') {
+          <lf-icone nom="horloge" [taille]="12" /><span class="lf-sr-only">{{ 'conversation.envoi_en_cours' | transloco }}</span>
+        }
+        @case ('envoye') {
+          <lf-icone nom="coche" [taille]="12" /><span class="lf-sr-only">{{ 'conversation.envoye' | transloco }}</span>
+        }
+      }
+    }
+  </footer>
+
+  @if (m.statut === 'echec') {
+    <div class="lf-error echec__ligne" role="alert">
+      <span>{{ 'conversation.echec_envoi' | transloco }}</span>
+      <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="renvoyer()">{{ 'commun.reessayer' | transloco }}</button>
+      <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="annuler()">{{ 'commun.annuler' | transloco }}</button>
+    </div>
+  }
+
+  @if (lisible() && m.statut === 'envoye') {
+    <div class="actions" role="group" [attr.aria-label]="'conversation.actions' | transloco">
+      @if (peutTransferer()) {
+        <button type="button" class="lf-btn lf-btn--ghost lf-btn--icon lf-btn--sm" [attr.aria-label]="'conversation.transferer' | transloco" [title]="'conversation.transferer' | transloco" (click)="transferer.emit(m)">
+          <lf-icone nom="transferer" [taille]="16" />
+        </button>
+      }
+      @if (m.sortant && m.eventId) {
+        <button type="button" class="lf-btn lf-btn--ghost lf-btn--icon lf-btn--sm" [attr.aria-label]="'conversation.supprimer' | transloco" [title]="'conversation.supprimer' | transloco" (click)="supprimer.emit(m)">
+          <lf-icone nom="poubelle" [taille]="16" />
+        </button>
+      }
+    </div>
+  }
+</article>

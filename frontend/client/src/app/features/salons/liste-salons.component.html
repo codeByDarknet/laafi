@@ -1,0 +1,124 @@
+<div class="outils">
+  <label class="lf-search">
+    <span class="lf-sr-only">{{ 'salons.rechercher' | transloco }}</span>
+    <input
+      class="lf-input"
+      type="search"
+      [placeholder]="'salons.rechercher' | transloco"
+      [value]="recherche()"
+      (input)="recherche.set($any($event.target).value)"
+      autocomplete="off"
+    />
+  </label>
+  <a routerLink="/nouveau" class="lf-btn lf-btn--primary lf-btn--icon" [attr.aria-label]="'salons.nouvelle' | transloco" [title]="'salons.nouvelle' | transloco">
+    <lf-icone nom="plus" />
+  </a>
+</div>
+
+<div class="defilement">
+  @if (chargement()) {
+    <ul class="lf-list" [attr.aria-label]="'commun.chargement' | transloco" aria-busy="true">
+      @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+        <li class="lf-list__item">
+          <span class="lf-skeleton lf-skeleton--circle"></span>
+          <span class="lf-list__body squelette">
+            <span class="lf-skeleton lf-skeleton--title"></span>
+            <span class="lf-skeleton lf-skeleton--text"></span>
+          </span>
+        </li>
+      }
+    </ul>
+  } @else {
+    @if (invitations().length) {
+      <h2 class="section">{{ 'salons.invitations' | transloco }}</h2>
+      <ul class="lf-list lf-list--divided">
+        @for (s of invitations(); track s.id) {
+          <li class="lf-list__item invitation">
+            <lf-avatar [nom]="s.nom" [id]="s.id" [groupe]="s.type !== 'direct'" />
+            <span class="lf-list__body">
+              <span class="lf-list__title">{{ s.nom }}</span>
+              <span class="lf-list__meta">{{ 'salons.invite_par' | transloco: { nom: nomInvitant(s) } }}</span>
+              <span class="actions">
+                <button type="button" class="lf-btn lf-btn--primary lf-btn--sm" [attr.aria-busy]="enCours() === s.id" [disabled]="enCours() === s.id" (click)="accepter(s)">
+                  {{ 'salons.accepter' | transloco }}
+                </button>
+                <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" [disabled]="enCours() === s.id" (click)="refuser(s)">
+                  {{ 'salons.refuser' | transloco }}
+                </button>
+              </span>
+            </span>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (conversations().length) {
+      <ul class="lf-list" [attr.aria-label]="'salons.titre' | transloco">
+        @for (s of conversations(); track s.id) {
+          <li>
+            <a
+              class="lf-list__item"
+              [class.lf-list__item--unread]="s.nonLus > 0"
+              [routerLink]="['/salons', s.id]"
+              routerLinkActive
+              ariaCurrentWhenActive="page"
+            >
+              <lf-avatar [nom]="s.nom" [id]="s.correspondant || s.id" [groupe]="s.type !== 'direct'" />
+              <span class="lf-list__body">
+                <span class="ligne">
+                  @if (s.type !== 'direct') {
+                    <lf-icone class="type" [nom]="icone(s)" [taille]="15" />
+                  }
+                  <span class="lf-list__title">{{ s.nom }}</span>
+                </span>
+                <span class="lf-list__meta">
+                  @if (s.dernier; as d) {
+                    @if (d.niveau === 'CONFIDENTIEL') {
+                      <lf-icone nom="cadenas" [taille]="13" />
+                      {{ 'apercu.confidentiel' | transloco }}
+                    } @else {
+                      @let a = apercu(d);
+                      @if (d.sortant) {
+                        {{ 'apercu.vous' | transloco }}
+                      }
+                      {{ a.cle ? (a.cle | transloco) : a.texte }}
+                    }
+                  } @else {
+                    {{ 'apercu.vide' | transloco }}
+                  }
+                </span>
+              </span>
+              <span class="lf-list__trailing">
+                <time>{{ horodatage(s.activite) }}</time>
+                <span class="badges">
+                  @if (s.dernier && s.dernier.niveau !== 'NORMAL') {
+                    <span class="lf-cls" [attr.data-cls]="s.dernier.niveau">{{ 'classification.court.' + s.dernier.niveau | transloco }}</span>
+                  }
+                  @if (s.nonLus > 0) {
+                    <span class="lf-badge lf-badge--count" [attr.aria-label]="'salons.non_lus' | transloco: { n: s.nonLus }">{{ s.nonLus > 99 ? '99+' : s.nonLus }}</span>
+                  }
+                </span>
+              </span>
+            </a>
+          </li>
+        }
+      </ul>
+    } @else if (!invitations().length) {
+      <div class="lf-empty">
+        @if (recherche()) {
+          <lf-icone class="lf-empty__art" nom="recherche" [taille]="56" />
+          <h2 class="lf-empty__title">{{ 'salons.aucun_resultat' | transloco }}</h2>
+          <p class="lf-empty__text">{{ 'salons.aucun_resultat_texte' | transloco: { q: recherche() } }}</p>
+        } @else {
+          <lf-icone class="lf-empty__art" nom="message" [taille]="56" />
+          <h2 class="lf-empty__title">{{ 'salons.vide_titre' | transloco }}</h2>
+          <p class="lf-empty__text">{{ 'salons.vide_texte' | transloco }}</p>
+          <a routerLink="/annuaire" class="lf-btn lf-btn--secondary">
+            <lf-icone nom="annuaire" />
+            {{ 'nav.annuaire' | transloco }}
+          </a>
+        }
+      </div>
+    }
+  }
+</div>

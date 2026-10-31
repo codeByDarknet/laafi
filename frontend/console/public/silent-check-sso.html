@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Vérification de session</title></head>
+<body>
+  <!-- Page chargée par keycloak-js dans une iframe de même origine : elle renvoie le résultat SSO à la page parente. -->
+  <script>parent.postMessage(location.href, location.origin);</script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+// =============================================================================
+// Laafi — jetons de design (design tokens)
+// -----------------------------------------------------------------------------
+// Ce module N'ÉMET AUCUN CSS quand on l'importe : il ne contient que des
+// variables Sass, des maps et des mixins. On peut donc l'utiliser librement
+// dans les styles de composants Angular :
+//
+//     @use 'tokens' as lf;
+//     .ma-zone { @include lf.focus-ring; @include lf.bp(md) { … } }
+//
+// Les propriétés CSS (--lf-*) sont émises une seule fois, par laafi.scss,
+// via le mixin `root-tokens()`. Les composants consomment ensuite
+// `var(--lf-…)` : le thème clair/sombre bascule sans recompiler.
+//
+// Contrastes vérifiés (WCAG 2.2 AA) : voir README.md, section « Palette ».
+// =============================================================================
+
+@use 'sass:map';
+
+// --- Couleurs du drapeau : réservées aux accents de marque -------------------
+// Ces teintes « pures » ne portent jamais de texte blanc (contraste < 4,5:1).
+// Pour les actions, on utilise les variantes approfondies définies plus bas.
+$flag-red: #ef2b2d;
+$flag-green: #009e49;
+$flag-gold: #fcd116;
+
+// --- Points de rupture (mobile d'abord : min-width) --------------------------
+$breakpoints: (
+  sm: 480px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+);
+
+// --- Thème clair : sable / latérite très légers ------------------------------
+$light: (
+  // Fonds et surfaces
+  'bg': #f8f3ed,
+  'surface': #ffffff,
+  'surface-2': #f0e9e0,
+  'surface-3': #e7ded2,
+  'overlay': rgba(30, 38, 34, 0.48),
+  // Traits
+  'border': #e2d8cc,
+  'border-strong': #9c8f80,
+  // Texte (ardoise teintée vert, jamais noir pur)
+  'ink': #1e2622,
+  'ink-2': #545e58,
+  'ink-3': #626a64,
+  'ink-inverse': #f8f3ed,
+  // Action principale : vert Faso approfondi (blanc dessus = 5,45:1)
+  'accent': #007a3d,
+  'accent-hover': #00672f,
+  'accent-contrast': #ffffff,
+  'accent-soft': #e3f2e8,
+  'accent-text': #006b35,
+  'accent-soft-text': #00592c,
+  // Danger : rouge drapeau approfondi (blanc dessus = 5,99:1)
+  'danger': #c21e25,
+  'danger-hover': #a3191f,
+  'danger-contrast': #ffffff,
+  'danger-soft': #fce6e5,
+  'danger-text': #a3191f,
+  // Avertissement : ambre (dérivé de l'or de l'étoile)
+  'warning-soft': #fff0c2,
+  'warning-text': #6b4500,
+  'warning-line': #d69a00,
+  // Succès = vert (même famille que l'accent)
+  'success-soft': #e3f2e8,
+  'success-text': #00592c,
+  // Classifications (le texte porte toujours le sens, la couleur le renforce)
+  'cls-normal-bg': #ece5db,
+  'cls-normal-fg': #3f4843,
+  'cls-normal-line': #9c8f80,
+  'cls-dr-bg': #fff0c2,
+  'cls-dr-fg': #6b4500,
+  'cls-dr-line': #d69a00,
+  'cls-conf-bg': #fce6e5,
+  'cls-conf-fg': #8f161b,
+  'cls-conf-line': #c21e25,
+  // Bulles de messagerie
+  'bubble-in': #ffffff,
+  'bubble-out': #e3f2e8,
+  'bubble-out-ink': #14301f,
+  // Focus : anneau vert foncé + halo or, visible sur toutes les surfaces
+  'focus': #00592c,
+  'focus-halo': rgba(252, 209, 22, 0.55),
+  'selection': rgba(252, 209, 22, 0.45),
+  'skeleton': #e7ded2,
+  'skeleton-shine': #f3ece3,
+  'scrollbar': #c9bcad,
+  // Ombres teintées latérite (pas de gris neutre)
+  'shadow-color': 30deg 25% 30%,
+);
+
+// --- Thème sombre : ardoise profonde -----------------------------------------
+$dark: (
+  'bg': #12181c,
+  'surface': #1a2227,
+  'surface-2': #222b31,
+  'surface-3': #2c363d,
+  'overlay': rgba(5, 8, 10, 0.66),
+  'border': #2f3a41,
+  'border-strong': #6b7880,
+  'ink': #ece7e0,
+  'ink-2': #a9b2ad,
+  'ink-3': #8e9893,
+  'ink-inverse': #12181c,
+  'accent': #34c27a,
+  'accent-hover': #4ad08b,
+  'accent-contrast': #08200f,
+  'accent-soft': #173827,
+  'accent-text': #5ad394,
+  'accent-soft-text': #8fe3b4,
+  'danger': #d93036,
+  'danger-hover': #b92a30,
+  'danger-contrast': #ffffff,
+  'danger-soft': #3d1517,
+  'danger-text': #ff8a80,
+  'warning-soft': #33280c,
+  'warning-text': #ffd66b,
+  'warning-line': #c99a1e,
+  'success-soft': #173827,
+  'success-text': #8fe3b4,
+  'cls-normal-bg': #262f35,
+  'cls-normal-fg': #c9d0cb,
+  'cls-normal-line': #6b7880,
+  'cls-dr-bg': #33280c,
+  'cls-dr-fg': #ffd66b,
+  'cls-dr-line': #c99a1e,
+  'cls-conf-bg': #3d1517,
+  'cls-conf-fg': #ffb4ae,
+  'cls-conf-line': #e5484d,
+  'bubble-in': #222b31,
+  'bubble-out': #173827,
+  'bubble-out-ink': #e4f5ea,
+  'focus': #fcd116,
+  'focus-halo': rgba(252, 209, 22, 0.28),
+  'selection': rgba(52, 194, 122, 0.38),
+  'skeleton': #222b31,
+  'skeleton-shine': #2c363d,
+  'scrollbar': #3d4950,
+  'shadow-color': 205deg 40% 3%,
+);
+
+// --- Mixins publics ----------------------------------------------------------
+
+/// Media query mobile d'abord. Usage : `@include bp(md) { … }`
+@mixin bp($name) {
+  $min: map.get($breakpoints, $name);
+  @if not $min {
+    @error "Point de rupture inconnu : #{$name}. Valeurs : #{map.keys($breakpoints)}";
+  }
+  @media (min-width: $min) {
+    @content;
+  }
+}
+
+/// Alias explicite demandé dans le contrat.
+@mixin breakpoint($name) {
+  @include bp($name) {
+    @content;
+  }
+}
+
+/// Anneau de focus clavier uniquement (`:focus-visible`), double trait pour
+/// rester visible sur fond clair, sombre ou coloré (WCAG 2.4.7 / 2.4.11).
+@mixin focus-ring($offset: 2px) {
+  &:focus-visible {
+    outline: 2px solid var(--lf-focus);
+    outline-offset: $offset;
+    box-shadow: 0 0 0 calc(#{$offset} + 4px) var(--lf-focus-halo);
+  }
+}
+
+/// Masque visuellement un élément tout en le laissant aux lecteurs d'écran.
+@mixin visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/// Coupe le texte sur une ligne avec « … ».
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/// Animation désactivée si l'utilisateur a demandé moins de mouvement.
+@mixin motion-safe {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}
+
+// --- Émission des propriétés CSS (appelé une seule fois par laafi.scss) ------
+
+@mixin _palette($map) {
+  @each $name, $value in $map {
+    --lf-#{$name}: #{$value};
+  }
+}
+
+@mixin root-tokens {
+  :root {
+    color-scheme: light;
+    @include _palette($light);
+
+    --lf-flag-red: #{$flag-red};
+    --lf-flag-green: #{$flag-green};
+    --lf-flag-gold: #{$flag-gold};
+
+    // Typographie : une seule famille (Noto Sans, axes graisse + largeur).
+    // Choisie car elle couvre tout l'alphabet du mooré et du dioula
+    // (ɛ ɔ ɩ ʋ ŋ, voyelles nasales ã ẽ ĩ õ ũ) : aucun « tofu » à l'écran.
+    --lf-font-sans: 'Noto Sans Laafi', 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
+      sans-serif;
+    --lf-font-mono: ui-monospace, 'SFMono-Regular', 'DejaVu Sans Mono', Menlo, Consolas, monospace;
+    // Titres : même famille, légèrement condensée (axe wdth) pour un ton
+    // officiel et compact sans ajouter de seconde police.
+    --lf-display-stretch: 87.5%;
+
+    // Échelle modulaire 1,2 (tierce mineure) sur une base de 16 px.
+    --lf-text-2xs: 0.6875rem; // 11
+    --lf-text-xs: 0.75rem; // 12
+    --lf-text-sm: 0.875rem; // 14
+    --lf-text-md: 1rem; // 16
+    --lf-text-lg: 1.2rem; // 19,2
+    --lf-text-xl: 1.44rem; // 23
+    --lf-text-2xl: 1.728rem; // 27,6
+    --lf-text-3xl: 2.0736rem; // 33,2
+    --lf-text-4xl: 2.488rem; // 39,8
+
+    --lf-leading-tight: 1.15;
+    --lf-leading-snug: 1.3;
+    --lf-leading-normal: 1.5;
+    --lf-leading-relaxed: 1.65;
+
+    --lf-weight-regular: 400;
+    --lf-weight-medium: 500;
+    --lf-weight-semibold: 600;
+    --lf-weight-bold: 700;
+    --lf-weight-black: 800;
+
+    --lf-measure: 68ch;
+
+    // Espacements (grille de 4 px)
+    --lf-space-0: 0;
+    --lf-space-1: 0.25rem;
+    --lf-space-2: 0.5rem;
+    --lf-space-3: 0.75rem;
+    --lf-space-4: 1rem;
+    --lf-space-5: 1.25rem;
+    --lf-space-6: 1.5rem;
+    --lf-space-8: 2rem;
+    --lf-space-10: 2.5rem;
+    --lf-space-12: 3rem;
+    --lf-space-16: 4rem;
+    --lf-gutter: 1rem;
+
+    // Rayons : hiérarchisés, pas un rayon unique partout
+    --lf-radius-xs: 3px; // badges, puces de statut
+    --lf-radius-sm: 6px; // champs, boutons
+    --lf-radius-md: 10px; // cartes, listes
+    --lf-radius-lg: 16px; // modales, bulles
+    --lf-radius-pill: 999px; // chips, avatars
+
+    // Ombres (teinte latérite en clair, quasi noire en sombre)
+    --lf-shadow-1: 0 1px 2px hsl(var(--lf-shadow-color) / 0.1);
+    --lf-shadow-2: 0 1px 2px hsl(var(--lf-shadow-color) / 0.08),
+      0 4px 12px -2px hsl(var(--lf-shadow-color) / 0.12);
+    --lf-shadow-3: 0 2px 4px hsl(var(--lf-shadow-color) / 0.08),
+      0 16px 40px -8px hsl(var(--lf-shadow-color) / 0.24);
+
+    // Couches (z-index)
+    --lf-z-base: 0;
+    --lf-z-raised: 10;
+    --lf-z-sticky: 100;
+    --lf-z-dropdown: 200;
+    --lf-z-overlay: 300;
+    --lf-z-modal: 400;
+    --lf-z-toast: 500;
+    --lf-z-tooltip: 600;
+
+    // Mouvement
+    --lf-duration-fast: 120ms;
+    --lf-duration-base: 180ms;
+    --lf-duration-slow: 280ms;
+    --lf-ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --lf-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+    // Points de rupture (lecture JS : getComputedStyle ; en CSS utiliser bp())
+    @each $name, $value in $breakpoints {
+      --lf-bp-#{$name}: #{$value};
+    }
+
+    // Hauteurs de contrôle (cible tactile ≥ 44 px pour le format md)
+    --lf-control-sm: 2rem;
+    --lf-control-md: 2.75rem;
+    --lf-control-lg: 3.25rem;
+  }
+
+  // Sombre automatique selon le système, sauf choix explicite « clair »…
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      color-scheme: dark;
+      @include _palette($dark);
+    }
+  }
+
+  // … ou forcé par l'utilisateur (<html data-theme="dark">).
+  :root[data-theme='dark'] {
+    color-scheme: dark;
+    @include _palette($dark);
+  }
+}

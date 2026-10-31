@@ -1,0 +1,99 @@
+@let s = resume();
+<header class="entete">
+  <a [routerLink]="['/salons', roomId()]" class="lf-btn lf-btn--ghost lf-btn--icon" [attr.aria-label]="'commun.retour' | transloco">
+    <lf-icone nom="retour" />
+  </a>
+  <h1>{{ 'details.titre' | transloco }}</h1>
+</header>
+
+@if (!room() || !s) {
+  <div class="lf-empty">
+    <h2 class="lf-empty__title">{{ 'conversation.introuvable_titre' | transloco }}</h2>
+    <a routerLink="/salons" class="lf-btn lf-btn--secondary">{{ 'commun.retour' | transloco }}</a>
+  </div>
+} @else {
+  <div class="page">
+    <section class="carte-identite">
+      <lf-avatar [nom]="s.nom" [id]="s.correspondant || s.id" [groupe]="s.type !== 'direct'" taille="xl" />
+      <h2>{{ s.nom }}</h2>
+      @if (sujet()) {
+        <p class="lf-muted">{{ sujet() }}</p>
+      }
+      <p class="garanties">
+        <span class="lf-badge lf-badge--success"><lf-icone nom="cadenas" [taille]="14" /> {{ 'details.chiffre' | transloco }}</span>
+        <span class="lf-badge">{{ 'nouveau.onglet.' + s.type | transloco }}</span>
+      </p>
+    </section>
+
+    @if (s.type !== 'direct') {
+      <div class="lf-alert">
+        <lf-icone nom="info" />
+        <div>{{ 'details.avertissement_metadonnees' | transloco }}</div>
+      </div>
+    }
+
+    <section class="section">
+      <div class="titre-section">
+        <h2>{{ 'details.membres' | transloco: { n: membres().length } }}</h2>
+        @if (peutInviter()) {
+          <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="invitationOuverte.set(true)">
+            <lf-icone nom="plus" [taille]="16" />
+            {{ 'details.inviter' | transloco }}
+          </button>
+        }
+      </div>
+      @if (!membresCharges()) {
+        <ul class="lf-list" aria-busy="true">
+          @for (i of [1, 2, 3]; track i) {
+            <li class="lf-list__item"><span class="lf-skeleton lf-skeleton--circle"></span><span class="lf-skeleton lf-skeleton--text large"></span></li>
+          }
+        </ul>
+      } @else {
+        <ul class="lf-list lf-list--divided carte">
+          @for (m of membres(); track m.id) {
+            <li class="lf-list__item">
+              <lf-avatar [nom]="m.nom" [id]="m.id" [verifie]="verifies()[m.id] === true" taille="sm" />
+              <span class="lf-list__body">
+                <span class="lf-list__title">{{ m.nom }}</span>
+                <span class="lf-list__meta lf-mono">{{ m.id }}</span>
+              </span>
+              <span class="lf-list__trailing">
+                @if (m.invite) {
+                  <span class="lf-badge lf-badge--warning">{{ 'details.invite' | transloco }}</span>
+                } @else if (m.role) {
+                  <span class="lf-badge">{{ 'details.role.' + m.role | transloco }}</span>
+                }
+                @if (verifies()[m.id] === true) {
+                  <span class="verifie"><lf-icone nom="bouclier" [taille]="14" /> {{ 'details.verifie' | transloco }}</span>
+                } @else if (verifies()[m.id] === false) {
+                  <span class="non-verifie">{{ 'details.non_verifie' | transloco }}</span>
+                }
+              </span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="section">
+      <button type="button" class="lf-btn lf-btn--danger-outline" (click)="depart.set(true)">
+        <lf-icone nom="sortir" />
+        {{ 'details.quitter' | transloco }}
+      </button>
+    </section>
+  </div>
+
+  <lf-dialogue [ouvert]="invitationOuverte()" [large]="true" [titre]="'details.inviter' | transloco" (ferme)="invitationOuverte.set(false)">
+    <lf-recherche-agents [choisis]="idsMembres()" action="details.inviter" (choisir)="inviter($event)" />
+  </lf-dialogue>
+
+  <lf-dialogue [ouvert]="depart()" [danger]="true" [bloque]="departEnCours()" [titre]="'details.quitter_titre' | transloco" (ferme)="depart.set(false)">
+    <p>{{ 'details.quitter_texte' | transloco }}</p>
+    <footer pied class="lf-modal__footer">
+      <button type="button" class="lf-btn lf-btn--ghost" (click)="depart.set(false)">{{ 'commun.annuler' | transloco }}</button>
+      <button type="button" class="lf-btn lf-btn--danger" [disabled]="departEnCours()" [attr.aria-busy]="departEnCours()" (click)="quitter()">
+        {{ 'details.quitter' | transloco }}
+      </button>
+    </footer>
+  </lf-dialogue>
+}

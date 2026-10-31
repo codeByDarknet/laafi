@@ -1,0 +1,167 @@
+<header class="lc-entete">
+  <div class="lc-entete__texte">
+    <h1>{{ 'tableau.titre' | transloco }}</h1>
+    <p class="lc-entete__desc">
+      @if (auth.estSuperAdmin()) {
+        {{ 'tableau.descNational' | transloco }}
+      } @else {
+        {{ 'tableau.descMinistere' | transloco: { ministere: referentiel.nom(auth.ministereImpose()) } }}
+      }
+    </p>
+  </div>
+  <div class="lc-entete__actions">
+    <button type="button" class="lf-btn lf-btn--secondary" (click)="charger()">
+      <lc-icone nom="rafraichir" />
+      {{ 'commun.actualiser' | transloco }}
+    </button>
+    <a class="lf-btn lf-btn--primary" routerLink="/agents/enroler">
+      <lc-icone nom="enroler" />
+      {{ 'nav.enroler' | transloco }}
+    </a>
+  </div>
+</header>
+
+<!-- Indicateurs : une seule bande, quatre mesures qui se lisent d'un coup d'œil. -->
+<section class="indicateurs" [attr.aria-label]="'tableau.indicateurs' | transloco">
+  <a class="indic" routerLink="/agents" [queryParams]="{ statut: 'ACTIF' }">
+    <span class="indic__label">{{ 'tableau.actifs' | transloco }}</span>
+    @if (chiffres(); as c) {
+      <span class="indic__valeur">{{ c.actifs }}</span>
+      <span class="indic__note">{{ 'tableau.surTotal' | transloco: { total: c.total } }}</span>
+    } @else if (erreurAgents()) {
+      <span class="indic__valeur indic__valeur--vide">—</span>
+    } @else {
+      <span class="lf-skeleton indic__squelette"></span>
+    }
+  </a>
+
+  <a class="indic" routerLink="/agents" [queryParams]="{ statut: 'REVOQUE' }">
+    <span class="indic__label">{{ 'tableau.revoques' | transloco }}</span>
+    @if (chiffres(); as c) {
+      <span class="indic__valeur" [class.indic__valeur--alerte]="c.revoques > 0">{{ c.revoques }}</span>
+      <span class="indic__note">
+        {{ 'tableau.appareilsRevoques' | transloco: { n: c.appareilsRevoques } }}
+      </span>
+    } @else if (erreurAgents()) {
+      <span class="indic__valeur indic__valeur--vide">—</span>
+    } @else {
+      <span class="lf-skeleton indic__squelette"></span>
+    }
+  </a>
+
+  <a class="indic" routerLink="/agents">
+    <span class="indic__label">{{ 'tableau.recents' | transloco: { jours: joursRecents } }}</span>
+    @if (chiffres(); as c) {
+      <span class="indic__valeur">{{ c.recents }}</span>
+      <span class="indic__note">{{ 'tableau.recentsNote' | transloco }}</span>
+    } @else if (erreurAgents()) {
+      <span class="indic__valeur indic__valeur--vide">—</span>
+    } @else {
+      <span class="lf-skeleton indic__squelette"></span>
+    }
+  </a>
+
+  <a class="indic indic--journal" routerLink="/journal"
+     [attr.data-etat]="rapport() ? (rapport()!.integre ? 'ok' : 'rompu') : null">
+    <span class="indic__label">{{ 'tableau.integrite' | transloco }}</span>
+    @if (verificationEnCours() && !rapport()) {
+      <span class="lf-skeleton indic__squelette"></span>
+    } @else if (rapport(); as r) {
+      <span class="indic__etat">
+        <lc-icone [nom]="r.integre ? 'chaine' : 'chaine-rompue'" />
+        {{ (r.integre ? 'journal.integre' : 'journal.rompu') | transloco }}
+      </span>
+      <span class="indic__note">
+        {{ 'journal.nbEntrees' | transloco: { n: r.nombreEntrees } }} ·
+        {{ 'journal.verifieA' | transloco }} {{ r.verifieLe | date: 'HH:mm' }}
+      </span>
+    } @else {
+      <span class="indic__valeur indic__valeur--vide">—</span>
+      <span class="indic__note">{{ erreurJournal() }}</span>
+    }
+  </a>
+</section>
+
+@if (erreurAgents(); as e) {
+  <div class="lf-alert lf-alert--danger erreur" role="alert">
+    <lc-icone nom="alerte" />
+    <div>
+      <p class="lf-alert__title">{{ 'tableau.erreurAgents' | transloco }}</p>
+      <p>{{ e }}</p>
+    </div>
+  </div>
+}
+
+<div class="colonnes">
+  <section class="lc-section bloc" aria-labelledby="titre-enroles">
+    <div class="bloc__entete">
+      <h2 id="titre-enroles" class="lc-section__titre">{{ 'tableau.derniersEnroles' | transloco }}</h2>
+      <a class="bloc__lien" routerLink="/agents">{{ 'tableau.voirTous' | transloco }}</a>
+    </div>
+    <div class="lf-card">
+      @if (agents() === null && !erreurAgents()) {
+        <div class="lf-card__body">
+          @for (i of [1, 2, 3, 4]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }
+        </div>
+      } @else if (derniersEnroles().length === 0) {
+        <div class="lf-empty">
+          <p class="lf-empty__title">{{ 'tableau.aucunEnrole' | transloco }}</p>
+          <a class="lf-btn lf-btn--primary lf-btn--sm" routerLink="/agents/enroler">{{ 'nav.enroler' | transloco }}</a>
+        </div>
+      } @else {
+        <ul class="lf-list lf-list--divided" role="list">
+          @for (a of derniersEnroles(); track a.username) {
+            <li class="lf-list__item">
+              <div class="lf-list__body">
+                <a class="lf-list__title lc-identite__nom" [routerLink]="['/agents', a.username]">
+                  {{ a.nomComplet || a.username }}
+                </a>
+                <span class="lf-list__meta">{{ a.fonction }} · {{ referentiel.sigle(a.ministere) }}</span>
+              </div>
+              <div class="lf-list__trailing">
+                <lc-statut [statut]="a.statut" />
+                <span class="lc-num lf-muted date">{{ a.creeLe | date: 'd MMM' }}</span>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </section>
+
+  <section class="lc-section bloc" aria-labelledby="titre-activite">
+    <div class="bloc__entete">
+      <h2 id="titre-activite" class="lc-section__titre">{{ 'tableau.activite' | transloco }}</h2>
+      <a class="bloc__lien" routerLink="/audit">{{ 'tableau.journalAudit' | transloco }}</a>
+    </div>
+    <div class="lf-card">
+      @if (erreurAudit(); as e) {
+        <div class="lf-card__body"><p class="lf-error">{{ e }}</p></div>
+      } @else if (audit() === null) {
+        <div class="lf-card__body">
+          @for (i of [1, 2, 3, 4]; track i) { <span class="lf-skeleton lf-skeleton--text"></span> }
+        </div>
+      } @else if (audit()!.length === 0) {
+        <div class="lf-empty"><p class="lf-empty__text">{{ 'audit.vide' | transloco }}</p></div>
+      } @else {
+        <ol class="activite" role="list">
+          @for (ev of audit(); track ev.id) {
+            <li class="activite__item" [attr.data-action]="ev.action">
+              <span class="activite__marque" aria-hidden="true"></span>
+              <div class="activite__texte">
+                <p>
+                  <strong>{{ libelleAction(ev.action) }}</strong>
+                  @if (ev.cible) { — <span class="lf-mono">{{ ev.cible }}</span> }
+                </p>
+                <p class="activite__meta">
+                  {{ 'audit.par' | transloco }} <span class="lf-mono">{{ ev.acteur }}</span>
+                  · <time class="lc-num" [attr.datetime]="ev.horodatage">{{ ev.horodatage | date: 'd MMM, HH:mm' }}</time>
+                </p>
+              </div>
+            </li>
+          }
+        </ol>
+      }
+    </div>
+  </section>
+</div>

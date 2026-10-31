@@ -1,0 +1,102 @@
+@if (options()) {
+  <div class="options" role="group" [attr.aria-label]="'composeur.options' | transloco">
+    <fieldset class="niveaux">
+      <legend class="lf-label">{{ 'composeur.classification' | transloco }}</legend>
+      @for (n of niveaux; track n) {
+        <label class="niveau">
+          <input type="radio" name="niveau" class="lf-sr-only" [value]="n" [checked]="niveau() === n" (change)="niveau.set(n)" />
+          <span class="lf-cls" [attr.data-cls]="n">{{ 'classification.niveau.' + n | transloco }}</span>
+        </label>
+      }
+    </fieldset>
+    <div class="ligne">
+      <label class="lf-field duree">
+        <span class="lf-label">{{ 'composeur.expiration' | transloco }}</span>
+        <select class="lf-input" [value]="dureeMs()" (change)="dureeMs.set(+$any($event.target).value)">
+          @for (d of durees(); track d) {
+            <option [value]="d" [selected]="d === dureeMs()">{{ libelleDuree(d) | transloco }}</option>
+          }
+        </select>
+      </label>
+      <label class="interrupteur">
+        <input type="checkbox" class="lf-switch" [checked]="instruction()" (change)="instruction.set($any($event.target).checked)" />
+        <span>
+          <strong>{{ 'composeur.instruction' | transloco }}</strong>
+          <small>{{ 'composeur.instruction_aide' | transloco }}</small>
+        </span>
+      </label>
+    </div>
+  </div>
+}
+
+@if (enregistrement()) {
+  <div class="barre vocal" role="group" [attr.aria-label]="'composeur.enregistrement' | transloco">
+    <button type="button" class="lf-btn lf-btn--ghost lf-btn--icon" [attr.aria-label]="'composeur.annuler_vocal' | transloco" (click)="annulerVocal()">
+      <lf-icone nom="poubelle" />
+    </button>
+    <span class="point" aria-hidden="true"></span>
+    <span class="chrono" aria-live="off">{{ format(ecoule()) }}</span>
+    <span class="micro" aria-hidden="true">
+      @for (v of niveauxMicro(); track $index) {
+        <span [style.--h]="v"></span>
+      }
+    </span>
+    <span class="lf-sr-only" role="status">{{ 'composeur.enregistrement' | transloco }}</span>
+    <button type="button" class="lf-btn lf-btn--primary lf-btn--icon envoyer" [attr.aria-label]="'composeur.envoyer_vocal' | transloco" (click)="arreterVocal()">
+      <lf-icone nom="envoyer" />
+    </button>
+  </div>
+} @else {
+  <div class="barre">
+    <button
+      type="button"
+      class="lf-btn lf-btn--ghost lf-btn--icon reglage"
+      [attr.aria-expanded]="options()"
+      [attr.aria-label]="'composeur.options' | transloco"
+      [title]="'composeur.options' | transloco"
+      (click)="options.set(!options())"
+    >
+      <lf-icone nom="bouclier" />
+      @if (niveau() !== 'NORMAL' || instruction()) {
+        <span class="pastille" [attr.data-cls]="niveau()" aria-hidden="true"></span>
+      }
+    </button>
+    <label class="lf-btn lf-btn--ghost lf-btn--icon" [title]="'composeur.joindre_image' | transloco">
+      <lf-icone nom="image" />
+      <span class="lf-sr-only">{{ 'composeur.joindre_image' | transloco }}</span>
+      <input #img type="file" accept="image/*" multiple class="lf-sr-only" (change)="choisirFichiers(img, true)" />
+    </label>
+    <label class="lf-btn lf-btn--ghost lf-btn--icon" [title]="'composeur.joindre_fichier' | transloco">
+      <lf-icone nom="trombone" />
+      <span class="lf-sr-only">{{ 'composeur.joindre_fichier' | transloco }}</span>
+      <input #fic type="file" multiple class="lf-sr-only" (change)="choisirFichiers(fic, false)" />
+    </label>
+
+    <label class="saisie">
+      <span class="lf-sr-only">{{ 'composeur.message' | transloco }}</span>
+      @if (niveau() !== 'NORMAL') {
+        <span class="lf-cls rappel" [attr.data-cls]="niveau()">{{ 'classification.court.' + niveau() | transloco }}</span>
+      }
+      <textarea
+        #zone
+        rows="1"
+        class="lf-input"
+        [placeholder]="(instruction() ? 'composeur.placeholder_instruction' : 'composeur.placeholder') | transloco"
+        [value]="texte()"
+        (input)="saisie(zone)"
+        (keydown)="touche($event)"
+        enterkeyhint="send"
+      ></textarea>
+    </label>
+
+    @if (peutEnvoyer() || !vocalPossible) {
+      <button type="button" class="lf-btn lf-btn--primary lf-btn--icon envoyer" [disabled]="!peutEnvoyer()" [attr.aria-label]="'composeur.envoyer' | transloco" (click)="envoyer()">
+        <lf-icone nom="envoyer" />
+      </button>
+    } @else {
+      <button type="button" class="lf-btn lf-btn--secondary lf-btn--icon envoyer" [attr.aria-label]="'composeur.enregistrer_vocal' | transloco" [title]="'composeur.enregistrer_vocal' | transloco" (click)="demarrerVocal()">
+        <lf-icone nom="micro" />
+      </button>
+    }
+  </div>
+}

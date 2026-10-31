@@ -1,0 +1,71 @@
+:host {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.outils {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  padding: var(--lf-space-3) var(--lf-gutter);
+  border-bottom: 1px solid var(--lf-border);
+
+  .lf-search {
+    flex: 1;
+  }
+}
+
+.defilement {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.section {
+  margin: 0;
+  padding: var(--lf-space-3) var(--lf-gutter) var(--lf-space-1);
+  color: var(--lf-ink-2);
+  font-size: var(--lf-text-xs);
+  font-weight: var(--lf-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.invitation {
+  align-items: flex-start;
+  background: var(--lf-accent-soft);
+}
+
+.actions {
+  display: flex;
+  gap: var(--lf-space-2);
+  margin-top: var(--lf-space-2);
+}
+
+.ligne {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-1);
+  min-width: 0;
+}
+
+.type {
+  color: var(--lf-ink-2);
+}
+
+.lf-list__meta lf-icone {
+  vertical-align: -2px;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-1);
+}
+
+.squelette {
+  gap: var(--lf-space-2);
+}

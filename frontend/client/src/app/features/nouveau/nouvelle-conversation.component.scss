@@ -1,0 +1,35 @@
+.lf-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+}
+
+.membres {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.puces {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--lf-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lf-chip {
+  gap: var(--lf-space-2);
+}
+
+.creer {
+  position: sticky;
+  bottom: 0;
+  padding-block: var(--lf-space-3);
+  background: var(--lf-bg);
+}

@@ -1,0 +1,64 @@
+.lecture {
+  margin-bottom: var(--lf-space-4);
+  --lc-icone: 1.25rem;
+}
+
+.libelle {
+  display: block;
+  margin-top: var(--lf-space-1);
+  font-weight: var(--lf-weight-semibold);
+}
+
+.modif {
+  display: block;
+  color: var(--lf-ink-2);
+  font-size: var(--lf-text-xs);
+}
+
+// Règle restrictive en couleur d'alerte, règle permissive neutre : lecture rapide du tableau.
+.regle {
+  font-weight: var(--lf-weight-medium);
+
+  &[data-ok='false'] {
+    color: var(--lf-danger-text);
+  }
+}
+
+.rappel {
+  margin-top: var(--lf-space-3);
+  max-width: var(--lf-measure);
+}
+
+.edition {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-4);
+}
+
+.groupe {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.jours {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-2);
+  padding-inline-start: 1.75rem;
+
+  .lf-input {
+    width: 7rem;
+  }
+}
+
+.lf-modal__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--lf-space-2);
+}

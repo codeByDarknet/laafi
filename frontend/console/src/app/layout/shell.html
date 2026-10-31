@@ -1,0 +1,64 @@
+<a class="lf-skip-link" href="#contenu">{{ 'nav.allerAuContenu' | transloco }}</a>
+
+<header class="lf-appbar">
+  <span class="lf-fani" aria-hidden="true"></span>
+  <div class="lf-appbar__inner">
+    <a class="lf-appbar__brand" routerLink="/tableau-de-bord">
+      <img src="assets/brand/laafi-mark.svg" alt="" width="28" height="28" />
+      <span>Laafi</span>
+    </a>
+    <span class="lf-appbar__context">
+      {{ 'app.console' | transloco }}
+      <span class="perimetre">
+        @if (perimetre(); as m) {
+          · {{ referentiel.sigle(m) }}
+        } @else {
+          · {{ 'app.perimetreNational' | transloco }}
+        }
+      </span>
+    </span>
+    <span class="lf-appbar__spacer"></span>
+
+    @if (auth.utilisateur(); as u) {
+      <div class="session">
+        <span class="lf-avatar lf-avatar--sm" data-tint="2" aria-hidden="true">{{ initiales() }}</span>
+        <span class="session__texte">
+          <span class="session__nom">{{ u.nom }}</span>
+          <span class="session__role">{{ roleAffiche() | transloco }}</span>
+        </span>
+      </div>
+    }
+    <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="deconnexion()">
+      <lc-icone nom="deconnexion" />
+      <span class="deconnexion__texte">{{ 'nav.deconnexion' | transloco }}</span>
+    </button>
+  </div>
+</header>
+
+<div class="cadre">
+  <nav class="nav" [attr.aria-label]="'nav.principale' | transloco">
+    @for (g of groupes; track g.cle) {
+      <div class="nav__groupe">
+        <p class="nav__titre-groupe">{{ g.cle | transloco }}</p>
+        <ul role="list">
+          @for (e of g.entrees; track e.lien) {
+            <li>
+              <a class="nav__lien" [routerLink]="e.lien" [attr.aria-current]="estActif(e.lien) ? 'page' : null">
+                <lc-icone [nom]="e.icone" />
+                <span>{{ e.cle | transloco }}</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+    <p class="nav__pied">
+      <lc-icone nom="cadenas" />
+      <span>{{ 'nav.pied' | transloco }}</span>
+    </p>
+  </nav>
+
+  <main id="contenu" class="contenu" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

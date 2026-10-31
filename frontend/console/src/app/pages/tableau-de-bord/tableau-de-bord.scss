@@ -1,0 +1,198 @@
+@use 'tokens' as lf;
+
+// Bande d'indicateurs : une surface, des séparateurs fins, pas quatre cartes identiques.
+.indicateurs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  background: var(--lf-surface);
+  border: 1px solid var(--lf-border);
+  border-radius: var(--lf-radius-md);
+  box-shadow: var(--lf-shadow-1);
+  overflow: hidden;
+
+  @include lf.bp(lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.25fr);
+  }
+}
+
+.indic {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lf-space-1);
+  min-width: 0;
+  padding: var(--lf-space-4) var(--lf-space-5) var(--lf-space-5);
+  color: inherit;
+  text-decoration: none;
+  border-block-end: 1px solid var(--lf-border);
+  transition: background-color var(--lf-duration-fast) var(--lf-ease-out);
+  @include lf.focus-ring(-2px);
+
+  &:nth-child(odd) {
+    border-inline-end: 1px solid var(--lf-border);
+  }
+
+  @include lf.bp(lg) {
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--lf-border);
+    &:last-child {
+      border-inline-end: 0;
+    }
+  }
+
+  &:hover {
+    background: var(--lf-surface-2);
+  }
+
+  &__label {
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-sm);
+    font-weight: var(--lf-weight-medium);
+  }
+
+  &__valeur {
+    font-size: var(--lf-text-3xl);
+    font-weight: var(--lf-weight-black);
+    font-stretch: var(--lf-display-stretch);
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+
+    &--alerte {
+      color: var(--lf-danger-text);
+    }
+
+    &--vide {
+      color: var(--lf-ink-3);
+    }
+  }
+
+  &__note {
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__squelette {
+    width: 4rem;
+    height: 2.2rem;
+    margin-block: 0.1rem 0.4rem;
+  }
+
+  &__etat {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--lf-space-2);
+    margin-block: 0.35rem 0.2rem;
+    font-size: var(--lf-text-lg);
+    font-weight: var(--lf-weight-bold);
+    font-stretch: var(--lf-display-stretch);
+    --lc-icone: 1.5rem;
+  }
+
+  // Journal probant : l'état se lit par le texte, l'icône ET la couleur.
+  &--journal[data-etat='ok'] {
+    background: var(--lf-success-soft);
+    .indic__etat {
+      color: var(--lf-success-text);
+    }
+    &:hover {
+      background: color-mix(in srgb, var(--lf-success-soft) 80%, var(--lf-surface-2));
+    }
+  }
+
+  &--journal[data-etat='rompu'] {
+    background: var(--lf-danger-soft);
+    .indic__etat {
+      color: var(--lf-danger-text);
+    }
+  }
+}
+
+.erreur {
+  margin-top: var(--lf-space-4);
+  --lc-icone: 1.25rem;
+}
+
+.colonnes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: var(--lf-space-6);
+
+  @include lf.bp(xl) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+.bloc__entete {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--lf-space-3);
+}
+
+.bloc__lien {
+  color: var(--lf-accent-text);
+  font-size: var(--lf-text-sm);
+  font-weight: var(--lf-weight-semibold);
+}
+
+.lf-list__item {
+  padding-inline: var(--lf-space-5);
+}
+
+.date {
+  min-width: 3.5rem;
+  text-align: end;
+  font-size: var(--lf-text-xs);
+}
+
+.lf-list__trailing {
+  display: flex;
+  align-items: center;
+  gap: var(--lf-space-3);
+}
+
+// Fil d'activité : marque colorée selon la nature de l'action.
+.activite {
+  margin: 0;
+  padding: var(--lf-space-2) 0;
+  list-style: none;
+
+  &__item {
+    --_c: var(--lf-border-strong);
+    display: flex;
+    gap: var(--lf-space-3);
+    padding: var(--lf-space-2) var(--lf-space-5);
+
+    &[data-action='ENROLEMENT'],
+    &[data-action='REACTIVATION'] {
+      --_c: var(--lf-accent);
+    }
+    &[data-action='REVOCATION_TOTALE'] {
+      --_c: var(--lf-danger);
+    }
+    &[data-action='REVOCATION_APPAREILS'],
+    &[data-action='URGENCE'] {
+      --_c: var(--lf-warning-line);
+    }
+  }
+
+  &__marque {
+    flex: none;
+    width: 0.6rem;
+    height: 0.6rem;
+    margin-top: 0.45rem;
+    border-radius: 50%;
+    background: var(--_c);
+  }
+
+  &__texte {
+    min-width: 0;
+    font-size: var(--lf-text-sm);
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-xs);
+  }
+}

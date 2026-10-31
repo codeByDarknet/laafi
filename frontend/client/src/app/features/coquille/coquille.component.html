@@ -1,0 +1,59 @@
+<div class="coquille" [class.coquille--liste]="surListe()">
+  <aside class="coquille__liste" [attr.aria-label]="'salons.titre' | transloco">
+    <header class="lf-appbar">
+      <div class="lf-appbar__inner">
+        <a routerLink="/salons" class="lf-appbar__brand">
+          <img src="assets/brand/laafi-mark.svg" alt="" width="28" height="28" />
+          <span>Laafi</span>
+        </a>
+        @if (profil.profil()?.ministere; as m) {
+          <span class="lf-appbar__context">{{ m }}</span>
+        }
+        <span class="lf-appbar__spacer"></span>
+        <a
+          routerLink="/annuaire"
+          routerLinkActive="est-actif"
+          class="lf-btn lf-btn--ghost lf-btn--icon"
+          [attr.aria-label]="'nav.annuaire' | transloco"
+          [title]="'nav.annuaire' | transloco"
+        >
+          <lf-icone nom="annuaire" />
+        </a>
+        <a
+          routerLink="/profil"
+          routerLinkActive="est-actif"
+          class="lf-btn lf-btn--ghost lf-btn--icon"
+          [attr.aria-label]="'nav.profil' | transloco"
+          [title]="'nav.profil' | transloco"
+        >
+          <lf-icone nom="reglages" />
+        </a>
+      </div>
+      <div class="lf-fani" aria-hidden="true"></div>
+    </header>
+
+    @switch (reseau.etat()) {
+      @case ('hors-ligne') {
+        <div class="reseau reseau--hors-ligne" role="status">
+          <lf-icone nom="horsLigne" [taille]="18" />
+          <span>{{ 'reseau.hors_ligne' | transloco }}</span>
+        </div>
+      }
+      @case ('reconnexion') {
+        <div class="reseau" role="status">
+          <span class="lf-spinner reseau__spinner" aria-hidden="true"></span>
+          <span>{{ 'reseau.reconnexion' | transloco }}</span>
+          <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="relancer()">
+            {{ 'reseau.reessayer' | transloco }}
+          </button>
+        </div>
+      }
+    }
+
+    <lf-liste-salons />
+  </aside>
+
+  <main id="contenu" class="coquille__principal" tabindex="-1">
+    <router-outlet />
+  </main>
+</div>

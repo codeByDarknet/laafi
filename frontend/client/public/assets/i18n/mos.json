@@ -1,0 +1,352 @@
+{
+  "commun": {
+    "aller_au_contenu": "Kẽng sɛb-kãsengã zĩigẽ",
+    "annuler": "Bas-y",
+    "chargement": "Gũ bilfu…",
+    "fermer": "Pag-y",
+    "reessayer": "Le maan-y",
+    "retour": "Lebg poorẽ",
+    "terminer": "Sa"
+  },
+  "nav": {
+    "annuaire": "Tʋʋm-tʋʋmdb yʋy-sɛbre",
+    "profil": "Mam yell la bas-m-yam"
+  },
+  "langues": {
+    "fr": "Fraŋsɛ",
+    "mos": "Moore",
+    "dyu": "Jula"
+  },
+  "roles": {
+    "agent": "Tʋʋm-tʋʋmda",
+    "chef_service": "Tʋʋm-zĩig taoor soaba",
+    "admin_ministere": "Ministɛɛr gɩdgda (administrateur)",
+    "super_admin": "Gɩdgd-kãsenga (super-administrateur)"
+  },
+  "accueil": {
+    "titre": "Gomnã tʋʋm-tʋʋmdb koɛɛg-tʋmsg sẽn gũusdẽ",
+    "texte": "Gom-y ne y tʋʋm-taas tɩ ned pa wʋmd ye. Y koɛɛsã solgdame y masĩnã pʋgẽ, la ned ning y sẽn tʋms a koɛɛgã bal n tõe n karem-a.",
+    "connexion": "Kẽ ne m tʋʋm-tʋʋmd kɔnto",
+    "garantie_chiffrement": "Koɛɛgã solgdame sɩngr n tãag a ned zĩigẽ: serveur-ã pa tõe n karem y koɛɛs ye",
+    "garantie_2fa": "Kẽesg ne gomnã kɔnto la sɛb-sore (code) sẽn sɩd n bãngd y yĩnga",
+    "garantie_appareil": "Y tõe n yɩɩsd masĩn sor wakat fãa, a sã n menem bɩ b sã n zu-a",
+    "pied": "Burkĩna Faso meng tʋʋm-zĩiga, sẽn be Burkĩna Faso pʋgẽ",
+    "erreur_jeton": "Kẽesgã pa tõog ye. Kẽesg sorã wakat tõe n sa: le sɩng-y.",
+    "erreur_demarrage": "Koɛɛg-tʋmsgã pa tõe n sɩng ye. Ges-y y internet n le maan-y."
+  },
+  "demarrage": {
+    "connexion": "Kẽesg n kẽnda…",
+    "chargement": "Y koɛɛg-tʋmsgã pakdame…",
+    "chiffrement": "Koɛɛs solgr segl-m masĩn-kãngã pʋgẽ. Sɩngr wakatã, a tõe n tall sekõnd wʋsgo."
+  },
+  "reseau": {
+    "hors_ligne": "Internet ka be ye. Y koɛɛsã na n tʋmsa internet sã n wa lebg n wa.",
+    "reconnexion": "Internet ka sõng ye, kẽesg lebgda…",
+    "reessayer": "Le maan-y masã"
+  },
+  "salons": {
+    "titre": "Sõsse",
+    "rechercher": "Bao sõsg a ye",
+    "nouvelle": "Sõsg-paalga",
+    "invitations": "Boolgo",
+    "invite_par": "{{nom}} n bool-y",
+    "accepter": "Sak-y",
+    "refuser": "Zãgs-y",
+    "non_lus": "Koɛɛs {{n}} sẽn pa karem ye",
+    "aucun_resultat": "Sõsg ba a ye pa yii ye",
+    "aucun_resultat_texte": "Sõsg ba a ye pa zemsd ne « {{q}} » ye.",
+    "vide_titre": "Sõsg ka be masã ye",
+    "vide_texte": "Bao y tʋʋm-taag tʋʋm-tʋʋmdb yʋy-sɛbrã pʋgẽ n gʋls-a, bɩ y naag tʋʋm-sull.",
+    "aucun_ouvert_titre": "Yãk-y sõsg a ye",
+    "aucun_ouvert_texte": "Yãk-y sõsg a ye sɛbrã pʋgẽ, bɩ y sɩng a paalga.",
+    "erreur_accepter": "Boolgã pa tõe n sak ye. Le maan-y.",
+    "erreur_refuser": "Boolgã pa tõe n zãgs ye. Le maan-y."
+  },
+  "apercu": {
+    "image": "Foto",
+    "vocal": "Koɛɛg sẽn yaa koɛɛ-sõsg (vocal)",
+    "fichier": "Sɛbre (fichier)",
+    "supprime": "Koɛɛgã yɩlgame",
+    "indechiffrable": "Koɛɛgã pa tõe n pak ye",
+    "dechiffrement": "Pakda…",
+    "inconnu": "Koɛɛga",
+    "confidentiel": "Koɛɛg-solgo",
+    "vous": "Foo",
+    "vide": "Koɛɛg ka be ye"
+  },
+  "classification": {
+    "niveau": {
+      "NORMAL": "Woto bala",
+      "DIFFUSION_RESTREINTE": "Tʋms-a ne ministɛɛrã neb bala",
+      "CONFIDENTIEL": "Solgo"
+    },
+    "court": {
+      "NORMAL": "N",
+      "DIFFUSION_RESTREINTE": "DR",
+      "CONFIDENTIEL": "C"
+    },
+    "bandeau": {
+      "NORMAL": "Sõsg-kãngã ka solgo ye.",
+      "DIFFUSION_RESTREINTE": "Tʋms-a ne ministɛɛrã neb bala: koɛɛsã tõe n tʋmsa y ministɛɛrã tʋʋm-tʋʋmdb bala.",
+      "CONFIDENTIEL": "Solgo: b gɩdgame tɩ y ra kõ-a ned a to bɩ y lugl-a ye, b gʋlsa y yʋʋr a zugu, la a solgda y sã n pa get-a."
+    }
+  },
+  "piece": {
+    "image": "Foto sẽn solge",
+    "dechiffrement": "Sɛbr sẽn naag koɛɛgã pakda…",
+    "erreur": "Sɛbr-kãngã pa tõe n pak ye.",
+    "afficher_image": "Wilg foto wã ({{taille}})",
+    "pause": "Yals-a bilfu",
+    "ecouter": "Kelg koɛɛg-vocal wã",
+    "vocal_duree": "Koɛɛg-vocal, {{duree}}",
+    "fichier": "Sɛbre (fichier) sẽn solge",
+    "telecharger": "Tõdg {{nom}}"
+  },
+  "instruction": {
+    "etiquette": "Gomnã noore",
+    "voir_accuses": "Ges sẽn deeg n bãng noorã",
+    "deja_reconnue": "Y deega noor-kãngã n bãnga",
+    "prendre_connaissance": "M deega n bãnga",
+    "session_api": "Kẽ-y Laafi tʋʋm-zĩigẽ n wilg tɩ y deega.",
+    "se_connecter": "Kẽ-y",
+    "accuse_ok": "Y deegrã gʋlsame."
+  },
+  "conversation": {
+    "message_supprime": "Koɛɛg-kãngã yɩlgame.",
+    "indechiffrable": "Koɛɛg-kãngã pa tõe n pak masĩn-kãngã zugu ye. Ges-y masĩnã ne y lebgr kle wã.",
+    "dechiffrement": "Pakda…",
+    "non_pris_en_charge": "Koɛɛg buud-kãngã pa tõe n wilg ka ye.",
+    "expire": "Na n menema {{quand}}",
+    "envoi_en_cours": "Tʋmsgã n kẽnda",
+    "envoye": "Tʋmsame",
+    "echec_envoi": "Tʋmsgã pa tõog ye",
+    "actions": "Koɛɛgã tʋʋma",
+    "transferer": "Tʋms-a ne ned a to",
+    "supprimer": "Yɩlg-a",
+    "erreur_envoi": "Koɛɛgã pa tõe n tʋms ye.",
+    "introuvable_titre": "Sõsgã pa yii ye",
+    "introuvable_texte": "Sõsg-kãngã ka be ye, bɩ y pa le be a pʋgẽ ye.",
+    "direct": "Sõsg ne ned a yembre",
+    "canal": "Gomnã koɛɛg-sore",
+    "groupe": "Sull",
+    "membres": "Neb {{n}}",
+    "details": "Sõsgã yell",
+    "invitation_titre": "B bool-y sõsg-kãngã pʋgẽ",
+    "invitation_texte": "Sak-y boolgã n tõog n karem la y tʋms koɛɛse.",
+    "fil": "Koɛɛse",
+    "charger_anciens": "Wilg koɛɛs sẽn deng",
+    "debut": "Sõsgã sɩngre. Koɛɛsã solgdame sɩngr n tãag a ned zĩigẽ.",
+    "vide": "Koɛɛg ka be ye. Gʋls-y a sɩngdga.",
+    "aller_en_bas": "Kẽng koɛɛs sẽn yaa paalsã zĩigẽ",
+    "lecture_seule": "Gomnã koɛɛg-sore: taoor-soaba bala n tõe n gʋlse.",
+    "supprimer_titre": "Y rata n yɩlg koɛɛg-kãngã?",
+    "supprimer_texte": "Koɛɛgã na n yɩlga ne neb fãa. Tʋʋm-kãngã pa le tõe n lebg poor ye.",
+    "erreur_suppression": "Koɛɛgã pa tõe n yɩlg ye."
+  },
+  "envoi": {
+    "preparation": "Segldame ({{taille}})…",
+    "televersement": "Tʋmsda ne solgre ({{taille}})…",
+    "echec": "Tʋmsgã gũuda ({{taille}}): na n le tʋmsa internet sã n wa"
+  },
+  "composeur": {
+    "options": "Koɛɛgã yɛla",
+    "classification": "Solgr zĩiga",
+    "expiration": "Menem ne a meng",
+    "instruction": "Gomnã noore",
+    "instruction_aide": "Neb nins sẽn deegd-a na n wilga tɩ b bãnga a võor.",
+    "enregistrement": "Koɛɛgã gʋlsda",
+    "annuler_vocal": "Bas gʋlsgã",
+    "envoyer_vocal": "Tʋms koɛɛg-vocal wã",
+    "joindre_image": "Naag foto",
+    "joindre_fichier": "Naag sɛbre (fichier)",
+    "message": "Koɛɛga",
+    "placeholder": "Gʋls koɛɛg sẽn solge…",
+    "placeholder_instruction": "Gʋls noorã…",
+    "envoyer": "Tʋms",
+    "enregistrer_vocal": "Gʋls koɛɛg-vocal",
+    "fichier_trop_gros": "« {{nom}} » yaa kãseng n yɩɩd 50 Mo.",
+    "micro_refuse": "Mikro wã sor pa kõ ye. Kõ-y sorã navigateur wã segldɛ pʋgẽ.",
+    "vocal_trop_court": "Koɛɛg-vocal wã yaa koeemde: gʋls-y wakat n yɩɩd woto.",
+    "duree": {
+      "jamais": "Abada",
+      "h1": "Wakat a yembr poore",
+      "j1": "Daar a yembr poore",
+      "j7": "Rasem 7 poore",
+      "j30": "Rasem 30 poore"
+    }
+  },
+  "transfert": {
+    "titre": "Tʋms koɛɛgã ne ned a to",
+    "dr_regle": "Koɛɛg ne ministɛɛrã neb bala: y tõe n tʋms-a « {{ministere}} » ministɛɛrã tʋʋm-tʋʋmdb bala.",
+    "aucune_cible": "Sõsg ka be tɩ y tʋms koɛɛg-kãngã ye.",
+    "refuse_dr": "Tʋmsgã zãgsame: sõsg-kãngã pʋgẽ, neb kẽer pa y ministɛɛrã neb ye.",
+    "erreur": "Tʋmsgã pa tõog ye. Le maan-y.",
+    "ok": "Koɛɛgã tʋmsame ne {{nom}}."
+  },
+  "accuses": {
+    "titre": "Deegr kaset",
+    "preuve_titre": "Kaset tɩ b bãnga noorã",
+    "preuve_texte": "Sɛbr Laafi serveur-ã sẽn sɩd n gʋls a yʋʋre, n wilgd tɩ tʋʋm-tʋʋmdã bãnga noor-kãngã meng meng (empreinte SHA-256).",
+    "agent": "Tʋʋm-tʋʋmda",
+    "date": "Daare",
+    "signature": "Serveur-ã yʋʋr-gʋlsgo",
+    "signature_valide": "Yʋʋr-gʋlsgã sɩdame",
+    "signature_invalide": "Yʋʋr-gʋlsgã pa ges ye",
+    "telecharger": "Tõdg kasetã",
+    "compte": "Deegr kaset {{n}}",
+    "conforme": "Empreinte wã zemsame",
+    "non_conforme": "Empreinte wã pa zems ne koɛɛg ning sẽn wilgdã ye",
+    "voir_preuve": "Ges kasetã",
+    "aucun": "Deegr kaset ka be masã ye."
+  },
+  "annuaire": {
+    "titre": "Tʋʋm-tʋʋmdb yʋy-sɛbre",
+    "intro": "Bao y tʋʋm-taag ne a yʋʋre, a tʋʋmdã bɩ a ministɛɛrã.",
+    "ouverture": "Sõsgã pakdame…",
+    "rechercher": "Yʋʋre, yʋ-pẽelem bɩ tʋʋmde",
+    "ministere": "Ministɛɛr",
+    "tous_ministeres": "Ministɛɛr fãa",
+    "indisponible": "Yʋy-sɛbrã data tɩ y kẽ Laafi tʋʋm-zĩigẽ.",
+    "se_connecter": "Kẽ tʋʋm-zĩigẽ",
+    "resultats": "Tʋʋm-tʋʋmdb {{n}}",
+    "vous": "Foo",
+    "selectionne": "Yãkame",
+    "plus": "Wilg tʋʋm-tʋʋmdb n paase",
+    "aucun": "Tʋʋm-tʋʋmd ba a ye pa zems ne y baoorã ye.",
+    "utiliser_id": "Tʋm ne {{id}}",
+    "choisir": "Yãk",
+    "ecrire": "Gʋlse"
+  },
+  "nouveau": {
+    "titre": "Sõsg-paalga",
+    "type": "Sõsgã buudu",
+    "onglet": {
+      "direct": "Ned a yembre",
+      "groupe": "Sull",
+      "canal": "Gomnã koɛɛg-sore"
+    },
+    "aide": {
+      "direct": "Sõsg sẽn solge ne y tʋʋm-taag a yembre bala.",
+      "groupe": "Tʋʋm-sull sẽn solge: neb fãa tõe n gʋlse.",
+      "canal": "Y ministɛɛrã koɛɛg-sore: taoor-soaba bala n gʋlsd, neb a taabã karemda."
+    },
+    "nom": "Yʋʋre",
+    "sujet": "Sõsgã zug-sɩɩlem (pa tilae ye)",
+    "avertissement_nom": "Yʋʋrã la zug-sɩɩlmã pa solgd ye: ra gʋls-y bũmb sẽn yaa solgo be ye.",
+    "membres": "Neb ({{n}})",
+    "retirer": "Yi-y {{nom}}",
+    "aucun_membre": "Ned ba a ye pa yãk ye.",
+    "ajouter": "Paas neba",
+    "creer": {
+      "groupe": "Naag sullã",
+      "canal": "Naag koɛɛg-sorã"
+    },
+    "erreur_creation": "Sõsgã pa tõe n naag ye. Le maan-y.",
+    "canal_non_declare": "Koɛɛg-sorã naagame, la b pa wilg-a Laafi tʋʋm-zĩigẽ ye. A ka na n be gomnã sɛbrã pʋgẽ ye."
+  },
+  "details": {
+    "titre": "Yɛla",
+    "chiffre": "Solgdame sɩngr n tãag a ned zĩigẽ",
+    "avertissement_metadonnees": "Serveur-ã tõe n yã yʋʋrã, zug-sɩɩlmã la neb yʋyã. La a pa tõe n yã koɛɛsã pʋgẽ bũmb ye.",
+    "membres": "Neb ({{n}})",
+    "inviter": "Bool-y",
+    "invite": "B boolame",
+    "role": {
+      "admin": "Gɩdgda (administrateur)",
+      "moderateur": "Gũusda (modérateur)"
+    },
+    "verifie": "B bãnga a yɩɩ-y sɩdame",
+    "non_verifie": "B pa bãng a yɩɩ-y ye",
+    "quitter": "Yi sõsgã pʋgẽ",
+    "quitter_titre": "Y rata n yi sõsg-kãngã pʋgẽ?",
+    "quitter_texte": "Y pa le na n deeg koɛɛs ye. Y sã n dat n lebg n kẽ, ned a ye sẽn be pʋgẽ na n le bool-y.",
+    "invitation_ok": "B bool {{nom}}.",
+    "erreur_invitation": "Boolgã pa tõe n tʋms ye.",
+    "erreur_depart": "Y pa tõe n yi sõsgã pʋgẽ ye."
+  },
+  "profil": {
+    "titre": "Mam yell la bas-m-yam",
+    "matricule": "Matricule",
+    "api_indisponible": "Gomnã yell-sɛbre, yʋy-sɛbrã la deegr kasetã pa be ye: kẽ-y Laafi tʋʋm-zĩigẽ.",
+    "preferences": "M sẽn nonga",
+    "langue": "Goama",
+    "langue_aide": "Lebgr n kẽnda: gom-biis kẽer ket n yaa fraŋsɛ.",
+    "theme": "Yãnde",
+    "themes": {
+      "systeme": "Wa masĩnã",
+      "clair": "Vẽenem",
+      "sombre": "Lik-lik"
+    }
+  },
+  "securite": {
+    "titre": "Masĩn-kãngã gũudgu",
+    "verifie_titre": "Masĩnã sɩdame",
+    "verifie_texte": "Y yɩɩ-y kasetã (identité cryptographique) bãnga masĩn-kãngã. Y tʋʋm-taasã tõe n kõ-a b sũuri.",
+    "non_verifie_titre": "B pa ges masĩnã ye",
+    "non_verifie_texte_cle": "Gʋls-y y lebgr kle wã n ges masĩn-kãngã la y le paam koɛɛs sẽn solg n dengã.",
+    "non_verifie_texte_premier": "Naag-y y lebgr kle: a gũusda y yɩɩ-y la y koɛɛsã, y sã n wa toeem masĩn.",
+    "empreinte": "Masĩn-kãngã empreinte",
+    "configurer": "Naag m lebgr kle",
+    "saisir_cle": "Gʋls m lebgr kle",
+    "saisir_texte": "Gʋls-y lebgr kle ning y sẽn gʋls y sẽn deng n kẽ wã.",
+    "cle": "Lebgr kle",
+    "cle_titre": "Y lebgr kle",
+    "cle_texte": "Gʋls kle-kãngã n bĩng-a zĩig sẽn gũusdẽ, sẽn pa masĩn-kãngã pʋgẽ. B pa le na n wilg-a ye. Y sã n ka tar-a, y pa na n tõog n karem y koɛɛsã masĩn-paalg zug ye.",
+    "cle_notee": "M gʋlsa m kle wã n bĩng zĩig sẽn gũusdẽ",
+    "copier": "Lugl",
+    "telecharger": "Tõdg",
+    "cle_copiee": "Kle wã luglame. Tẽeg n yɩlg presse-papiers wã.",
+    "copie_impossible": "Lugsgã pa tõog ye: gʋls kle wã ne y nugu.",
+    "cle_incorrecte": "Kle wã pa sɩd ye. Ges-y y sẽn gʋlsã, ne zĩ-vɩɩsã fãa.",
+    "verifier": "Ges masĩn-kãngã",
+    "appareil_verifie": "Masĩnã sɩdame.",
+    "erreur_configuration": "Lebgr kle wã pa tõe n naag ye. Le maan-y."
+  },
+  "appareils": {
+    "titre": "M masĩnse",
+    "aide": "Masĩns nins sẽn kẽ y kɔntã pʋgẽ. A sã n menem bɩ b sã n zu-a, dig yɛl-kẽnd butõŋ wã sẽn be tẽngrã, bɩ y bool y gɩdgdã.",
+    "activite": "a tʋʋm sẽn baas yaa {{date}}",
+    "courant": "Masĩn-kãngã",
+    "verifie": "Sɩdame",
+    "non_verifie": "Pa ges ye",
+    "erreur": "Masĩnsã sɛbrã pa tõe n wa ye."
+  },
+  "urgence": {
+    "titre": "Yɛl-kẽnde",
+    "texte": "Y telefõnn menema, b zu-a, bɩ yɛl n be? Yi-y y masĩns fãa masã n yɩlg masĩn-kãngã kibayã fãa.",
+    "bouton": "Yi m masĩns fãa",
+    "confirmer_titre": "Yɛl-kẽnd yiibu",
+    "consequence_1": "Y masĩns fãa yiida masã-masã.",
+    "consequence_2": "Masĩn-kãngã kibay fãa yɩlgdame: koɛɛse, solgr kle, la y sẽn nong bũmbã.",
+    "consequence_3": "Y sã n dat n lebg n kẽ, y na n le kẽ n gʋls y lebgr kle wã.",
+    "mot": "URGENCE",
+    "taper": "N wilg tɩ y sakame, gʋls {{mot}}",
+    "confirmer": "Yi fãa la yɩlg fãa"
+  },
+  "revoque": {
+    "titre": "Sorã yɩɩsame",
+    "motif": {
+      "jeton-invalide": "Gomnã gɩdgdb bɩ masĩn a to n yiis masĩn-kãngã y kɔntã pʋgẽ.",
+      "compte-desactive": "Gomnã gɩdgdb n yals y kɔntã.",
+      "deconnexion-distante": "B pag y kẽesgã zĩig zãrga.",
+      "urgence": "Yɛl-kẽnd yiibã maanega."
+    },
+    "efface_cles": "Solgr kle wã yɩlgame masĩn-kãngã pʋgẽ",
+    "efface_messages": "Koɛɛse la sɛb nins sẽn naag-ba yɩlgame",
+    "efface_session": "Kẽesgã la y sẽn nong bũmbã yɩlgame",
+    "rapport": "Yɩlgrã yɛla",
+    "rapport_detail": "Kibay-rogs {{bases}} la cache {{caches}} yɩlgame.",
+    "rapport_erreurs": "Bũmb {{n}} pa tõe n yɩlg masã ye; b na n yɩlg-b lame onglet wã sã n pag.",
+    "aide": "Y sã n tẽed tɩ yaa tudgri, bool-y y ministɛɛrã gɩdgda.",
+    "reconnecter": "Le kẽ-y"
+  },
+  "erreurs": {
+    "reseau": "Tʋʋm-zĩigã pa tõe n paam ye. Ges-y y internet.",
+    "session_api": "Y kẽesgã Laafi tʋʋm-zĩigẽ wakat saame. Le kẽ-y.",
+    "interdit": "Y ka tar sor n maan tʋʋm-kãngã ye.",
+    "introuvable": "Bũmbã pa yii ye.",
+    "conflit": "Tʋʋm-kãngã maanega pĩnda.",
+    "serveur": "Tʋʋm-zĩigã paama yel-beedo. Le maan-y bilf poore.",
+    "inconnue": "Yel-beed b sẽn pa tẽ n paame."
+  }
+}

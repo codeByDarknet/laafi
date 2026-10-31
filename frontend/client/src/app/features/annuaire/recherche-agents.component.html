@@ -1,0 +1,103 @@
+<div class="filtres">
+  <label class="lf-search">
+    <span class="lf-sr-only">{{ 'annuaire.rechercher' | transloco }}</span>
+    <input
+      class="lf-input"
+      type="search"
+      [placeholder]="'annuaire.rechercher' | transloco"
+      [value]="q()"
+      (input)="q.set($any($event.target).value)"
+      autocomplete="off"
+    />
+  </label>
+  @if (filtreMinistere() && ministeres().length) {
+    <label class="lf-field ministere">
+      <span class="lf-sr-only">{{ 'annuaire.ministere' | transloco }}</span>
+      <select class="lf-input" (change)="ministere.set($any($event.target).value || null)">
+        <option value="">{{ 'annuaire.tous_ministeres' | transloco }}</option>
+        @for (m of ministeres(); track m.code) {
+          <option [value]="m.code" [selected]="ministere() === m.code">{{ m.sigle }} — {{ m.nom }}</option>
+        }
+      </select>
+    </label>
+  }
+</div>
+
+@switch (etat()) {
+  @case ('chargement') {
+    <ul class="lf-list" aria-busy="true" [attr.aria-label]="'commun.chargement' | transloco">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <li class="lf-list__item">
+          <span class="lf-skeleton lf-skeleton--circle"></span>
+          <span class="lf-list__body squelette">
+            <span class="lf-skeleton lf-skeleton--title"></span>
+            <span class="lf-skeleton lf-skeleton--text"></span>
+          </span>
+        </li>
+      }
+    </ul>
+  }
+  @case ('sans-api') {
+    <div class="lf-alert lf-alert--warning">
+      <lf-icone nom="alerte" />
+      <div>
+        <p>{{ 'annuaire.indisponible' | transloco }}</p>
+        <button type="button" class="lf-btn lf-btn--secondary lf-btn--sm" (click)="seConnecter()">{{ 'annuaire.se_connecter' | transloco }}</button>
+      </div>
+    </div>
+  }
+  @case ('erreur') {
+    <div class="lf-alert lf-alert--danger" role="alert">
+      <lf-icone nom="alerte" />
+      <div>
+        <p>{{ erreur() | transloco }}</p>
+        <button type="button" class="lf-btn lf-btn--ghost lf-btn--sm" (click)="chercher(0)">{{ 'commun.reessayer' | transloco }}</button>
+      </div>
+    </div>
+  }
+  @default {
+    @if (resultats().length) {
+      <p class="compte lf-muted" aria-live="polite">{{ 'annuaire.resultats' | transloco: { n: total() } }}</p>
+      <ul class="lf-list lf-list--divided">
+        @for (a of resultats(); track a.matrixId) {
+          @let pris = choisis().includes(a.matrixId);
+          <li>
+            <button type="button" class="lf-list__item" [attr.aria-pressed]="pris" [disabled]="a.matrixId === monId" (click)="choisir.emit(a)">
+              <lf-avatar [nom]="a.nom" [id]="a.matrixId" taille="sm" />
+              <span class="lf-list__body">
+                <span class="lf-list__title">{{ a.nom }}@if (a.matrixId === monId) { · {{ 'annuaire.vous' | transloco }} }</span>
+                <span class="lf-list__meta">{{ joindre(a.fonction, a.direction, a.ministere) }}</span>
+              </span>
+              <span class="choix" [class.choix--pris]="pris">
+                @if (pris) {
+                  <lf-icone nom="coche" [taille]="18" />
+                  <span class="lf-sr-only">{{ 'annuaire.selectionne' | transloco }}</span>
+                } @else {
+                  <span class="lf-sr-only">{{ action() | transloco }}</span>
+                  <lf-icone nom="plus" [taille]="18" />
+                }
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+      @if (suivante()) {
+        <button type="button" class="lf-btn lf-btn--ghost lf-btn--block plus" (click)="chercher(page() + 1)">{{ 'annuaire.plus' | transloco }}</button>
+      }
+    } @else {
+      <div class="lf-empty">
+        <lf-icone class="lf-empty__art" nom="annuaire" [taille]="48" />
+        <p class="lf-empty__text">{{ 'annuaire.aucun' | transloco }}</p>
+      </div>
+    }
+  }
+}
+
+@if (idManuel(); as id) {
+  @if (etat() !== 'pret' || !resultats().length) {
+    <button type="button" class="lf-btn lf-btn--secondary lf-btn--block manuel" (click)="choisirManuel(id)">
+      <lf-icone nom="personne" />
+      {{ 'annuaire.utiliser_id' | transloco: { id: id } }}
+    </button>
+  }
+}

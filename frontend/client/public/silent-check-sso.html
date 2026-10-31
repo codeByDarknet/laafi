@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Laafi</title></head>
+<body>
+  <!-- keycloak-js : vérification SSO silencieuse (iframe de même origine). Transmet le résultat à la page parente. -->
+  <script>parent.postMessage(location.href, location.origin);</script>
+</body>
+</html>

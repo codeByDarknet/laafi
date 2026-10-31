@@ -1,0 +1,98 @@
+@use 'tokens' as lf;
+
+.accueil {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--lf-bg);
+
+  &__fani {
+    height: 6px;
+  }
+
+  &__corps {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--lf-space-5);
+    width: min(100% - 2 * var(--lf-gutter), 26rem);
+    margin: var(--lf-space-10) auto var(--lf-space-6);
+
+    @include lf.bp(md) {
+      margin-top: 14vh;
+    }
+  }
+
+  &__logo {
+    height: 3rem;
+    width: auto;
+
+    &--sombre {
+      display: none;
+    }
+  }
+
+  &__titre {
+    font-size: var(--lf-text-3xl);
+    font-stretch: var(--lf-display-stretch);
+    line-height: var(--lf-leading-tight);
+    text-wrap: balance;
+  }
+
+  &__texte {
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-lg);
+    line-height: var(--lf-leading-snug);
+  }
+
+  &__reessayer {
+    margin-top: var(--lf-space-2);
+  }
+
+  &__garanties {
+    display: grid;
+    gap: var(--lf-space-3);
+    padding: var(--lf-space-4) 0 0;
+    border-top: 1px solid var(--lf-border);
+    list-style: none;
+    color: var(--lf-ink-2);
+    font-size: var(--lf-text-sm);
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--lf-space-2);
+    }
+
+    lf-icone {
+      margin-top: 0.1em;
+      color: var(--lf-accent-text);
+    }
+  }
+
+  &__langue {
+    max-width: 14rem;
+  }
+
+  &__pied {
+    padding: var(--lf-space-4) var(--lf-gutter);
+    font-size: var(--lf-text-xs);
+    text-align: center;
+  }
+}
+
+// Logo adapté au thème (attribut forcé ou préférence système)
+:host-context([data-theme='dark']) .accueil__logo--clair {
+  display: none;
+}
+:host-context([data-theme='dark']) .accueil__logo--sombre {
+  display: block;
+}
+@media (prefers-color-scheme: dark) {
+  :host-context(html:not([data-theme='light'])) .accueil__logo--clair {
+    display: none;
+  }
+  :host-context(html:not([data-theme='light'])) .accueil__logo--sombre {
+    display: block;
+  }
+}
