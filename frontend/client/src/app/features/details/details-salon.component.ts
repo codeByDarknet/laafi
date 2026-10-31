@@ -43,10 +43,16 @@ export class DetailsSalonComponent {
   protected readonly depart = signal(false);
   protected readonly departEnCours = signal(false);
 
-  protected readonly room = computed(() => {
-    this.matrix.version();
-    return this.salons.salon(this.roomId());
-  });
+  // L'objet Room du SDK est toujours le MÊME objet (muté en place à chaque synchro) :
+  // sans `equal: () => false`, Angular le jugerait inchangé et les écrans dérivés
+  // (messages, membres) ne se mettraient pas à jour à l'arrivée d'un message.
+  protected readonly room = computed(
+    () => {
+      this.matrix.version();
+      return this.salons.salon(this.roomId());
+    },
+    { equal: () => false },
+  );
   protected readonly resume = computed(() => this.salons.salons().find((s) => s.id === this.roomId()) ?? null);
   protected readonly sujet = computed(() => this.room()?.currentState.getStateEvents('m.room.topic', '')?.getContent()['topic'] ?? '');
   protected readonly peutInviter = computed(() => {
