@@ -9,7 +9,9 @@ import jakarta.validation.constraints.Size;
  * Les motifs interdisent le caractère "|" et les espaces, utilisés dans la sérialisation canonique.
  */
 public record AccuseRequete(
-        @NotBlank @Size(max = 255) @Pattern(regexp = "^![^|\\s]+:[^|\\s]+$", message = "identifiant de salon Matrix invalide")
+        // « :serveur » facultatif : en salons Matrix v12 (version par défaut de Synapse),
+        // l'identifiant est « !<empreinte> », sans nom de serveur.
+        @NotBlank @Size(max = 255) @Pattern(regexp = "^![^|:\\s]+(:[^|\\s]+)?$", message = "identifiant de salon Matrix invalide")
         String roomId,
         @NotBlank @Size(max = 255) @Pattern(regexp = "^\\$[^|\\s]+$", message = "identifiant d'événement Matrix invalide")
         String eventId,
