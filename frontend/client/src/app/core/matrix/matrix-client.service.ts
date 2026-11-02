@@ -112,10 +112,15 @@ export class MatrixClientService {
 
     this.brancherEvenements(client);
 
-    // ── 5. Synchronisation « réseau faible » : membres chargés à la demande, 20 messages
-    //       par salon au premier chargement, pas de présence ni d'indicateurs de frappe.
+    // ── 5. Synchronisation « réseau faible » : 20 messages par salon au premier chargement,
+    //       pas de présence ni d'indicateurs de frappe.
+    //       Membres NON chargés à la demande (lazyLoadMembers: false) : avec le « state_after »
+    //       (MSC4222) qu'utilise le SDK, Synapse omet parfois NOTRE propre adhésion « join »
+    //       après « Accepter » (synchro limitée) ; le SDK nous croyait alors toujours invité
+    //       et l'écran restait sur « Vous êtes invité » jusqu'au rechargement de la page.
+    //       Les groupes de l'administration sont petits : l'état complet reste léger.
     await client.startClient({
-      lazyLoadMembers: true,
+      lazyLoadMembers: false,
       initialSyncLimit: 20,
       disablePresence: true,
       filter: this.filtreMinimal(session.userId),
@@ -172,8 +177,7 @@ export class MatrixClientService {
       presence: { not_types: ['*'] },
       room: {
         ephemeral: { not_types: ['m.typing'] },
-        state: { lazy_load_members: true },
-        timeline: { limit: 20, lazy_load_members: true },
+        timeline: { limit: 20 },
       },
     });
     return filtre;
